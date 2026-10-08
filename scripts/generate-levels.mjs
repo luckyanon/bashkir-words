@@ -15,7 +15,7 @@ for(const fullWord of raw.targetWords.filter(w=>w.length>=5)){
  const selected=[fullWord];const count=Math.min(11,candidates.length);
  for(let i=0;i<count;i++)selected.push(candidates[Math.floor(i*candidates.length/count)]);
  const bonusWords=buildable.filter(w=>!lexicon.isTargetCandidate(w)).slice(0,3);
- pools.push({letters:[...rack],words:selected.map(word=>({word,entryId:lexicon.getEntry(word).id})),bonusWords,minWordLength,excludedWordLengths:Array.from({length:minWordLength-2},(_,i)=>i+2)});
+ pools.push({letters:[...rack],words:selected.map(word=>({word,entryId:lexicon.getEntry(word).id})),bonusWords,minWordLength,excludedWordLengths:Array.from({length:minWordLength-2},(_,i)=>i+2),hardcoreWordCount:lexicon.findWords(rack,{minLength:2,targetsOnly:true}).length});
 }
 const data={schemaVersion:'6.0.0',datasetRevision:raw.datasetRevision,generatorVersion:6,language:'ba',partOfSpeech:'noun',maxWordLength:raw.maxLength,minTargetWords:7,maxTargetWords:12,maxBonusWords:3,pools};
 const provider=createLevelProvider(data,lexicon);const examples=Array.from({length:32},(_,i)=>provider.getLevel(i+1));

@@ -53,11 +53,12 @@ export function validateLevel(level, service) {
   if (!Number.isSafeInteger(level.id) || level.id < 1) fail('Некорректный номер уровня.');
   if (typeof level.title !== 'string' || !level.title.trim()) fail('У уровня нет названия.');
   const freeLayout = level.layout === 'free';
+  const hardcore = level.mode === 'hardcore' && level.generatorVersion === 6;
   const generated = Number(level.generatorVersion) >= 2;
   const filtered = Number(level.generatorVersion) >= 3;
-  const expectedMinWordLength = Math.max(level.letters?.length === 5 ? 2 : level.letters?.length === 6 ? 3 : 4,level.difficultyRevision ? (level.id>80?4:level.id>40?3:2) : 2);
-  const maxRows = freeLayout ? LEVEL_LIMITS.freeMaxRows : LEVEL_LIMITS.maxRows;
-  const maxCols = freeLayout ? LEVEL_LIMITS.freeMaxCols : LEVEL_LIMITS.maxCols;
+  const expectedMinWordLength = hardcore?2:Math.max(level.letters?.length === 5 ? 2 : level.letters?.length === 6 ? 3 : 4,level.difficultyRevision ? (level.id>80?4:level.id>40?3:2) : 2);
+  const maxRows = hardcore ? 2048 : freeLayout ? LEVEL_LIMITS.freeMaxRows : LEVEL_LIMITS.maxRows;
+  const maxCols = hardcore ? 2048 : freeLayout ? LEVEL_LIMITS.freeMaxCols : LEVEL_LIMITS.maxCols;
   if (!Number.isInteger(level.rows) || level.rows < 1 || level.rows > maxRows
     || !Number.isInteger(level.cols) || level.cols < 1 || level.cols > maxCols) {
     fail(`Размеры поля должны быть целыми числами от 1 до ${maxRows}.`);
@@ -73,11 +74,17 @@ export function validateLevel(level, service) {
     const excluded = Array.from({ length: expectedMinWordLength - 2 }, (_, index) => index + 2);
     if (JSON.stringify(level.excludedWordLengths) !== JSON.stringify(excluded)) fail('Некорректные исключённые длины слов.');
   }
-  if (!Array.isArray(level.words) || level.words.length === 0 || level.words.length > LEVEL_LIMITS.maxWords) {
+  if (!Array.isArray(level.words) || level.words.length === 0 || (!hardcore && level.words.length > LEVEL_LIMITS.maxWords)) {
     fail('Уровень должен содержать от 1 до 13 целевых слов.');
     return result();
   }
   if (generated && level.words.length < 7) fail('Сгенерированный уровень должен содержать не менее 7 целевых слов.');
+  if(hardcore&&level.words.length<30)fail('Хардкор должен содержать не менее 30 целевых слов.');
+  if(hardcore && typeof dictionary?.findWords==='function'){
+    const expected=dictionary.findWords(level.letters,{minLength:expectedMinWordLength,targetsOnly:true});
+    const targets=new Set(level.words.map(word=>word.word));
+    if(expected.length!==targets.size||expected.some(word=>!targets.has(word)))fail('Хардкор должен включать все подходящие целевые слова.');
+  }
   if (Number(level.generatorVersion) >= 4 && !level.words.some(placement => [...(placement?.word || '')].length === level.letters?.length)) fail('На уровне должно быть целевое слово, использующее все буквы круга.');
   const hasDictionary = ['hasWord', 'isTargetCandidate', 'canBuild']
     .every(method => typeof dictionary?.[method] === 'function');

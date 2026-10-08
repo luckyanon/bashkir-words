@@ -1,5 +1,6 @@
 import { createDictionary, normalizeWord, signature } from './lib/dictionary.mjs';
 import { getWordCells } from './levels.mjs';
+import {createHardcoreLayout} from './hardcore-layout.mjs';
 
 export const GENERATOR_VERSION = 6;
 const MAX_SPAN = 24;
@@ -268,7 +269,7 @@ export {maxWordLengthForLevel} from './difficulty.mjs';
 /** Only sourced nouns, with a deterministic probability deck and stage limits. */
 export function createLevelProvider(poolData, lexicon, {
   seed = 'bashkir-words', generatorVersion = poolData?.generatorVersion,
-  layoutVersion = 2, legacyLayoutThroughLevel = 0, includeLocalWords = true, applyLevelDifficulty = true,
+  layoutVersion = 2, legacyLayoutThroughLevel = 0, includeLocalWords = true, applyLevelDifficulty = true, hardcore = false,
 } = {}) {
   if (![1, 2].includes(layoutVersion)) throw new RangeError('Unsupported layout version');
   if (!Number.isSafeInteger(legacyLayoutThroughLevel) || legacyLayoutThroughLevel < 0) throw new RangeError('Legacy layout boundary must be a nonnegative safe integer');
@@ -307,10 +308,27 @@ export function createLevelProvider(poolData, lexicon, {
   if ([...groups.values()].some(indexes => !indexes.length)) throw new TypeError('Every weighted rack category must have a source pool');
   const campaignSeed = String(seed);
   const cache = new Map();
+  const hardcoreIndexes=hardcore?pools.map((pool,index)=>({pool,index})).filter(({pool})=>Number.isSafeInteger(pool.hardcoreWordCount)&&pool.hardcoreWordCount>=30).map(({index})=>index):[];
+  if(hardcore&&!hardcoreIndexes.length)throw new TypeError('Hardcore requires eligible racks with at least 30 targets');
+  const hardcoreOrders=new Map();
   const hasLevel = validLevelId;
   function getLevel(id) {
     if (!hasLevel(id)) throw new RangeError('Level number must be a positive safe integer');
     if (cache.has(id)) return cache.get(id);
+    if(hardcore){
+      const cap=maxWordLengthForLevel(id,poolData.maxWordLength);
+      const indexes=hardcoreIndexes.filter(index=>pools[index].letters.length<=cap);
+      if(!indexes.length)throw new TypeError('No eligible hardcore racks within the length limit');
+      const cycle=Math.floor((id-1)/indexes.length),key=`${cap}:${cycle}`;
+      if(!hardcoreOrders.has(key)){hardcoreOrders.clear();hardcoreOrders.set(key,shuffle(indexes,randomSource(`${campaignSeed}:hardcore:2:pools:${key}`)));}
+      const pool=pools[hardcoreOrders.get(key)[(id-1)%indexes.length]];
+      const words=lexicon.findWords(pool.letters,{minLength:2,targetsOnly:true});
+      if(words.length<30||words.length!==pool.hardcoreWordCount)throw new TypeError('Outdated hardcore rack index');
+      const layout=createHardcoreLayout(words.map(word=>({word,entryId:lexicon.getEntry(word).id})),randomSource(`${campaignSeed}:hardcore:2:${id}`));
+      const bonusWords=lexicon.findWords(pool.letters,{minLength:2}).filter(word=>!lexicon.isTargetCandidate(word)).slice(0,3);
+      const level=Object.freeze({id,title:'Хардкор',mode:'hardcore',letters:Object.freeze(shuffle(pool.letters,randomSource(`${campaignSeed}:hardcore:rack:${id}`))),words:Object.freeze(layout.words.map(Object.freeze)),bonusWords:Object.freeze(bonusWords),rows:layout.rows,cols:layout.cols,layout:'free',difficultyRevision:applyLevelDifficulty?1:0,generatorVersion:GENERATOR_VERSION,layoutVersion:2,minWordLength:2,excludedWordLengths:Object.freeze([])});
+      cache.set(id,level);if(cache.size>8)cache.delete(cache.keys().next().value);return level;
+    }
     // Start a fresh probability deck at the first new level after a saved v2 boundary.
     const newId = id;
     const block = Math.floor((newId - 1) / CATEGORY_DECK.length);
@@ -347,7 +365,7 @@ export function createLevelProvider(poolData, lexicon, {
     return level;
   }
   return Object.freeze({ getLevel, hasLevel, size: Infinity, poolCount: pools.length,
-    seed: campaignSeed, datasetRevision:poolData.datasetRevision, generatorVersion: GENERATOR_VERSION, layoutVersion, legacyLayoutThroughLevel,wordRevision:includeLocalWords?1:0,difficultyRevision:applyLevelDifficulty?1:0,
+    mode:hardcore?'hardcore':'classic',rulesRevision:hardcore?2:0,seed: campaignSeed, datasetRevision:poolData.datasetRevision, generatorVersion: GENERATOR_VERSION, layoutVersion, legacyLayoutThroughLevel,wordRevision:includeLocalWords?1:0,difficultyRevision:applyLevelDifficulty?1:0,
     legacyThroughLevel:0, legacyV3ThroughLevel:0, maxWordLength:poolData.maxWordLength,
     probabilityDeckSize: CATEGORY_DECK.length });
 }

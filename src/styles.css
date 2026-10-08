@@ -150,3 +150,36 @@ dialog{animation:none}
 dialog{overflow:hidden}.modal-inner{max-height:calc(100dvh - 38px);overflow-x:hidden;overflow-y:auto}#app{overflow:clip}
 
 body{isolation:isolate}.background-layer{position:fixed;inset:-24px;z-index:-2;background-size:cover;background-position:66.6667% 65%;background-repeat:no-repeat;pointer-events:none}body:before{z-index:-1}
+
+/* The bank stays fixed above the independently movable board. */
+.game-bank{position:relative}.hardcore-regenerate{position:absolute;right:7px;top:calc(100% + 5px);width:32px;height:32px;padding:6px;border-radius:50%;display:grid;place-items:center;color:#fff5ed;background:#39254885;border:1px solid var(--line)}.hardcore-regenerate svg{width:19px;height:19px}.board-space{flex:1 1 auto;min-height:90px;margin-top:28px}
+
+/* The hardcore field fills the screen beneath the stationary interface. */
+.board-area.map-viewport{position:fixed;inset:0;width:100vw;height:100dvh;margin:0;padding:0;z-index:0;overflow:hidden;display:block;touch-action:none;overscroll-behavior:none;cursor:grab;user-select:none;pointer-events:auto}
+.map-viewport.panning{cursor:grabbing}
+.map-viewport .crossword{position:absolute;left:0;top:0;margin:0;max-width:none;transform:none;will-change:auto}
+.map-viewport .cell{touch-action:none}
+.board-zoom{display:none;position:absolute;right:8px;top:50%;transform:translateY(-50%);z-index:5;flex-direction:column;gap:6px}
+.board-zoom button{width:36px;height:36px;padding:0;border-radius:50%;background:#fff4e9dd;color:#624078;box-shadow:0 2px 8px #24143533;font-size:24px;line-height:1;touch-action:manipulation}
+@media(hover:hover) and (pointer:fine){.board-zoom{display:flex}}
+
+.hardcore-screen{isolation:isolate;pointer-events:none;animation:none}
+.hardcore-screen .game-header,.hardcore-screen .wheel-area,.hardcore-screen .bottom-actions{position:relative;z-index:2;pointer-events:none}
+.hardcore-screen .game-header button,.hardcore-screen .game-header .coin-balance,.hardcore-screen .wheel,.hardcore-screen .bottom-actions button{pointer-events:auto}
+.hardcore-screen .board-space{pointer-events:none}
+.hardcore-screen .game-header,.hardcore-screen .wheel-area,.hardcore-screen .bottom-actions{animation:level-in .2625s cubic-bezier(.2,.8,.25,1)}
+.hardcore-screen .map-viewport{animation:backdrop-in .2625s ease-out}
+
+.hardcore-word-count{font-variant-numeric:tabular-nums}
+
+.menu-controls{position:relative;flex-shrink:0;z-index:3}
+.menu-controls .compact-hint{position:absolute;left:0;top:calc(100% + 18px);width:48px;height:46px;padding:5px 3px;display:flex;flex-direction:column;gap:2px;border-radius:13px;box-shadow:0 2px 7px #24143526}
+.compact-hint>svg{width:19px;height:19px}
+.compact-hint .hint-price{padding:0;border:0;gap:2px;font-size:11px;line-height:1;font-variant-numeric:tabular-nums}
+.compact-hint .coin{width:13px;height:13px}
+.game-screen:not(.hardcore-screen) .board-area{margin-top:62px}
+@media(max-height:620px){.menu-controls .compact-hint{width:40px;height:42px;top:calc(100% + 16px)}.game-screen:not(.hardcore-screen) .board-area{margin-top:56px}}
+
+.background-card .background-price,.background-price{display:flex;justify-content:center;align-items:center;gap:4px}.background-price .coin{width:17px;height:17px}.background-purchase{display:flex;flex-direction:column;align-items:center;gap:12px}.background-purchase>img{width:150px;height:170px;object-fit:cover;object-position:66.6667% center;border-radius:12px}.background-purchase>strong{font-size:20px}.background-purchase>.background-price{font-size:18px}.background-purchase .coin{width:22px;height:22px}
+
+.menu-rating{position:absolute;top:max(24px,env(safe-area-inset-top));left:25px;min-height:44px;padding:10px 14px;border:1px solid var(--line);border-radius:18px;background:rgba(41,27,64,.22);color:inherit;font-size:15px;font-weight:700}.rating-placeholder{text-align:center;margin:20px 0!important}

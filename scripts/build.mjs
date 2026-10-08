@@ -1,0 +1,21 @@
+import { mkdir, cp, readFile, writeFile, readdir, rm } from 'node:fs/promises';
+import path from 'node:path';
+import { createHash } from 'node:crypto';
+const root = path.resolve(import.meta.dirname,'..');
+const out = path.join(root,'dist');
+if(path.resolve(out)!==path.join(root,'dist'))throw Error('Invalid build directory');
+await rm(out,{recursive:true,force:true});
+await mkdir(out,{recursive:true});
+await cp(path.join(root,'public'),out,{recursive:true});
+await cp(path.join(root,'src'),path.join(out,'src'),{recursive:true});
+await cp(path.join(root,'index.html'),path.join(out,'index.html'));
+const files = [];
+async function walk(dir) { for (const entry of await readdir(dir,{withFileTypes:true})) { const full=path.join(dir,entry.name); if(entry.isDirectory()) await walk(full); else files.push('./'+path.relative(out,full).replaceAll('\\','/')); } }
+await walk(out);
+const assets = files.filter(f=>!f.endsWith('sw.js'));
+const hash = createHash('sha256');
+for (const file of assets.sort()) hash.update(await readFile(path.join(out,file.slice(2))));
+const cacheVersion = hash.digest('hex').slice(0,12);
+const template = await readFile(path.join(root,'scripts/sw-template.js'),'utf8');
+await writeFile(path.join(out,'sw.js'),template.replace('__ASSETS__',JSON.stringify(['./',...assets])).replace('__CACHE_VERSION__',cacheVersion));
+console.log(`Built ${assets.length} local resources. Offline shell ready.`);

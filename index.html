@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#5a347c">
+  <meta name="description" content="Слова — башкирская словесная головоломка. Соединяйте буквы, решайте кроссворды и узнавайте русские значения слов.">
+  <title>Слова · Башкирская головоломка</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./src/styles.css">
+</head>
+<body>
+  <main id="app" aria-busy="true"><div class="loading"><span class="brand-mark">Ә</span><h1>Слова</h1><p>Готовим словарь…</p></div></main>
+  <div id="toast" popover="manual" role="status" aria-live="polite"></div>
+  <dialog id="modal" aria-labelledby="modal-title"></dialog>
+  <script type="module" src="./src/main.mjs"></script>
+  <script type="module" src="./src/sw-registration.mjs"></script>
+</body>
+</html>
+

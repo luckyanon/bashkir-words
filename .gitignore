@@ -1,0 +1,27 @@
+# Dependencies and generated web bundles
+node_modules/
+dist/
+dist-android/
+.sites-runtime/
+.openai/
+
+# Local settings and signing secrets
+.env
+.env.*
+!.env.example
+*.keystore
+*.jks
+password.txt
+local.properties
+.idea/
+.vscode/
+
+# Build outputs and archives
+*.apk
+*.aab
+*.aar
+*.tar.gz
+*.zip
+*.log
+.DS_Store
+Thumbs.db

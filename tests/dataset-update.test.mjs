@@ -1,0 +1,10 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {readFile} from 'node:fs/promises';
+import {createLexicon} from '../src/dictionary-service.mjs';import {createLevelProvider} from '../src/level-generator.mjs';import {createGame} from '../src/game.mjs';import {migrateNounSave} from '../src/noun-migration.mjs';import {createStorage,STORAGE_KEY} from '../src/storage.mjs';
+test('dataset replacement preserves reached level, economy and matching solved words and backs up original save',async()=>{
+ const load=async n=>JSON.parse(await readFile(new URL('../public/data/'+n,import.meta.url),'utf8'));
+ const [raw,full,pools]=await Promise.all(['game-lexicon.nouns.json','nouns.full.json','level-pools.json'].map(load));const lexicon=createLexicon(raw,full),provider=createLevelProvider(pools,lexicon,{seed:'dataset-update'}),game=createGame(provider,lexicon);
+ const word=game.getCurrentLevel().words[0].word;game.submit(word);game.hint();game.claimDailyGift();const saved=game.snapshot();saved.datasetRevision='previous-dataset';const original=JSON.stringify(saved);
+ const migration=migrateNounSave(saved,provider);assert(migration.changed);const restored=createGame(provider,lexicon,migration.saved);assert.equal(restored.state.currentLevel,saved.currentLevel);assert.equal(restored.state.coins,saved.coins);assert.equal(restored.state.hintCount,saved.hintCount);assert.deepEqual(restored.state.dailyGift,saved.dailyGift);assert(restored.getSolvedWords().includes(word));assert.equal(migrateNounSave(restored.snapshot(),provider).changed,false);
+ const values=new Map([[STORAGE_KEY,original]]),storage=createStorage({persistent:true,get:async k=>values.get(k)??null,set:async(k,v)=>values.set(k,v),remove:async k=>values.delete(k)});assert(await storage.save(restored.snapshot()));assert.equal(values.get(`${STORAGE_KEY}:before-dataset-${provider.datasetRevision}`),original);
+ assert.equal(lexicon.getEntry('БАЛ').id,full.entries.find(e=>e.display==='БАЛ').id);assert.equal(lexicon.dictionary.size,full.entries.length);
+});

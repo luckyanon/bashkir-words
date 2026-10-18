@@ -26,9 +26,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          gh api -H 'Accept: application/vnd.github.raw+json' \
-            "repos/$GH_REPO/contents/releases/bashkir-words-2.9.0.apk?ref=$SOURCE_COMMIT" \
-            > bashkir-words-2.9.0.apk
+          curl --fail --silent --show-error --location \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H 'Accept: application/vnd.github.raw+json' \
+            "https://api.github.com/repos/$GH_REPO/contents/releases/bashkir-words-2.9.0.apk?ref=$SOURCE_COMMIT" \
+            --output bashkir-words-2.9.0.apk
           printf '%s  %s\n' \
             '9ac869e50d1738941243e308f6f21c465ce11bee171eea52e24f020cc0ed8fd2' \
             'bashkir-words-2.9.0.apk' | sha256sum --check -

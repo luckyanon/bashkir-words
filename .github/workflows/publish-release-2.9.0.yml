@@ -1,0 +1,50 @@
+name: Publish Android release 2.9.0
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [.github/workflows/publish-release-2.9.0.yml]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-android-2.9.0
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      SOURCE_COMMIT: b085520e14ba00ab41119ffddc87413f283779b8
+    steps:
+      - name: Download verified APK and release notes
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api -H 'Accept: application/vnd.github.raw+json' \
+            "repos/$GH_REPO/contents/releases/bashkir-words-2.9.0.apk?ref=$SOURCE_COMMIT" \
+            > bashkir-words-2.9.0.apk
+          printf '%s  %s\n' \
+            '9ac869e50d1738941243e308f6f21c465ce11bee171eea52e24f020cc0ed8fd2' \
+            'bashkir-words-2.9.0.apk' | sha256sum --check -
+          gh api -H 'Accept: application/vnd.github.raw+json' \
+            "repos/$GH_REPO/contents/releases/README.md?ref=$SOURCE_COMMIT" \
+            > release-notes.md
+      - name: Publish release and mark it Latest
+        shell: bash
+        run: |
+          set -euo pipefail
+          if gh release view v2.9.0 --repo "$GH_REPO" >/dev/null 2>&1; then
+            gh release upload v2.9.0 bashkir-words-2.9.0.apk --repo "$GH_REPO" --clobber
+            gh release edit v2.9.0 --repo "$GH_REPO" --draft=false --latest \
+              --title 'Слова 2.9.0' --notes-file release-notes.md
+          else
+            gh release create v2.9.0 bashkir-words-2.9.0.apk --repo "$GH_REPO" \
+              --target "$SOURCE_COMMIT" --title 'Слова 2.9.0' \
+              --notes-file release-notes.md --latest
+          fi

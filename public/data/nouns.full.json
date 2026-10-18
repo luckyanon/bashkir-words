@@ -6,7 +6,7 @@
   "partOfSpeech": "noun",
   "selectionPolicy": "Only source-marked noun readings; other parts of speech and their definitions are excluded. Homographs are retained only in the noun reading. Existing single-word/common-noun/modern-spelling filters retained. Academic-only OCR candidates are quarantined.",
   "reuseNotice": "Includes Belemle-derived data with unspecified reuse terms; see ATTRIBUTION.md.",
-  "entryCount": 6704,
+  "entryCount": 6701,
   "entries": [
     {
       "id": "ba-cb5c092c99c8",
@@ -12081,98 +12081,6 @@
         "linguistReviewed": false,
         "nounSourceCount": 1,
         "translationSourceCount": 1
-      }
-    },
-    {
-      "id": "ba-3c9fedfee8b4",
-      "word": "алмас",
-      "display": "АЛМАС",
-      "length": 5,
-      "signature": "ААЛМС",
-      "letterCounts": {
-        "А": 2,
-        "Л": 1,
-        "М": 1,
-        "С": 1
-      },
-      "partsOfSpeech": [
-        "noun"
-      ],
-      "definitions": {
-        "ru": [
-          {
-            "text": "алмаз; бриллиант (алмазный; бриллиантовый)",
-            "partOfSpeech": "noun",
-            "sourceId": "kaikki-ru",
-            "senseId": "ru-алмас-ba-noun-Rjo6yES6"
-          }
-        ],
-        "en": [
-          {
-            "text": "diamond",
-            "partOfSpeech": "noun",
-            "sourceId": "kaikki-en",
-            "senseId": "en-алмас-ba-noun-gcnWEotf"
-          }
-        ]
-      },
-      "sources": [
-        {
-          "sourceId": "kaikki-en",
-          "url": "https://en.wiktionary.org/wiki/%D0%B0%D0%BB%D0%BC%D0%B0%D1%81#Bashkir",
-          "originalHeadwords": [
-            "алмас"
-          ],
-          "recordLines": [
-            1118
-          ],
-          "partOfSpeech": "noun"
-        },
-        {
-          "sourceId": "kaikki-ru",
-          "url": "https://ru.wiktionary.org/wiki/%D0%B0%D0%BB%D0%BC%D0%B0%D1%81#Башкирский",
-          "originalHeadwords": [
-            "алмас"
-          ],
-          "recordLines": [
-            2378
-          ],
-          "partOfSpeech": "noun"
-        },
-        {
-          "sourceId": "belemle-orthography",
-          "url": "https://belemle.ru/orfograficheskiy-slovar/1865/",
-          "originalHeadwords": [
-            "алмас"
-          ],
-          "recordLines": [
-            631
-          ],
-          "recordIds": [
-            1865
-          ],
-          "partOfSpeech": "noun"
-        },
-        {
-          "sourceId": "academic-01",
-          "relativeOriginal": "../bashkir-dictionaries/sources/academic/volume-01.pdf",
-          "pdfPages": [
-            249
-          ],
-          "partOfSpeech": "noun",
-          "nounMarker": "и.",
-          "evidence": "Explicit noun marker plus exact headword agreement with a digital dictionary"
-        }
-      ],
-      "eligibility": {
-        "game": true,
-        "target": true,
-        "starter": false
-      },
-      "quality": {
-        "type": "source_marked_noun",
-        "linguistReviewed": false,
-        "nounSourceCount": 4
       }
     },
     {
@@ -244384,67 +244292,6 @@
       }
     },
     {
-      "id": "ba-34e2dbd4a439",
-      "word": "мил",
-      "display": "МИЛ",
-      "length": 3,
-      "signature": "ИЛМ",
-      "letterCounts": {
-        "М": 1,
-        "И": 1,
-        "Л": 1
-      },
-      "partsOfSpeech": [
-        "noun"
-      ],
-      "definitions": {
-        "ru": [
-          {
-            "text": "миля",
-            "partOfSpeech": "noun",
-            "sourceId": "tarat-ba-ru",
-            "url": "https://tarat.ru/ru/targema/search/ba/ru/%D0%BC%D0%B8%D0%BB",
-            "senseId": "ba-ru-added-e7784f4f55ef4947",
-            "translationAddedOn": "2026-10-08",
-            "validation": "Source-based extraction; not a completed linguistic review"
-          }
-        ],
-        "en": []
-      },
-      "sources": [
-        {
-          "sourceId": "belemle-orthography",
-          "url": "https://belemle.ru/orfograficheskiy-slovar/14231/",
-          "originalHeadwords": [
-            "мил"
-          ],
-          "recordLines": [
-            12997
-          ],
-          "recordIds": [
-            14231
-          ],
-          "partOfSpeech": "noun"
-        },
-        {
-          "sourceId": "tarat-ba-ru",
-          "translationOnly": true,
-          "url": "https://tarat.ru/ru/targema/search/ba/ru/%D0%BC%D0%B8%D0%BB"
-        }
-      ],
-      "eligibility": {
-        "game": true,
-        "target": true,
-        "starter": false
-      },
-      "quality": {
-        "type": "source_marked_noun",
-        "linguistReviewed": false,
-        "nounSourceCount": 1,
-        "translationSourceCount": 1
-      }
-    },
-    {
       "id": "ba-ddce2018044e",
       "word": "милек",
       "display": "МИЛЕК",
@@ -370018,98 +369865,6 @@
         "linguistReviewed": false,
         "nounSourceCount": 2,
         "translationSourceCount": 2
-      }
-    },
-    {
-      "id": "ba-a671e09c76cf",
-      "word": "төрөк",
-      "display": "ТӨРӨК",
-      "length": 5,
-      "signature": "КӨӨРТ",
-      "letterCounts": {
-        "Т": 1,
-        "Ө": 2,
-        "Р": 1,
-        "К": 1
-      },
-      "partsOfSpeech": [
-        "noun"
-      ],
-      "definitions": {
-        "ru": [
-          {
-            "text": "турок",
-            "partOfSpeech": "noun",
-            "sourceId": "kaikki-ru",
-            "senseId": "ru-төрөк-ba-noun-PnyN5IsL"
-          }
-        ],
-        "en": [
-          {
-            "text": "Turk",
-            "partOfSpeech": "noun",
-            "sourceId": "kaikki-en",
-            "senseId": "en-төрөк-ba-noun-6A-kbAH7"
-          }
-        ]
-      },
-      "sources": [
-        {
-          "sourceId": "kaikki-en",
-          "url": "https://en.wiktionary.org/wiki/%D1%82%D3%A9%D1%80%D3%A9%D0%BA#Bashkir",
-          "originalHeadwords": [
-            "төрөк"
-          ],
-          "recordLines": [
-            2566
-          ],
-          "partOfSpeech": "noun"
-        },
-        {
-          "sourceId": "kaikki-ru",
-          "url": "https://ru.wiktionary.org/wiki/%D1%82%D3%A9%D1%80%D3%A9%D0%BA#Башкирский",
-          "originalHeadwords": [
-            "төрөк"
-          ],
-          "recordLines": [
-            3918
-          ],
-          "partOfSpeech": "noun"
-        },
-        {
-          "sourceId": "belemle-orthography",
-          "url": "https://belemle.ru/orfograficheskiy-slovar/21201/",
-          "originalHeadwords": [
-            "төрөк"
-          ],
-          "recordLines": [
-            19967
-          ],
-          "recordIds": [
-            21201
-          ],
-          "partOfSpeech": "noun"
-        },
-        {
-          "sourceId": "academic-08",
-          "relativeOriginal": "../bashkir-dictionaries/sources/academic/volume-08.pdf",
-          "pdfPages": [
-            457
-          ],
-          "partOfSpeech": "noun",
-          "nounMarker": "и.",
-          "evidence": "Explicit noun marker plus exact headword agreement with a digital dictionary"
-        }
-      ],
-      "eligibility": {
-        "game": true,
-        "target": true,
-        "starter": false
-      },
-      "quality": {
-        "type": "source_marked_noun",
-        "linguistReviewed": false,
-        "nounSourceCount": 4
       }
     },
     {
@@ -513218,5 +512973,6 @@
     ],
     "removedCount": 1,
     "reason": "Explicit user request; supersedes previous exception for бор"
-  }
+  },
+  "datasetRevision": "nouns-2026-10-19-rules-2"
 }

@@ -1,0 +1,4 @@
+Original ambient music for Bashkir Words 2.9.0 (2026).
+The note sequence and synthesized performance defined in src/music.mjs are original, not a transcription or recording of an existing song.
+To the extent possible under law, the rights holder dedicates this musical sequence and synthesized performance to the public domain under CC0 1.0 Universal: https://creativecommons.org/publicdomain/zero/1.0/
+This dedication applies only to this music, not the dictionary, fonts, illustrations or other project assets. No attribution is required for this music.

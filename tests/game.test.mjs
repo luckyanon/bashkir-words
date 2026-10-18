@@ -223,7 +223,7 @@ test('legacy saves preserve level number, unlocks, coins and preferences while r
   assert.equal(game.state.currentLevel, 8);
   assert.equal(game.getMaxUnlocked(), 9);
   assert.equal(game.state.coins, 217);
-  assert.deepEqual(game.state.settings, old.settings);
+  assert.deepEqual(game.state.settings, {...old.settings,music:true});
   assert.deepEqual(game.getLevelState().revealed, []);
   assert.equal(game.state.migration.boardReset, true);
   assert.deepEqual(game.state.legacy.levels, old.levels);

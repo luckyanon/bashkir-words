@@ -1,10 +1,20 @@
 const clamp=(value,min,max)=>Math.max(min,Math.min(max,value));
 const delta=(value,base)=>((value-base+540)%360)-180;
-export function createTiltModel(){
- let neutral;
- return {reset(){neutral=null;},sample(beta,gamma,angle=0){
+export function createTiltModel({now=()=>globalThis.performance?.now?.()??Date.now()}={}){
+ let neutral,last,settling=false,movedAt=0,lastTime=0;
+ return {reset(){neutral=null;last=null;settling=false;},sample(beta,gamma,angle=0){
   if(!Number.isFinite(beta)||!Number.isFinite(gamma))return null;
-  if(!neutral){neutral={beta,gamma};return {x:0,y:0};}
+  const time=now();
+  if(!neutral){neutral={beta,gamma};last={beta,gamma};lastTime=movedAt=time;return {x:0,y:0};}
+  const dt=Math.max(0,Math.min(100,time-lastTime));lastTime=time;
+  if(Math.abs(delta(beta,last.beta))+Math.abs(delta(gamma,last.gamma))>.5)movedAt=time;
+  last={beta,gamma};
+  // Move the neutral angle along the boundary: changing grip never leaves the wallpaper stuck.
+  const dx=delta(gamma,neutral.gamma),dy=delta(beta,neutral.beta);
+  if(Math.abs(dx)>22){neutral.gamma+=dx-Math.sign(dx)*22;settling=true;}
+  if(Math.abs(dy)>22){neutral.beta+=dy-Math.sign(dy)*22;settling=true;}
+  // After a new grip rests at the boundary, ease the neutral point into that grip.
+  if(settling&&time-movedAt>500){const mix=1-Math.exp(-dt/600);neutral.gamma+=delta(gamma,neutral.gamma)*mix;neutral.beta+=delta(beta,neutral.beta)*mix;if(Math.abs(delta(gamma,neutral.gamma))+Math.abs(delta(beta,neutral.beta))<.05)settling=false;}
   const x=clamp(delta(gamma,neutral.gamma)/22,-1,1),y=clamp(delta(beta,neutral.beta)/22,-1,1),r=angle*Math.PI/180;
   return {x:clamp(x*Math.cos(r)+y*Math.sin(r),-1,1),y:clamp(y*Math.cos(r)-x*Math.sin(r),-1,1)};
  }};

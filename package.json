@@ -1,6 +1,6 @@
 {
   "name": "bashkir-words",
-  "version": "2.8.5",
+  "version": "2.9.0",
   "private": true,
   "type": "module",
   "description": "Локальная башкирская словесная головоломка",

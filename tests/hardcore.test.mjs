@@ -40,7 +40,7 @@ test('largest field fits every target, and SARA and KISHER are accepted on forme
  assert(largest.words.some(w=>w.word.length===2));assert(largest.words.some(w=>w.word.length===3));
  assert(!validateLevel({...largest,words:largest.words.slice(0,29)},lexicon).valid);
  const game=gameForLevel(largest);for(const target of largest.words)assert(['target','repeat'].includes(game.submit(target.word).type));
- assert(game.getLevelState().completed);assert.equal(game.state.coins,90+largest.words.length*HARDCORE_WORD_REWARD+HARDCORE_LEVEL_REWARD);
+ assert(game.getLevelState().completed);assert.equal(game.state.coins,90+largest.words.length*6);
  for(const word of ['САРА','КИШЕР']){
   const pool=data.pools.find(p=>p.hardcoreWordCount>=30&&lexicon.canBuild(word,p.letters)&&!p.words.some(w=>w.word===word));
   assert(pool);const level=forPool(pool);assert(level.words.some(w=>w.word===word));assert(!level.bonusWords.includes(word));
@@ -80,15 +80,15 @@ test('hardcore persists independently, shares coins/settings and regenerates wit
  restored.reset();assert(!restored.isHardcore);assert.equal(restored.state.currentLevel,1);assert.equal(restored.state.hardcore.currentLevel,1);assert.equal(restored.state.coins,90);
 });
 
-test('hardcore completion and bonus rewards persist once, do not unlock classic levels, and hints charge shared coins',()=>{
+test('hardcore pays the exact completion formula once, preserves saves, and blocks hints',()=>{
  const {normal,hardcore}=engines('hardcore-economy'),game=createGame(normal,lexicon,null,{hardcoreSource:hardcore});game.setMode('hardcore');
  for(let i=0;i<20&&!game.getCurrentLevel().bonusWords.length;i++)game.regenerateHardcore();
- const level=game.getCurrentLevel(),before=game.state.coins;game.hint();assert.equal(game.state.coins,before-HINT_COST);
- let bonuses=0;for(const word of level.bonusWords){const result=game.submit(word);assert.equal(result.type,'bonus');assert.equal(result.reward,1);bonuses++;const coins=game.state.coins;assert.equal(game.submit(word).type,'repeat');assert.equal(game.state.coins,coins);}
+ const level=game.getCurrentLevel(),before=game.state.coins;assert.equal(game.hint().type,'unavailable');assert.equal(game.state.coins,before);
+ let bonuses=0;for(const word of level.bonusWords){const result=game.submit(word);assert.equal(result.type,'bonus');assert.equal(result.reward,0);bonuses++;const coins=game.state.coins;assert.equal(game.submit(word).type,'repeat');assert.equal(game.state.coins,coins);}
  const completions=[];
  for(const word of level.words){const result=game.submit(word.word);if(result.type==='target')assert.equal(result.reward,result.newlySolved.length*HARDCORE_WORD_REWARD);if(result.completionReward)completions.push(result.completionReward);}
- assert.deepEqual(completions,[500]);assert.equal(game.state.hardcore.wordCount,level.words.length);
- assert(game.getLevelState().completed);assert.equal(game.state.coins,before-HINT_COST+(bonuses+level.words.length)*HARDCORE_WORD_REWARD+HARDCORE_LEVEL_REWARD);assert.equal(game.getMaxUnlocked(),1);assert.deepEqual(game.state.backgrounds.owned,['ufa']);
+ assert.deepEqual(completions,[level.words.length*6+bonuses*12]);assert.equal(game.state.hardcore.wordCount,level.words.length);
+ assert(game.getLevelState().completed);assert.equal(game.state.coins,before+level.words.length*6+bonuses*12);assert.equal(game.getMaxUnlocked(),1);assert.deepEqual(game.state.backgrounds.owned,['ufa']);
  const saved=game.snapshot(),restored=createGame(normal,lexicon,saved,{hardcoreSource:hardcore});assert.deepEqual(restored.snapshot(),saved);
  for(const word of level.words)assert.equal(restored.submit(word.word).type,'repeat');assert.equal(restored.state.coins,saved.coins);
  restored.regenerateHardcore();assert.equal(restored.state.coins,saved.coins);assert.equal(restored.getLevelState().rewarded,false);assert.deepEqual(restored.state.hardcore.rewardedWords,[]);
@@ -102,12 +102,12 @@ test('old hardcore saves retain their balance and paid status; only future words
  for(const word of game.getCurrentLevel().bonusWords)game.submit(word);
  const old=game.snapshot(),h=old.hardcore;
  for(const key of ['rewardRevision','wordCount','rewardedWords','legacyCompletedCount','legacyBonusCount'])delete h[key];
- old.coins=90+h.completedCount*LEVEL_REWARD+h.bonusCount*BONUS_REWARD;
+ old.coins=90+h.completedCount*30+h.bonusCount*BONUS_REWARD;
  const restored=createGame(normal,lexicon,old,{hardcoreSource:hardcore});assert.equal(restored.state.coins,old.coins);
  assert.equal(restored.state.hardcore.legacyCompletedCount,h.completedCount);assert.equal(restored.state.hardcore.legacyBonusCount,h.bonusCount);
  for(const word of [...h.progress.solved,...h.progress.bonus]){assert.equal(restored.submit(word).type,'repeat');assert.equal(restored.state.coins,old.coins);}
  const remaining=restored.getCurrentLevel().words.length-h.progress.solved.length;
  for(const target of restored.getCurrentLevel().words)restored.submit(target.word);
- assert.equal(restored.state.coins,old.coins+remaining+500);
+ assert.equal(restored.state.coins,old.coins+restored.getCurrentLevel().words.length*6+h.progress.bonus.length*12);
  const again=createGame(normal,lexicon,restored.snapshot(),{hardcoreSource:hardcore});assert.deepEqual(again.snapshot(),restored.snapshot());
 });

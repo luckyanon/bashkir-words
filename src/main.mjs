@@ -1,3 +1,5 @@
+import {createIdleHintClock,hintTileIds} from './idle-hints.mjs';
+import {createMusic} from './music.mjs';
 import {createBackgroundMotion} from './background-motion.mjs';
 import {loadLexicon} from './dictionary-service.mjs';
 import {createGame,HINT_COST} from './game.mjs';
@@ -17,7 +19,26 @@ import {renderAttribution} from './attribution.mjs';
 
 const app=document.querySelector('#app'),modal=document.querySelector('#modal');
 const licenseModal=document.createElement('dialog');licenseModal.className='license-modal';licenseModal.setAttribute('aria-labelledby','license-title');document.body.append(licenseModal);
-let licenseRestoreFocus,licenseContent,boardCamera;
+let licenseRestoreFocus,licenseContent,boardCamera,music;
+const idleClock=createIdleHintClock();let idleTimer,lastIdleHint;
+function clearIdleHint(){document.querySelector('.idle-word-hint')?.remove();for(const tile of document.querySelectorAll('.letter.idle-letter'))tile.classList.remove('idle-letter');lastIdleHint=null;}
+function wordAttempt(){idleClock.attempt();clearIdleHint();}
+function stopIdleHints(){clearInterval(idleTimer);idleTimer=null;clearIdleHint();}
+function startIdleHints(){
+  stopIdleHints();idleClock.reset();if(game.isHardcore)return;
+  idleTimer=setInterval(()=>{
+    if(view!=='game'||game.isHardcore||game.getLevelState().completed||document.hidden||modal.open||licenseModal.open||screenTransition){wordAttempt();return;}
+    const solved=new Set(game.getSolvedWords()),candidates=game.getCurrentLevel().words.map(item=>item.word).filter(word=>!solved.has(word)&&lexicon.getMeanings(word).length);
+    const hint=idleClock.tick(candidates);
+    if(!hint){clearIdleHint();return;}if(hint===lastIdleHint)return;
+    clearIdleHint();lastIdleHint=hint;
+    if(hint.type==='translation'){
+      const node=document.createElement('div');node.className='idle-word-hint';node.setAttribute('role','status');
+      node.textContent='Подсказка: '+lexicon.getMeanings(hint.word)[0].text;document.querySelector('.game-screen')?.append(node);
+    }else{const ids=new Set(hintTileIds(hint.word,uiTiles));for(const tile of document.querySelectorAll('.letter'))tile.classList.toggle('idle-letter',ids.has(Number(tile.dataset.tile)));}
+  },200);
+}
+
 let lexicon,poolData,levels,game,storage,platform,view='menu',wheelInput,boardObserver,toastTimer,restoreFocus,lastCompletionReward=0,uiTiles=[],tilesLevel='',shuffleTimer,completionTimer,giftTimer;
 const cellTimers=new Map();
 const closingDialogs=new WeakMap();let screenTransition=false;
@@ -54,7 +75,7 @@ function toast(message,duration=2400){
   toastTimer=setTimeout(()=>{el.classList.remove('visible');toastHideTimer=setTimeout(()=>{if(typeof el.hidePopover==='function'&&el.matches(':popover-open'))el.hidePopover();},200);},duration);
 }
 function cancelInput(){wheelInput?.cancel();boardCamera?.cancel();}
-function disposeInput(){boardCamera?.dispose();boardCamera=null;wheelInput?.dispose();wheelInput=null;boardObserver?.disconnect();boardObserver=null;clearTimeout(shuffleTimer);clearTimeout(completionTimer);completionTimer=null;for(const timer of cellTimers.values())clearTimeout(timer);cellTimers.clear();}
+function disposeInput(){stopIdleHints();boardCamera?.dispose();boardCamera=null;wheelInput?.dispose();wheelInput=null;boardObserver?.disconnect();boardObserver=null;clearTimeout(shuffleTimer);clearTimeout(completionTimer);completionTimer=null;for(const timer of cellTimers.values())clearTimeout(timer);cellTimers.clear();}
 async function closeLicense(){await dismissDialog(licenseModal);const focus=licenseRestoreFocus;licenseRestoreFocus=null;if(focus?.isConnected)focus.focus({preventScroll:true});}
 let translationReturn;
 async function closeModal(all=false){
@@ -66,7 +87,7 @@ async function closeModal(all=false){
     [...modal.querySelectorAll('[data-action=translate]')].find(el=>el.dataset.word===previous.word)?.focus({preventScroll:true});return;
   }
 if(licenseModal.open){await closeLicense();if(!all)return;}await dismissDialog(modal);const focus=restoreFocus;restoreFocus=null;if(focus?.isConnected)focus.focus({preventScroll:true});else document.querySelector('#found-words,[data-action="continue"]')?.focus({preventScroll:true});}
-async function showModal(title,body){translationReturn=null;cancelInput();const focus=modal.open?restoreFocus:document.activeElement;if(modal.open)await dismissDialog(modal);restoreFocus=focus;modal.innerHTML=`<div class="modal-inner"><div class="modal-header">${title?`<h2 id="modal-title">${escape(title)}</h2>`:'<span id="modal-title" class="visually-hidden">Обратная связь</span>'}${button('close',icon('close'),'close-modal',`aria-label="${t.close}"`)}</div>${body}</div>`;modal.style.animation='';modal.getAnimations().forEach(animation=>animation.cancel());modal.showModal();}
+async function showModal(title,body){wordAttempt();translationReturn=null;cancelInput();const focus=modal.open?restoreFocus:document.activeElement;if(modal.open)await dismissDialog(modal);restoreFocus=focus;modal.innerHTML=`<div class="modal-inner"><div class="modal-header">${title?`<h2 id="modal-title">${escape(title)}</h2>`:'<span id="modal-title" class="visually-hidden">Обратная связь</span>'}${button('close',icon('close'),'close-modal',`aria-label="${t.close}"`)}</div>${body}</div>`;modal.style.animation='';modal.getAnimations().forEach(animation=>animation.cancel());modal.showModal();}
 modal.addEventListener('click',event=>{if(event.target===modal){const r=modal.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)closeModal();}});
 modal.addEventListener('cancel',event=>{event.preventDefault();closeModal();});
 licenseModal.addEventListener('cancel',event=>{event.preventDefault();closeLicense();});
@@ -81,7 +102,7 @@ async function showLicense(){
   }catch{if(licenseModal.open)licenseModal.querySelector('.license-content').innerHTML=`<p>${t.attributionError}</p>`;}
 }
 function render(){
-  applyBackground();
+  applyBackground();music?.setEnabled(game.state.settings.music!==false);
   disposeInput();clearTimeout(giftTimer);document.body.classList.toggle('no-motion',!game.state.settings.animations);app.setAttribute('aria-busy','false');
   if(view==='menu')renderMenu();else if(view==='victory')renderVictory();else renderGame();
 }
@@ -130,9 +151,10 @@ function sizeBoard(){
 function renderGame(){
   const level=game.getCurrentLevel(),saved=game.getLevelState(),board=buildBoard(level),revealed=new Set(saved.revealed),solved=new Set(saved.solved);
   arrangeTiles(game.rack);
-  app.innerHTML=`<section class="game-screen ${game.isHardcore?'hardcore-screen':''}"><header class="game-header"><div class="menu-controls">${button('menu',icon('menu'),'icon-button',`aria-label="${t.menu}"`)}${button('hint',`${icon('bulb')}<span class="hint-price">${HINT_COST}${coin}</span>`,'hint-button compact-hint',`${game.state.coins<HINT_COST||!game.getHiddenCells().length?'disabled':''} aria-label="${t.hint}, ${HINT_COST} ${t.coinsLabel}" title="${t.hint}, ${HINT_COST} ${t.coinsLabel}"`)}</div><div class="level-label"><strong>${game.isHardcore?'Хардкор':`${t.level} ${level.id}`}</strong>${game.isHardcore?`<span class="hardcore-word-count" aria-label="Найдено ${saved.solved.length} из ${level.words.length} слов на поле">${saved.solved.length}/${level.words.length}</span>`:''}</div><div class="game-bank"><div class="coin-balance" aria-label="${game.state.coins} ${t.coinsLabel}">${coin}<span>${game.state.coins}</span></div>${game.isHardcore?button('hardcore-regenerate','<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5M6 7a7 7 0 0 1 12-1l2 3M4 15l2 3a7 7 0 0 0 12-1"/></svg>','hardcore-regenerate','aria-label="Перегенерировать уровень" title="Перегенерировать уровень"'):''}</div></header>${game.isHardcore?'<div class="board-space" aria-hidden="true"></div>':''}<div class="board-area ${game.isHardcore?'map-viewport':''}"><div class="crossword" role="group" aria-label="${t.crossword}" style="grid-template-columns:repeat(${level.cols},var(--cell));grid-template-rows:repeat(${level.rows},var(--cell));--cell:24px">${board.map(cell=>{const shown=revealed.has(cell.key),complete=cell.wordIndexes.some(index=>solved.has(level.words[index].word));return `<div class="cell ${shown?'revealed':''} ${shown&&!complete?'partial':''}" data-cell="${cell.key}" style="grid-row:${cell.row+1};grid-column:${cell.col+1}" aria-label="${shown?escape(cell.letter):t.hiddenCell}">${shown?escape(cell.letter):''}</div>`;}).join('')}</div>${game.isHardcore?'<div class="board-zoom" aria-label="Масштаб поля"><button type="button" data-zoom="1.25" aria-label="Приблизить поле">+</button><button type="button" data-zoom="0.8" aria-label="Отдалить поле">−</button></div>':''}</div><div class="wheel-area"><div id="word-preview" role="status" aria-live="polite">· · ·</div><span id="keyboard-help" class="visually-hidden">${t.keyboardHelp}</span><div class="wheel" aria-label="${t.letterWheel}" aria-describedby="keyboard-help"><svg viewBox="0 0 100 100" aria-hidden="true"><polyline points=""/></svg>${uiTiles.map(tile=>{const p=tilePosition(tile.slot,uiTiles.length);return `<button class="letter" data-tile="${tile.id}" data-slot="${tile.slot}" style="left:${p.left}%;top:${p.top}%" aria-label="${escape(tile.letter)}; ${t.tileLabel} ${tile.id+1}" aria-pressed="false">${escape(tile.letter)}</button>`;}).join('')}${button('shuffle',icon('shuffle'),'wheel-center',`aria-label="${t.shuffle}" title="${t.shuffle}"`)}</div></div><footer class="bottom-actions">${button('found',`${icon('book')}<span>${t.found}</span>`,'found-button','id="found-words"')}</footer></section>`;
-  wheelInput=bindWheel(document.querySelector('.wheel'),{tiles:uiTiles,onSubmit:submitWord,onSelect:()=>platform.sound('select'),onPreview:renderPreview});
+  app.innerHTML=`<section class="game-screen ${game.isHardcore?'hardcore-screen':''}"><header class="game-header"><div class="menu-controls">${button('menu',icon('menu'),'icon-button',`aria-label="${t.menu}"`)}${game.isHardcore?'':button('hint',`<span class="hint-square">${icon('bulb')}</span><span class="hint-price">${HINT_COST}${coin}</span>`,'hint-button compact-hint',`${game.state.coins<HINT_COST||!game.getHiddenCells().length?'disabled':''} aria-label="${t.hint}, ${HINT_COST} ${t.coinsLabel}" title="${t.hint}, ${HINT_COST} ${t.coinsLabel}"`)}</div><div class="level-label"><strong>${game.isHardcore?'Хардкор':`${t.level} ${level.id}`}</strong>${game.isHardcore?`<span class="hardcore-word-count" aria-label="Найдено ${saved.solved.length} из ${level.words.length} слов на поле">${saved.solved.length}/${level.words.length}</span>`:''}</div><div class="game-bank"><div class="coin-balance" aria-label="${game.state.coins} ${t.coinsLabel}">${coin}<span>${game.state.coins}</span></div>${game.isHardcore?button('hardcore-regenerate','<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5M6 7a7 7 0 0 1 12-1l2 3M4 15l2 3a7 7 0 0 0 12-1"/></svg>','hardcore-regenerate','aria-label="Перегенерировать уровень" title="Перегенерировать уровень"'):''}</div></header>${game.isHardcore?'<div class="board-space" aria-hidden="true"></div>':''}<div class="board-area ${game.isHardcore?'map-viewport':''}"><div class="crossword" role="group" aria-label="${t.crossword}" style="grid-template-columns:repeat(${level.cols},var(--cell));grid-template-rows:repeat(${level.rows},var(--cell));--cell:24px">${board.map(cell=>{const shown=revealed.has(cell.key),complete=cell.wordIndexes.some(index=>solved.has(level.words[index].word));return `<div class="cell ${shown?'revealed':''} ${shown&&!complete?'partial':''}" data-cell="${cell.key}" style="grid-row:${cell.row+1};grid-column:${cell.col+1}" aria-label="${shown?escape(cell.letter):t.hiddenCell}">${shown?escape(cell.letter):''}</div>`;}).join('')}</div>${game.isHardcore?'<div class="board-zoom" aria-label="Масштаб поля"><button type="button" data-zoom="1.25" aria-label="Приблизить поле">+</button><button type="button" data-zoom="0.8" aria-label="Отдалить поле">−</button></div>':''}</div><div class="wheel-area"><div id="word-preview" role="status" aria-live="polite">· · ·</div><span id="keyboard-help" class="visually-hidden">${t.keyboardHelp}</span><div class="wheel" aria-label="${t.letterWheel}" aria-describedby="keyboard-help"><svg viewBox="0 0 100 100" aria-hidden="true"><polyline points=""/></svg>${uiTiles.map(tile=>{const p=tilePosition(tile.slot,uiTiles.length);return `<button class="letter" data-tile="${tile.id}" data-slot="${tile.slot}" style="left:${p.left}%;top:${p.top}%" aria-label="${escape(tile.letter)}; ${t.tileLabel} ${tile.id+1}" aria-pressed="false">${escape(tile.letter)}</button>`;}).join('')}${button('shuffle',icon('shuffle'),'wheel-center',`aria-label="${t.shuffle}" title="${t.shuffle}"`)}</div></div><footer class="bottom-actions">${button('found',`${icon('book')}<span>${t.found}</span>`,'found-button','id="found-words"')}</footer></section>`;
+  wheelInput=bindWheel(document.querySelector('.wheel'),{tiles:uiTiles,onSubmit:submitWord,onSelect:()=>{wordAttempt();platform.sound('select');},onPreview:renderPreview});
   sizeBoard();if(game.isHardcore)boardCamera=bindBoardCamera(document.querySelector('.board-area'),document.querySelector('.crossword'),{overview:true,rows:level.rows,cols:level.cols,focusArea:()=>document.querySelector('.board-space')});boardObserver=new ResizeObserver(sizeBoard);boardObserver.observe(document.querySelector('.board-area'));if(game.isHardcore)boardObserver.observe(document.querySelector('.board-space'));
+  startIdleHints();
 }
 let invalidPreviewTimer;
 function renderPreview(word){
@@ -199,6 +221,7 @@ function rejectWord(word){
   invalidPreviewTimer=setTimeout(()=>{if(preview.isConnected)renderPreview('');},420);
 }
 function submitWord(word){
+  wordAttempt();
   const result=game.submit(word);if(result.type==='repeat'){if(result.bonus){toast(`${t.bonus}: ${result.word}`);platform.sound('bonus');}else{shakeFoundWord(result.word);platform.sound('repeat');}return;}if(result.type==='excluded-length'){toast(t.excludedWordLength(result.length),1800);rejectWord(word);return;}if(!['target','bonus'].includes(result.type)){rejectWord(word);return;}
   if(result.type==='bonus')toast(`${t.bonus}: ${result.word}`);
   platform.sound(result.completed?'victory':result.type);
@@ -219,7 +242,7 @@ function animateShuffle(){
 function campaignSeed(){return String(Date.now())+'-'+crypto.getRandomValues(new Uint32Array(1))[0];}
 function installGame(provider,saved=null){levels=provider;game=createGame(provider,lexicon,saved,{hardcoreSource:createLevelProvider(poolData,lexicon,{seed:provider.seed+':hardcore',hardcore:true}),onChange:state=>{storage.save(state).then(ok=>{if(!ok)toast(t.storageWarning);});}});}
 async function action(name,element){
-  if(name==='gift'){const origin=element.querySelector('.coin')?.getBoundingClientRect();const result=game.claimDailyGift();refreshGiftButton();if(result.type==='gift'){animateGift(origin);platform.sound('bonus');toast(t.giftReceived);}else toast(t.giftClaimed);return;}
+  if(name==='gift'){const origin=element.querySelector('.coin')?.getBoundingClientRect();const result=game.claimDailyGift();refreshGiftButton();if(result.type==='gift'){const plugins=window.BashkirNativePlugins||{};plugins.DailyGift?.sync({claimedDay:game.state.dailyGift.lastClaimDay,requestPermission:true}).catch(()=>{});animateGift(origin);platform.sound('bonus');toast(t.giftReceived);}else toast(t.giftClaimed);return;}
   if(name==='license-close'){await closeLicense();return;}
   if(name==='attribution'){await showLicense();return;}
   if(name==='close'){await closeModal();return;}
@@ -230,7 +253,7 @@ async function action(name,element){
   if(name==='confirm-hardcore-regenerate'){if(modal.open&&element.closest('#modal'))await regenerateHardcore();return;}
   if(name==='next'){if(game.isHardcore){await regenerateHardcore();return;}await start(game.getNextLevelId());return;}
   if(name==='shuffle'){animateShuffle();return;}
-  if(name==='hint'){cancelInput();const result=game.hint();if(result.type==='insufficient')toast(t.insufficient);else if(result.type==='hint'){platform.sound(result.completed?'victory':'hint');finishOnBoard(result);}return;}
+  if(name==='hint'){if(game.isHardcore)return;wordAttempt();cancelInput();const result=game.hint();if(result.type==='insufficient')toast(t.insufficient);else if(result.type==='hint'){platform.sound(result.completed?'victory':'hint');finishOnBoard(result);}return;}
   if(name==='found'){await showModal(t.found,`<div class="found-scroll" tabindex="0" role="region" aria-label="${t.found}">${wordList()}</div>`);return;}
   if(name==='translate'){const list=modal.open?modal.querySelector('.found-scroll'):null;const previous=list?{scrollTop:list.scrollTop,word:element.dataset.word}:null;await showTranslation(element.dataset.word);translationReturn=previous;return;}
   if(name==='settings'){await showSettings();return;}
@@ -249,7 +272,7 @@ async function action(name,element){
     if(result.type!=='purchased'&&result.type!=='owned')return;
     applyBackground();refreshCoinBalances();await showSettings();return;
   }
-  if(name==='toggle'){const setting=element.dataset.setting;game.setSettings({[setting]:!(setting==='backgroundMotion'?game.state.settings[setting]!==false:game.state.settings[setting])});document.body.classList.toggle('no-motion',!game.state.settings.animations);element.setAttribute('aria-checked',String(game.state.settings[setting]));backgroundMotion?.setEnabled(game.state.settings.backgroundMotion!==false&&game.state.settings.animations);return;}
+  if(name==='toggle'){const setting=element.dataset.setting;game.setSettings({[setting]:!(setting==='backgroundMotion'?game.state.settings[setting]!==false:game.state.settings[setting])});document.body.classList.toggle('no-motion',!game.state.settings.animations);element.setAttribute('aria-checked',String(game.state.settings[setting]));backgroundMotion?.setEnabled(game.state.settings.backgroundMotion!==false&&game.state.settings.animations);music?.setEnabled(game.state.settings.music!==false);return;}
   if(name==='rating'){await showModal('Рейтинг','<p class="rating-placeholder">В разработке</p>');return;}
   if(name==='about'){await showModal(t.about,`<div class="about-stats"><div><strong>${lexicon.dictionary.size.toLocaleString('ru')}</strong><span>${t.dictionaryWords}</span></div><div><strong>∞</strong><span>${t.endless}</span></div></div><p>${t.aboutLicense}</p>${button('attribution',t.attribution,'attribution-button')}<p class="dialog-note">${t.aboutReview}<br><button class="dictionary-feedback-link" data-action="dictionary-feedback">В словарной базе могут отсутствовать некоторые слова. Нашли такие? Сообщите нам.</button></p><div class="dictionary-contacts"><p class="dialog-note">Задать вопрос:</p><div class="dictionary-contact-links"><a href="https://t.me/goinmasss" target="_blank" rel="noopener noreferrer"><img src="./assets/contact-telegram.webp" alt="">Telegram</a><a href="https://vk.ru/luckyanon" target="_blank" rel="noopener noreferrer"><img src="./assets/contact-vk.png" alt="">VK</a></div></div>`);return;}
 }
@@ -278,16 +301,17 @@ function refreshCoinBalances(){
   const hint=document.querySelector('[data-action=hint]');if(hint)hint.disabled=game.state.coins<HINT_COST||!game.getHiddenCells().length;
 }
 function updateBackgroundCards(){for(const card of modal.querySelectorAll('.background-card')){const selected=card.dataset.background===(game.state.settings.background||'ufa');card.setAttribute('aria-pressed',String(selected));}}
-function showSettings(){return showModal(t.settings,`<div>${[['sound',t.sound],['animations',t.animations],['backgroundMotion','Движение фона']].map(([key,label])=>`<div class="settings-row"><span id="label-${key}">${label}</span><button class="switch" role="switch" aria-checked="${key==='backgroundMotion'?game.state.settings[key]!==false:game.state.settings[key]}" aria-labelledby="label-${key}" data-action="toggle" data-setting="${key}"></button></div>`).join('')}</div><div class="background-picker"><div class="background-gallery-header"><h3>Фон игры</h3></div><div class="background-gallery" role="group" aria-label="Галерея фонов">${BACKGROUNDS.map(bg=>`<button class="background-card" data-action="background" data-background="${bg.id}" aria-pressed="${(game.state.settings.background||'ufa')===bg.id}" ><img src="${bg.file}" alt=""><strong>${bg.name}</strong>${game.ownsBackground(bg.id)?'':`<small class="background-price" aria-label="${bg.price} монет">${bg.price}${coin}</small>`}</button>`).join('')}</div></div><p class="dialog-note">${t.settingsNote}</p><div class="reset-progress-section">${button('reset-progress','Сбросить прогресс','reset-progress-button')}</div>`);}
+function showSettings(){return showModal(t.settings,`<div>${[['sound',t.sound],['music','Музыка'],['animations',t.animations],['backgroundMotion','Движение фона']].map(([key,label])=>`<div class="settings-row"><span id="label-${key}">${label}</span><button class="switch" role="switch" aria-checked="${key==='backgroundMotion'?game.state.settings[key]!==false:game.state.settings[key]}" aria-labelledby="label-${key}" data-action="toggle" data-setting="${key}"></button></div>`).join('')}</div><div class="background-picker"><div class="background-gallery-header"><h3>Фон игры</h3></div><div class="background-gallery" role="group" aria-label="Галерея фонов">${BACKGROUNDS.map(bg=>`<button class="background-card" data-action="background" data-background="${bg.id}" aria-pressed="${(game.state.settings.background||'ufa')===bg.id}" ><img src="${bg.file}" alt=""><strong>${bg.name}</strong>${game.ownsBackground(bg.id)?'':`<small class="background-price" aria-label="${bg.price} монет">${bg.price}${coin}</small>`}</button>`).join('')}</div></div><p class="dialog-note">${t.settingsNote}</p><div class="reset-progress-section">${button('reset-progress','Сбросить прогресс','reset-progress-button')}</div>`);}
 document.addEventListener('click',event=>{const el=event.target.closest('[data-action]');if(el&&!el.disabled)action(el.dataset.action,el).catch(error=>{console.error(error);toast(t.actionError);});});
 window.addEventListener('keydown',event=>{if(!event.defaultPrevented&&event.key==='Escape'&&!modal.open&&!licenseModal.open&&view==='game')navigateView('menu');});
 window.addEventListener('resize',sizeBoard);
 window.addEventListener('focus',refreshGiftButton);
-document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshGiftButton();});
+document.addEventListener('visibilitychange',()=>{wordAttempt();if(!document.hidden)refreshGiftButton();});
 async function boot(){
   try{
     const plugins=window.BashkirNativePlugins||window.Capacitor?.Plugins||{};
     platform=createPlatform({onCancel:cancelInput,onBack:()=>{if(modal.open||licenseModal.open)closeModal();else if(view!=='menu')navigateView('menu');else plugins.App?.exitApp?.();},settings:()=>game?.state.settings||{sound:true},plugins});
+    music=createMusic();plugins.App?.addListener('appStateChange',({isActive})=>{music.setActive(isActive);if(!isActive)wordAttempt();}).catch(()=>{});
     storage=createStorage(platform.storageAdapter);backgroundMotion=createBackgroundMotion(backgroundLayer,{native:plugins.BackgroundMotion,app:plugins.App});
     const [loadedLexicon,pools,saved]=await Promise.all([loadLexicon('./',globalThis.fetch),fetch('./data/level-pools.json').then(r=>{if(!r.ok)throw new Error('level pools');return r.json();}),storage.load()]);
     lexicon=loadedLexicon;poolData=pools;
@@ -297,6 +321,7 @@ async function boot(){
     const wordsMigrated=migrateLocalWords(migrated.saved,createLevelProvider(pools,lexicon,{seed,...layoutOptionsForSave(saved,pools.generatorVersion),includeLocalWords:!!saved?.wordRevision,applyLevelDifficulty:!!saved?.difficultyRevision}),provider);
     installGame(provider,wordsMigrated.saved);
     if(migrated.changed || wordsMigrated.changed || saved && saved.layoutVersion!==2)await storage.save(game.snapshot());
+    plugins.DailyGift?.sync({claimedDay:game.state.dailyGift.lastClaimDay??-1,requestPermission:false}).catch(()=>{});
     render();if(saved?.version===1){await storage.save(game.snapshot());toast(t.progressUpdated);}else if([2,3].includes(saved?.generatorVersion))await storage.save(game.snapshot());
     if(!window.Capacitor?.isNativePlatform?.()&&'serviceWorker' in navigator&&location.protocol!=='file:')navigator.serviceWorker.register('./sw.js').catch(()=>{});
   }catch(error){console.error(error);app.setAttribute('aria-busy','false');app.innerHTML=`<div class="loading"><h1>${t.title}</h1><p>${t.loadError}</p><p class="menu-note">${t.loadErrorHelp}</p><button class="primary" onclick="location.reload()">${t.retry}</button></div>`;}

@@ -1,6 +1,6 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {readFile} from 'node:fs/promises';
 import {BACKGROUNDS,availableBackground} from '../src/backgrounds.mjs';
-import {createLexicon} from '../src/dictionary-service.mjs';import {createLevelProvider} from '../src/level-generator.mjs';import {createGame} from '../src/game.mjs';import {getWordCells} from '../src/levels.mjs';import {migrateLocalWords} from '../src/local-word-migration.mjs';
+import {createLexicon} from '../src/dictionary-service.mjs';import {createLevelProvider} from '../src/level-generator.mjs';import {createGame,LEVEL_REWARD} from '../src/game.mjs';import {getWordCells} from '../src/levels.mjs';import {migrateLocalWords} from '../src/local-word-migration.mjs';
 const load=async name=>JSON.parse(await readFile(new URL('../public/data/'+name,import.meta.url),'utf8'));
 const [raw,full,pools]=await Promise.all(['game-lexicon.nouns.json','nouns.full.json','level-pools.json'].map(load));const lexicon=createLexicon(raw,full);
 test('background shop has the requested prices and only Ufa is free',()=>{
@@ -9,7 +9,7 @@ test('background shop has the requested prices and only Ufa is free',()=>{
  const fresh=createGame(createLevelProvider(pools,lexicon),lexicon);assert.deepEqual(fresh.state.backgrounds.owned,['ufa']);
  fresh.setSettings({background:'olasay'});assert.equal(fresh.state.settings.background,undefined);
 });
-const fundedGame=()=>{const provider=createLevelProvider(pools,lexicon),initial=createGame(provider,lexicon).snapshot();return {provider,game:createGame(provider,lexicon,{...initial,currentLevel:300,completedRanges:[[1,299]],coins:90+299*30})};};
+const fundedGame=()=>{const provider=createLevelProvider(pools,lexicon),initial=createGame(provider,lexicon).snapshot();return {provider,game:createGame(provider,lexicon,{...initial,currentLevel:300,completedRanges:[[1,299]],coins:90+299*LEVEL_REWARD})};};
 test('all backgrounds can be bought once, applied and restored without a second debit',()=>{
  const {provider,game}=fundedGame();let coins=game.state.coins;
  for(const bg of BACKGROUNDS.slice(1)){
@@ -21,7 +21,7 @@ test('all backgrounds can be bought once, applied and restored without a second 
  }
  const restored=createGame(provider,lexicon,game.snapshot());restored.setSettings({background:'ufa'});assert.equal(restored.state.coins,coins);assert.equal(restored.state.settings.background,'ufa');
  // Restoring an inflated balance cannot refund purchases.
- const forged={...restored.snapshot(),coins:90+299*30};assert.equal(createGame(provider,lexicon,forged).state.coins,coins);
+ const forged={...restored.snapshot(),coins:90+299*LEVEL_REWARD};assert.equal(createGame(provider,lexicon,forged).state.coins,coins);
 });
 test('insufficient coins and unknown backgrounds cannot change coins or ownership',()=>{
  const game=createGame(createLevelProvider(pools,lexicon),lexicon),before=game.snapshot();
@@ -40,9 +40,13 @@ test('pre-shop earned backgrounds survive migration once, with no charge and no 
 test('reset removes purchased backgrounds and restores default Ufa without refund',()=>{
  const {game}=fundedGame();game.purchaseBackground('olasay');game.setSettings({sound:false});game.reset();assert.equal(game.state.coins,90);assert.deepEqual(game.state.backgrounds,{version:1,owned:['ufa'],paid:[]});assert.equal(game.state.settings.background,undefined);assert.equal(game.state.settings.sound,false);
 });
-test('BAL is a translated field target whenever allowed and buildable, never a bonus',()=>{
- assert.equal(lexicon.getMeanings('бал')[0].text,'мёд');const provider=createLevelProvider(pools,lexicon,{seed:'bal-check'});let seen=0;
- for(let id=1;id<=100;id++){const level=provider.getLevel(id);if(level.minWordLength<=3&&lexicon.canBuild('БАЛ',level.letters)){seen++;assert(level.words.some(w=>w.word==='БАЛ'));assert(!level.bonusWords.includes('БАЛ'));const game=createGame([level],lexicon);assert.equal(game.submit('бал').type,'target');assert.equal(game.submit('бал').type,'repeat');}else assert(!level.words.some(w=>w.word==='БАЛ'));}assert(seen>0);
+test('BAL stays on the field when buildable and fits inside the twelve-target limit',()=>{
+ assert.equal(lexicon.getMeanings('бал')[0].text,'мёд');let seen=0;
+ for(const pool of pools.pools.filter(p=>p.minWordLength<=3&&lexicon.canBuild('БАЛ',p.letters))){
+  const level=createLevelProvider({...pools,pools:[pool]},lexicon,{applyLevelDifficulty:false}).getLevel(121);seen++;
+  assert(level.words.length<=12);assert(level.words.some(w=>w.word==='БАЛ'));assert(!level.bonusWords.includes('БАЛ'));
+  assert.equal(createGame([level],lexicon).submit('бал').type,'target');
+ }assert(seen>0);
 });
 test('adding BAL preserves solved words, paid hint information, coins and gift on changed boards',()=>{
  const options={seed:'bal-migration'},balPool=pools.pools.find(p=>p.letters.length===5&&lexicon.canBuild('БАЛ',p.letters)),data={...pools,pools:[balPool,...[6,7,8].map(n=>pools.pools.find(p=>Math.min(8,p.letters.length)===n))]},old=createLevelProvider(data,lexicon,{...options,includeLocalWords:false}),next=createLevelProvider(data,lexicon,options);let id=1;while(id<300&&!next.getLevel(id).words.some(w=>w.word==='БАЛ'))id++;assert(id<300);

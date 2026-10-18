@@ -1,4 +1,10 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {createTiltModel,createBackgroundMotion} from '../src/background-motion.mjs';import {createGame} from '../src/game.mjs';
+test('a large change of grip moves the neutral point, settles at centre and responds to a new small tilt',()=>{
+ let time=0;const model=createTiltModel({now:()=>time});model.sample(0,0);time=33;
+ assert.equal(model.sample(90,0).y,1);let point;
+ for(let i=0;i<120;i++){time+=33;point=model.sample(90,0);}
+ assert(Math.abs(point.y)<.01);time+=33;assert(model.sample(79,0).y<-.45);
+});
 test('tilt calibrates to the current holding angle, caps movement and handles angle wrap',()=>{
  const model=createTiltModel();assert.equal(model.sample(null,0),null);assert.deepEqual(model.sample(45,10),{x:0,y:0});assert.deepEqual(model.sample(67,32),{x:1,y:1});assert.deepEqual(model.sample(-100,-100),{x:-1,y:-1});model.reset();model.sample(179,0);assert(Math.abs(model.sample(-179,0).y-2/22)<1e-8);
 });

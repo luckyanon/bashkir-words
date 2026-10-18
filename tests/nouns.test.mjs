@@ -4,27 +4,37 @@ import {createGame} from '../src/game.mjs';import {validateLevel,getWordCells} f
 const load=async n=>JSON.parse(await readFile(new URL('../public/data/'+n,import.meta.url),'utf8'));
 const [raw,full,pools]=await Promise.all(['game-lexicon.nouns.json','nouns.full.json','level-pools.json'].map(load));const lexicon=createLexicon(raw,full);
 test('all accepted words come from supplied noun entries, and original meanings and IDs remain intact',()=>{
- assert.equal(lexicon.dictionary.size,6704);assert.equal(raw.maxLength,12);assert(raw.words.every(w=>w.length<=12));
+ assert.equal(lexicon.dictionary.size,6701);assert.equal(raw.maxLength,12);assert(raw.words.every(w=>w.length<=12));
  assert.deepEqual(raw.words.sort(),full.entries.map(e=>e.display).sort());
  for(const entry of full.entries){assert(entry.partsOfSpeech.includes('noun'));assert.equal(lexicon.getEntry(entry.display),entry);for(const meaning of [...(entry.definitions.ru||[]),...(entry.definitions.en||[])])assert.equal(meaning.partOfSpeech,'noun');}
  for(const word of raw.targetWords)assert(lexicon.getMeanings(word).length);
 });
-test('every noun pool creates a valid board with seven targets, no more than three bonuses and a full-rack word',()=>{
- const reps=[5,6,7,8].map(n=>pools.pools.find(p=>Math.min(8,p.letters.length)===n));
- for(const pool of pools.pools){const category=Math.min(8,pool.letters.length),data={...pools,pools:reps.map(p=>Math.min(8,p.letters.length)===category?pool:p)};
-  const provider=createLevelProvider(data,lexicon,{applyLevelDifficulty:false}),id=Array.from({length:20},(_,i)=>121+i).find(i=>getRackCategory(i)===category),level=provider.getLevel(id),report=validateLevel(level,lexicon);
-  assert.equal(report.valid,true,report.errors.join('; '));assert(level.words.length>=7);assert(level.bonusWords.length<=3);
-  assert(level.words.some(p=>p.word.length===level.letters.length && signature(p.word)===signature(level.letters.join(''))));
+test('every source rack creates a valid field with eight to twelve targets, a full-rack word and at most three initial bonuses',()=>{
+ for(const pool of pools.pools){
+  const provider=createLevelProvider({...pools,pools:[pool]},lexicon,{applyLevelDifficulty:false});
+  const level=provider.getLevel(121),report=validateLevel(level,lexicon);
+  assert(report.valid,report.errors.join('; '));assert(level.words.length>=8&&level.words.length<=12);
+  assert(level.letters.length>=3);assert(level.bonusWords.length<=3);
+  assert(level.words.some(p=>p.word.length===level.letters.length&&signature(p.word)===signature(level.letters.join(''))));
  }
 });
-test('stage boundaries are 20, 50, 70, 100 and weighted decks remain deterministic at distant levels',()=>{
- assert.deepEqual([1,19,20,49,50,69,70,99,100,1000000].map(id=>maxWordLengthForLevel(id)),[8,8,9,9,10,10,11,11,12,12]);
- const provider=createLevelProvider(pools,lexicon,{seed:'noun-stage'}),reload=createLevelProvider(pools,lexicon,{seed:'noun-stage'});let largest=0;
- for(const id of [...Array.from({length:400},(_,i)=>i+1),1000000,1000001]){const level=provider.getLevel(id);assert(level.letters.length<=maxWordLengthForLevel(id));assert([...level.words.map(w=>w.word),...level.bonusWords].every(w=>w.length>=(id>80?4:id>40?3:2)));assert.equal(level.letters.length,Math.max(...level.words.map(w=>w.word.length)));assert.deepEqual(level,reload.getLevel(id));largest=Math.max(largest,level.letters.length);}
- for(let id=401;id<=6000&&largest<12;id++)if(getRackCategory(id,'noun-stage')===8)largest=Math.max(largest,provider.getLevel(id).letters.length);
- assert.equal(largest,12);
- for(const first of [1,41,81,121,1000001]){const counts={5:0,6:0,7:0,8:0};for(let id=first;id<first+20;id++)counts[Math.min(8,provider.getLevel(id).letters.length)]++;assert.deepEqual(counts,first>80?{5:0,6:16,7:3,8:1}:{5:8,6:8,7:3,8:1});}
+test('new difficulty stages respect 20,40,60,80,100 boundaries and sample every eligible rack size deterministically',()=>{
+ assert.deepEqual([1,19,20,39,40,59,60,79,80,99,100,1000000].map(id=>maxWordLengthForLevel(id)),[6,6,7,7,8,8,9,9,10,10,12,12]);
+ const provider=createLevelProvider(pools,lexicon,{seed:'noun-stage'}),reload=createLevelProvider(pools,lexicon,{seed:'noun-stage'});
+ for(const [first,last,minimum,maximum] of [[1,19,3,6],[20,39,3,7],[40,59,3,8],[60,79,3,9],[80,99,4,10],[100,130,4,12]]){
+  const seen=new Set();for(let id=first;id<=last;id++){
+   const level=provider.getLevel(id);seen.add(level.letters.length);assert(level.letters.length>=minimum&&level.letters.length<=maximum);
+   assert.deepEqual(level,reload.getLevel(id));assert(validateLevel(level,lexicon).valid);assert(level.words.length>=8&&level.words.length<=12);
+  }
+  const eligible=[...new Set(pools.pools.map(p=>p.letters.length))].filter(n=>n>=minimum&&n<=maximum);
+  assert.deepEqual([...seen].sort((a,b)=>a-b),eligible.sort((a,b)=>a-b));
+ }
+ assert.deepEqual(provider.getLevel(1000000),reload.getLevel(1000000));
 });
+test('removed words are absent from targets, bonuses and detailed entries',()=>{
+ for(const word of ['МИЛ','ТӨРӨК','АЛМАС']){assert(!lexicon.hasWord(word));assert.equal(lexicon.getEntry(word),undefined);assert(!raw.targetWords.includes(word));for(const pool of pools.pools){assert(!pool.words.some(p=>p.word===word));assert(!pool.bonusWords.includes(word));}}
+});
+
 test('replacement preserves device economy, level, gift and settings; completion and repeated words cannot farm rewards',()=>{
  const provider=createLevelProvider(pools,lexicon,{seed:'nouns-progress'});const initial=createGame(provider,lexicon).snapshot();
  const old={...initial,generatorVersion:5,currentLevel:40,maxUnlocked:40,completedRanges:[[1,39]],coins:70,settings:{sound:false,animations:true},dailyGift:{lastClaimDay:Math.floor(Date.UTC(2026,9,7)/86400000),count:1},levels:{40:{revealed:['0,0'],solved:[],bonus:[]}}};

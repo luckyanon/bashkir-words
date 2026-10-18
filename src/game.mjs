@@ -6,9 +6,9 @@ export const SAVE_VERSION = 2;
 export const INITIAL_COINS = 90;
 export const HINT_COST = 20;
 export const BONUS_REWARD = 5;
-export const LEVEL_REWARD = 30;
-export const HARDCORE_WORD_REWARD = 1;
-export const HARDCORE_LEVEL_REWARD = 500;
+export const LEVEL_REWARD = 60;
+export const HARDCORE_WORD_REWARD = 0;
+export const HARDCORE_LEVEL_REWARD = 0;
 export const DAILY_GIFT_REWARD = 100;
 const MAX_LEVEL_ID = Number.MAX_SAFE_INTEGER - 1;
 const RECENT_LEVEL_LIMIT = 64;
@@ -19,8 +19,10 @@ const validId = value => Number.isSafeInteger(Number(value)) && Number(value) >=
 const safeCount = value => Number.isSafeInteger(value) && value >= 0 ? value : 0;
 const capped = value => Math.min(Number.MAX_SAFE_INTEGER, Math.max(0, value));
 const emptyLevel = () => ({ revealed: [], solved: [], bonus: [], completed: false, rewarded: false });
-const emptyHardcore = () => ({currentLevel:1,completedCount:0,bonusCount:0,wordCount:0,rewardRevision:1,legacyCompletedCount:0,legacyBonusCount:0,rewardedWords:[],progress:emptyLevel()});
-const hardcoreEarnings=h=>h?capped(h.legacyCompletedCount*LEVEL_REWARD+(h.completedCount-h.legacyCompletedCount)*HARDCORE_LEVEL_REWARD+h.legacyBonusCount*BONUS_REWARD+(h.bonusCount-h.legacyBonusCount+h.wordCount)*HARDCORE_WORD_REWARD):0;
+const emptyHardcore = () => ({currentLevel:1,completedCount:0,bonusCount:0,wordCount:0,rewardRevision:2,rewardCoins:0,legacyEarnings:0,legacyCompletedCount:0,legacyBonusCount:0,rewardedWords:[],progress:emptyLevel()});
+const legacyHardcoreEarnings=h=>h?capped(safeCount(h.legacyCompletedCount)*30+(safeCount(h.completedCount)-safeCount(h.legacyCompletedCount))*500+safeCount(h.legacyBonusCount)*BONUS_REWARD+(safeCount(h.bonusCount)-safeCount(h.legacyBonusCount)+safeCount(h.wordCount))):0;
+const hardcoreEarnings=h=>h?capped(safeCount(h.legacyEarnings)+safeCount(h.rewardCoins)):0;
+export const hardcoreCompletionReward=(words,bonus)=>words*6+bonus*12;
 const emptyGift = () => ({ count: 0, lastClaimDay: null });
 function localDay(value) {
   const date = new Date(value);
@@ -140,8 +142,8 @@ function sanitizePrepared(source, saved, hardcoreSource) {
   const state = {
     version: SAVE_VERSION, campaignSeed: source.seed, generatorVersion: source.generatorVersion,
     currentLevel: source.firstId, maxUnlocked: source.firstId, coins: INITIAL_COINS,
-    settings: { sound: true, animations: true }, levels: {}, completedRanges: [], bonusRanges: [[], [], []], hintCount: 0,
-    economy: { baseCoins: INITIAL_COINS, completedBaseline: 0 },
+    settings: { sound: true, music: true, animations: true }, levels: {}, completedRanges: [], bonusRanges: [[], [], []], hintCount: 0,
+    economy: { baseCoins: INITIAL_COINS, completedBaseline: 0, rewardRevision:2, legacyClassicCompletions:0 },
     dailyGift: emptyGift(),
     backgrounds: {version:1,owned:['ufa'],paid:[]},
   };
@@ -150,7 +152,7 @@ function sanitizePrepared(source, saved, hardcoreSource) {
   if(source.generatorVersion>=6){state.layoutVersion=source.layoutVersion;state.legacyLayoutThroughLevel=source.legacyLayoutThroughLevel;state.datasetRevision=source.datasetRevision;state.wordRevision=source.wordRevision;state.difficultyRevision=source.difficultyRevision;}
   const valid = object(saved) && object(saved.levels) && (saved.version === SAVE_VERSION || saved.version === 1);
   if(hardcoreSource){state.mode='classic';state.hardcore=emptyHardcore();state.hardcore.datasetRevision=source.datasetRevision;state.hardcore.rulesRevision=hardcoreSource.rulesRevision;}
-  if (valid) for (const key of ['sound', 'animations', 'backgroundMotion']) if (typeof saved.settings?.[key] === 'boolean') state.settings[key] = saved.settings[key];
+  if (valid) for (const key of ['sound', 'music', 'animations', 'backgroundMotion']) if (typeof saved.settings?.[key] === 'boolean') state.settings[key] = saved.settings[key];
   if (valid && saved.version === 1) {
     const oldUnlocked = unique(saved.unlocked).map(Number).filter(id => validId(id) && id <= 32 && source.hasLevel(id));
     let max = source.firstId;
@@ -159,7 +161,7 @@ function sanitizePrepared(source, saved, hardcoreSource) {
     state.maxUnlocked = max;
     if (max > 1) state.completedRanges = [[1, max - 1]];
     state.coins = Number.isSafeInteger(saved.coins) && saved.coins >= 0 ? saved.coins : INITIAL_COINS;
-    state.economy = { baseCoins: state.coins, completedBaseline: count(state.completedRanges) };
+    state.economy = { baseCoins: state.coins, completedBaseline: count(state.completedRanges),rewardRevision:2,legacyClassicCompletions:0 };
     state.legacy = { version: 1, currentLevel: saved.currentLevel, unlocked: oldUnlocked, coins: state.coins, levels: clone(saved.levels) };
     state.migration = { fromVersion: 1, boardReset: true, currentLevel: state.currentLevel,
       message: 'Игра обновлена: номер уровня, монеты и настройки сохранены. Текущее поле создано заново, чтобы на каждом уровне было не меньше 7 слов. Старый прогресс сохранён в резервной копии.' };
@@ -192,9 +194,9 @@ function sanitizePrepared(source, saved, hardcoreSource) {
       h.currentLevel=validId(old.currentLevel)?Number(old.currentLevel):1;
       h.completedCount=Math.min(h.currentLevel,safeCount(old.completedCount));
       h.bonusCount=Math.min(h.currentLevel*3,safeCount(old.bonusCount));
-      h.legacyCompletedCount=old.rewardRevision===1?Math.min(h.completedCount,safeCount(old.legacyCompletedCount)):h.completedCount;
-      h.legacyBonusCount=old.rewardRevision===1?Math.min(h.bonusCount,safeCount(old.legacyBonusCount)):h.bonusCount;
-      h.wordCount=old.rewardRevision===1?Math.min(capped(h.currentLevel*source.bonusSlotLimit),safeCount(old.wordCount)):0;
+      h.legacyCompletedCount=old.rewardRevision>=1?Math.min(h.completedCount,safeCount(old.legacyCompletedCount)):h.completedCount;
+      h.legacyBonusCount=old.rewardRevision>=1?Math.min(h.bonusCount,safeCount(old.legacyBonusCount)):h.bonusCount;
+      h.wordCount=old.rewardRevision>=1?Math.min(capped(h.currentLevel*source.bonusSlotLimit),safeCount(old.wordCount)):0;
       const meta=hardcoreSource.getMeta(h.currentLevel);
       let progress=old.progress;
       if(old.datasetRevision!==source.datasetRevision||old.rulesRevision!==hardcoreSource.rulesRevision){
@@ -204,7 +206,8 @@ function sanitizePrepared(source, saved, hardcoreSource) {
       }
       h.progress=deriveLevel(meta,progress,old.progress?.rewarded===true&&h.completedCount>0);
       // Old solved words keep their paid status; upgrades never grant rewards again.
-      h.rewardedWords=unique(old.rewardRevision===1?old.rewardedWords:h.progress.solved).filter(word=>typeof word==='string'&&normalizeWord(word)===word).slice(0,source.bonusSlotLimit);
+      h.rewardedWords=unique(old.rewardRevision>=1?old.rewardedWords:h.progress.solved).filter(word=>typeof word==='string'&&normalizeWord(word)===word).slice(0,source.bonusSlotLimit);
+      h.rewardRevision=2;h.legacyEarnings=old.rewardRevision===2?safeCount(old.legacyEarnings):legacyHardcoreEarnings(h);h.rewardCoins=old.rewardRevision===2?Math.min(safeCount(old.rewardCoins),capped(h.currentLevel*source.bonusSlotLimit*18)):0;
       if(saved.mode==='hardcore')state.mode='hardcore';
     }
     if(saved.rackRepairVersion===1)state.rackRepairVersion=1;
@@ -237,7 +240,9 @@ function sanitizePrepared(source, saved, hardcoreSource) {
       state.levels[id] = deriveLevel(meta, saved.levels[id], contains(state.completedRanges, Number(id)));
       state.levels[id].bonus = state.levels[id].bonus.filter(word => contains(state.bonusRanges[meta.bonuses.indexOf(word)], Number(id)));
     }
-    const earned = capped(state.economy.baseCoins + (count(state.completedRanges) - state.economy.completedBaseline) * LEVEL_REWARD + state.bonusRanges.reduce((sum, ranges) => sum + count(ranges), 0) * BONUS_REWARD + state.dailyGift.count * DAILY_GIFT_REWARD + hardcoreEarnings(state.hardcore));
+    state.economy.rewardRevision=2;
+    state.economy.legacyClassicCompletions=Math.min(count(state.completedRanges)-state.economy.completedBaseline,saved.economy?.rewardRevision===2?safeCount(saved.economy.legacyClassicCompletions):count(state.completedRanges)-state.economy.completedBaseline);
+    const earned = capped(state.economy.baseCoins + (count(state.completedRanges) - state.economy.completedBaseline-state.economy.legacyClassicCompletions) * LEVEL_REWARD+state.economy.legacyClassicCompletions*30 + state.bonusRanges.reduce((sum, ranges) => sum + count(ranges), 0) * BONUS_REWARD + state.dailyGift.count * DAILY_GIFT_REWARD + hardcoreEarnings(state.hardcore));
     const backgroundSpend=BACKGROUNDS.filter(bg=>state.backgrounds.paid.includes(bg.id)).reduce((sum,bg)=>sum+bg.price,0);
     const expected = Math.max(0, earned - state.hintCount * HINT_COST - backgroundSpend);
     state.coins = Number.isSafeInteger(saved.coins) && saved.coins >= 0 ? Math.min(saved.coins, expected) : expected;
@@ -287,7 +292,7 @@ export function createGame(levelSource, lexicon, savedState = null, options = {}
     if(isHardcore()){
       const h=state.hardcore,newlySolved=progress.solved.filter(word=>!before.has(word)),paid=new Set(h.rewardedWords),unpaid=newlySolved.filter(word=>!paid.has(word));
       const reward=unpaid.length*HARDCORE_WORD_REWARD;h.wordCount=capped(h.wordCount+unpaid.length);h.rewardedWords.push(...unpaid);state.coins=capped(state.coins+reward);
-      if(progress.completed&&!progress.rewarded){h.completedCount++;state.coins=capped(state.coins+HARDCORE_LEVEL_REWARD);completionReward=HARDCORE_LEVEL_REWARD;progress.rewarded=true;}
+      if(progress.completed&&!progress.rewarded){h.completedCount++;completionReward=hardcoreCompletionReward(meta.words.length,progress.bonus.length);h.rewardCoins=capped(h.rewardCoins+completionReward);state.coins=capped(state.coins+completionReward);progress.rewarded=true;}
       return {newlySolved,completed:progress.completed,completionReward,reward};
     }
     if (progress.completed && !contains(state.completedRanges, meta.id)) {
@@ -329,8 +334,9 @@ export function createGame(levelSource, lexicon, savedState = null, options = {}
     const bonusIndex = meta.bonuses.indexOf(word);
     if (bonusIndex < 0) return { type: 'outside', word, reward: 0 };
     progress.bonus.push(word);
+    if(isHardcore())state.hardcore.bonusCount++;
     const reward = isHardcore()?HARDCORE_WORD_REWARD:contains(state.bonusRanges[bonusIndex], meta.id) ? 0 : BONUS_REWARD;
-    if (reward) { if(isHardcore())state.hardcore.bonusCount++;else {while(state.bonusRanges.length<=bonusIndex)state.bonusRanges.push([]);insertRange(state.bonusRanges[bonusIndex], meta.id);} state.coins = capped(state.coins + reward); }
+    if (reward) { if(!isHardcore()){while(state.bonusRanges.length<=bonusIndex)state.bonusRanges.push([]);insertRange(state.bonusRanges[bonusIndex], meta.id);} state.coins = capped(state.coins + reward); }
     emit();
     return { type: 'bonus', word, reward, completed: progress.completed, newlySolved: [], completionReward: 0 };
   }
@@ -339,6 +345,7 @@ export function createGame(levelSource, lexicon, savedState = null, options = {}
     return getMeta().board.filter(cell => !revealed.has(cell.key));
   }
   function hint() {
+    if(isHardcore())return {type:'unavailable',cost:0};
     const hidden = getHiddenCells();
     if (!hidden.length) return { type: 'complete', cost: HINT_COST };
     if (state.coins < HINT_COST) return { type: 'insufficient', cost: HINT_COST };
@@ -365,7 +372,7 @@ export function createGame(levelSource, lexicon, savedState = null, options = {}
     return [...rack];
   }
   function setSettings(update = {}) {
-    for (const key of ['sound', 'animations', 'backgroundMotion']) if (typeof update[key] === 'boolean') state.settings[key] = update[key];
+    for (const key of ['sound', 'music', 'animations', 'backgroundMotion']) if (typeof update[key] === 'boolean') state.settings[key] = update[key];
     if(availableBackground(update.background,state.backgrounds.owned))state.settings.background=update.background;
     emit(); return { ...state.settings };
   }

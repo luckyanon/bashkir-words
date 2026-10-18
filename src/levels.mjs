@@ -1,7 +1,7 @@
-import {maxWordLengthForLevel} from './difficulty.mjs';
+import {maxWordLengthForLevel,hardcoreMaxWordLengthForLevel,minRackLengthForLevel} from './difficulty.mjs';
 import { isAlphabetWord, normalizeWord } from './lib/dictionary.mjs';
 
-export const LEVEL_LIMITS = Object.freeze({ minRack: 3, maxRack: 12, maxRows: 12, maxCols: 12, maxWords: 13, freeMaxRows: 24, freeMaxCols: 24 });
+export const LEVEL_LIMITS = Object.freeze({ minRack: 3, maxRack: 12, maxRows: 12, maxCols: 12, maxWords: 12, freeMaxRows: 24, freeMaxCols: 24 });
 
 /** A placement is stored once; intersections are derived from its coordinates. */
 export function getWordCells(placement) {
@@ -56,7 +56,7 @@ export function validateLevel(level, service) {
   const hardcore = level.mode === 'hardcore' && level.generatorVersion === 6;
   const generated = Number(level.generatorVersion) >= 2;
   const filtered = Number(level.generatorVersion) >= 3;
-  const expectedMinWordLength = hardcore?2:Math.max(level.letters?.length === 5 ? 2 : level.letters?.length === 6 ? 3 : 4,level.difficultyRevision ? (level.id>80?4:level.id>40?3:2) : 2);
+  const expectedMinWordLength = hardcore?2:(level.difficultyRevision>=2?(level.letters?.length<=5?2:level.letters?.length===6?3:4):Math.max(level.letters?.length<=5?2:level.letters?.length===6?3:4,level.difficultyRevision?(level.id>80?4:level.id>40?3:2):2));
   const maxRows = hardcore ? 2048 : freeLayout ? LEVEL_LIMITS.freeMaxRows : LEVEL_LIMITS.maxRows;
   const maxCols = hardcore ? 2048 : freeLayout ? LEVEL_LIMITS.freeMaxCols : LEVEL_LIMITS.maxCols;
   if (!Number.isInteger(level.rows) || level.rows < 1 || level.rows > maxRows
@@ -68,17 +68,18 @@ export function validateLevel(level, service) {
     && level.letters.every(letter => typeof letter === 'string' && [...letter].length === 1
       && normalizeWord(letter) === letter && isAlphabetWord(letter));
   if (!validRack) fail('Круг должен содержать от 3 до 12 отдельных башкирских букв.');
-  if(Number(level.generatorVersion)>=5){const cap=maxWordLengthForLevel(level.id);if(level.letters?.length>cap)fail('Длина слова превышает предел сложности этого уровня.');}
+  if(Number(level.generatorVersion)>=5){const cap=hardcore?hardcoreMaxWordLengthForLevel(level.id):maxWordLengthForLevel(level.id);if(level.letters?.length>cap)fail('Длина слова превышает предел сложности этого уровня.');}
+  if(!hardcore&&level.difficultyRevision>=2&&level.letters?.length<minRackLengthForLevel(level.id))fail('Круг короче минимума для этапа.');
   if (filtered) {
-    if (!validRack || level.letters.length < 5 || level.minWordLength !== expectedMinWordLength) fail('Некорректная минимальная длина слова для уровня.');
+    if (!validRack || level.letters.length < 3 || level.minWordLength !== expectedMinWordLength) fail('Некорректная минимальная длина слова для уровня.');
     const excluded = Array.from({ length: expectedMinWordLength - 2 }, (_, index) => index + 2);
     if (JSON.stringify(level.excludedWordLengths) !== JSON.stringify(excluded)) fail('Некорректные исключённые длины слов.');
   }
   if (!Array.isArray(level.words) || level.words.length === 0 || (!hardcore && level.words.length > LEVEL_LIMITS.maxWords)) {
-    fail('Уровень должен содержать от 1 до 13 целевых слов.');
+    fail('Уровень должен содержать от 1 до 12 целевых слов.');
     return result();
   }
-  if (generated && level.words.length < 7) fail('Сгенерированный уровень должен содержать не менее 7 целевых слов.');
+  if (generated && level.words.length < (hardcore?30:8)) fail('Сгенерированный уровень должен содержать не менее 8 целевых слов.');
   if(hardcore&&level.words.length<30)fail('Хардкор должен содержать не менее 30 целевых слов.');
   if(hardcore && typeof dictionary?.findWords==='function'){
     const expected=dictionary.findWords(level.letters,{minLength:expectedMinWordLength,targetsOnly:true});

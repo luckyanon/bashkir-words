@@ -250,21 +250,15 @@ function createCompactLayout(source, seed, fallback, fallbackComponents) {
   return best;
 }
 
-const CATEGORY_DECK = Object.freeze([...Array(8).fill(5), ...Array(8).fill(6), ...Array(3).fill(7), 8]);
-const CATEGORY_COUNTS = Object.freeze({ 5: 8, 6: 8, 7: 3, 8: 1 });
 const validLevelId = id => Number.isSafeInteger(id) && id >= 1;
-export const minWordLengthForRack = rackLength => rackLength === 5 ? 2 : rackLength === 6 ? 3 : 4;
-
-/** A seeded shuffled deck gives the requested ratio and guarantees every category in twenty levels. */
-export function getRackCategory(id, seed = 'bashkir-words') {
-  if (!validLevelId(id)) throw new RangeError('Level number must be a positive safe integer');
-  const block = Math.floor((id - 1) / CATEGORY_DECK.length);
-  const offset = (id - 1) % CATEGORY_DECK.length;
-  return shuffle(CATEGORY_DECK, randomSource(`${GENERATOR_VERSION}:${String(seed)}:sizes:${block}`))[offset];
-}
-
-import {maxWordLengthForLevel} from './difficulty.mjs';
+export const minWordLengthForRack = rackLength => rackLength <= 5 ? 2 : rackLength === 6 ? 3 : 4;
+import {maxWordLengthForLevel,hardcoreMaxWordLengthForLevel,rackSizesForLevel} from './difficulty.mjs';
 export {maxWordLengthForLevel} from './difficulty.mjs';
+export function getRackCategory(id, seed='bashkir-words') {
+  if(!validLevelId(id))throw new RangeError('Level number must be a positive safe integer');
+  const sizes=rackSizesForLevel(id),block=Math.floor((id-1)/sizes.length);
+  return shuffle(sizes,randomSource(`${seed}:sizes:2:${sizes.join(',')}:${block}`))[(id-1)%sizes.length];
+}
 
 /** Only sourced nouns, with a deterministic probability deck and stage limits. */
 export function createLevelProvider(poolData, lexicon, {
@@ -276,10 +270,10 @@ export function createLevelProvider(poolData, lexicon, {
   if(generatorVersion!==6 || poolData?.schemaVersion!=='6.0.0' || poolData.partOfSpeech!=='noun' || !Number.isSafeInteger(poolData.maxWordLength) || poolData.maxWordLength<9 || poolData.maxWordLength>12 || !poolData.pools?.length)throw new TypeError('Expected noun level pools');
   const dictionary = lexicon?.dictionary || (typeof lexicon?.hasWord === 'function' ? lexicon : createDictionary(lexicon));
   const pools = poolData.pools;
-  const groups = new Map([5, 6, 7, 8].map(category => [category, []]));
+  const groups = new Map(Array.from({length:10},(_,i)=>[i+3,[]]));
   for (const [index, pool] of pools.entries()) {
-    if (!Array.isArray(pool.letters) || pool.letters.length < 5 || pool.letters.length > poolData.maxWordLength
-      || !Array.isArray(pool.words) || pool.words.length < 7 || pool.words.length > 12
+    if (!Array.isArray(pool.letters) || pool.letters.length < 3 || pool.letters.length > poolData.maxWordLength
+      || !Array.isArray(pool.words) || pool.words.length < 8 || pool.words.length > 12
       || !Array.isArray(pool.bonusWords) || pool.bonusWords.length > 3
       || pool.minWordLength !== minWordLengthForRack(pool.letters.length)
       || !pool.words.some(entry => [...entry.word].length === pool.letters.length && signature(entry.word) === pool.letters.join(''))) throw new TypeError('Invalid level pool limits or missing full-rack target');
@@ -302,10 +296,10 @@ export function createLevelProvider(poolData, lexicon, {
         }
       }
     }
-    const category = Math.min(8, pool.letters.length);
+    const category = pool.letters.length;
     groups.get(category).push(index);
   }
-  if ([...groups.values()].some(indexes => !indexes.length)) throw new TypeError('Every weighted rack category must have a source pool');
+
   const campaignSeed = String(seed);
   const cache = new Map();
   const hardcoreIndexes=hardcore?pools.map((pool,index)=>({pool,index})).filter(({pool})=>Number.isSafeInteger(pool.hardcoreWordCount)&&pool.hardcoreWordCount>=30).map(({index})=>index):[];
@@ -316,7 +310,7 @@ export function createLevelProvider(poolData, lexicon, {
     if (!hasLevel(id)) throw new RangeError('Level number must be a positive safe integer');
     if (cache.has(id)) return cache.get(id);
     if(hardcore){
-      const cap=maxWordLengthForLevel(id,poolData.maxWordLength);
+      const cap=hardcoreMaxWordLengthForLevel(id,poolData.maxWordLength);
       const indexes=hardcoreIndexes.filter(index=>pools[index].letters.length<=cap);
       if(!indexes.length)throw new TypeError('No eligible hardcore racks within the length limit');
       const cycle=Math.floor((id-1)/indexes.length),key=`${cap}:${cycle}`;
@@ -326,23 +320,16 @@ export function createLevelProvider(poolData, lexicon, {
       if(words.length<30||words.length!==pool.hardcoreWordCount)throw new TypeError('Outdated hardcore rack index');
       const layout=createHardcoreLayout(words.map(word=>({word,entryId:lexicon.getEntry(word).id})),randomSource(`${campaignSeed}:hardcore:2:${id}`));
       const bonusWords=lexicon.findWords(pool.letters,{minLength:2}).filter(word=>!lexicon.isTargetCandidate(word)).slice(0,3);
-      const level=Object.freeze({id,title:'Хардкор',mode:'hardcore',letters:Object.freeze(shuffle(pool.letters,randomSource(`${campaignSeed}:hardcore:rack:${id}`))),words:Object.freeze(layout.words.map(Object.freeze)),bonusWords:Object.freeze(bonusWords),rows:layout.rows,cols:layout.cols,layout:'free',difficultyRevision:applyLevelDifficulty?1:0,generatorVersion:GENERATOR_VERSION,layoutVersion:2,minWordLength:2,excludedWordLengths:Object.freeze([])});
+      const level=Object.freeze({id,title:'Хардкор',mode:'hardcore',letters:Object.freeze(shuffle(pool.letters,randomSource(`${campaignSeed}:hardcore:rack:${id}`))),words:Object.freeze(layout.words.map(Object.freeze)),bonusWords:Object.freeze(bonusWords),rows:layout.rows,cols:layout.cols,layout:'free',difficultyRevision:applyLevelDifficulty?2:0,generatorVersion:GENERATOR_VERSION,layoutVersion:2,minWordLength:2,excludedWordLengths:Object.freeze([])});
       cache.set(id,level);if(cache.size>8)cache.delete(cache.keys().next().value);return level;
     }
-    // Start a fresh probability deck at the first new level after a saved v2 boundary.
-    const newId = id;
-    const block = Math.floor((newId - 1) / CATEGORY_DECK.length);
-    const offset = (newId - 1) % CATEGORY_DECK.length;
-    const deck = shuffle(CATEGORY_DECK, randomSource(`${GENERATOR_VERSION}:${campaignSeed}:sizes:${block}`));
-    const minimum=applyLevelDifficulty?(id>80?4:id>40?3:2):2;
-    const category = minimum===4 && deck[offset]===5 ? 6 : deck[offset];
-    const ordinal = block * CATEGORY_COUNTS[category] + deck.slice(0, offset).filter(value => value === category).length;
-    const indexes = groups.get(category).filter(index=>pools[index].letters.length<=maxWordLengthForLevel(id,poolData.maxWordLength) && pools[index].words.filter(entry=>entry.word.length>=minimum).length>=7);
-    const cycle = Math.floor(ordinal / indexes.length);
-    const order = shuffle(indexes, randomSource(`${GENERATOR_VERSION}:${campaignSeed}:pools:${category}:${cycle}`));
-    const originalPool = pools[order[ordinal % indexes.length]];
-    const minWordLength=Math.max(minimum,originalPool.minWordLength);
-    const pool={...originalPool,minWordLength,words:originalPool.words.filter(entry=>entry.word.length>=minWordLength),bonusWords:originalPool.bonusWords.filter(word=>word.length>=minWordLength),excludedWordLengths:Array.from({length:minWordLength-2},(_,i)=>i+2)};
+    const sizes=(applyLevelDifficulty?rackSizesForLevel(id,poolData.maxWordLength):[...groups.keys()]).filter(size=>groups.get(size)?.length);
+    if(!sizes.length)throw new TypeError('No racks satisfy the stage and minimum eight targets');
+    const block=Math.floor((id-1)/sizes.length),offset=(id-1)%sizes.length;
+    const category=shuffle(sizes,randomSource(`${campaignSeed}:sizes:2:${sizes.join(',')}:${block}`))[offset];
+    const indexes=groups.get(category),cycle=Math.floor(block/indexes.length);
+    const order=shuffle(indexes,randomSource(`${campaignSeed}:pools:2:${category}:${cycle}`));
+    const pool=pools[order[block%indexes.length]];
     const random = randomSource(`${GENERATOR_VERSION}:${campaignSeed}:${id}`);
     // Keep the original random stream for rack order, independently of how cells are arranged.
     const clusters = createClusters(pool.words, random);
@@ -352,12 +339,12 @@ export function createLevelProvider(poolData, lexicon, {
     let layout = currentLayoutVersion === 1 ? legacyLayout
       : createCompactLayout(pool.words, `${GENERATOR_VERSION}:${campaignSeed}:${id}:layout:2`, legacyLayout, clusters.length);
     const additions=includeLocalWords?(lexicon.additionalWords||[]).filter(word=>word.length>=pool.minWordLength&&dictionary.canBuild(word,pool.letters)&&!pool.words.some(w=>w.word===word)):[];
-    if(additions.length){const words=[...pool.words,...additions.map(word=>({word,entryId:lexicon.getEntry(word).id}))];layout=createCompactLayout(words,`${GENERATOR_VERSION}:${campaignSeed}:${id}:local-words:1`,packClusters(createCompactClusters(words,randomSource(`${campaignSeed}:${id}:local-fallback`)),randomSource(`${campaignSeed}:${id}:local-pack`)),words.length);}
+    if(additions.length){const added=additions.map(word=>({word,entryId:lexicon.getEntry(word).id}));const words=[...pool.words.filter(entry=>entry.word.length===pool.letters.length),...added,...pool.words.filter(entry=>entry.word.length!==pool.letters.length)].filter((entry,index,all)=>all.findIndex(other=>other.word===entry.word)===index).slice(0,12);layout=createCompactLayout(words,`${GENERATOR_VERSION}:${campaignSeed}:${id}:local-words:1`,packClusters(createCompactClusters(words,randomSource(`${campaignSeed}:${id}:local-fallback`)),randomSource(`${campaignSeed}:${id}:local-pack`)),words.length);}
     const level = Object.freeze({
       id, title: 'Башкирские слова', letters: Object.freeze(letters),
       words: Object.freeze(layout.words.map(word => Object.freeze(word))),
       bonusWords: Object.freeze([...pool.bonusWords]), rows: layout.rows, cols: layout.cols,
-      layout: 'free', difficultyRevision:applyLevelDifficulty?1:0, generatorVersion: GENERATOR_VERSION, layoutVersion: currentLayoutVersion, minWordLength: pool.minWordLength,
+      layout: 'free', difficultyRevision:applyLevelDifficulty?2:0, generatorVersion: GENERATOR_VERSION, layoutVersion: currentLayoutVersion, minWordLength: pool.minWordLength,
       excludedWordLengths: Object.freeze([...pool.excludedWordLengths]),
     });
     cache.set(id, level);
@@ -365,9 +352,9 @@ export function createLevelProvider(poolData, lexicon, {
     return level;
   }
   return Object.freeze({ getLevel, hasLevel, size: Infinity, poolCount: pools.length,
-    mode:hardcore?'hardcore':'classic',rulesRevision:hardcore?2:0,seed: campaignSeed, datasetRevision:poolData.datasetRevision, generatorVersion: GENERATOR_VERSION, layoutVersion, legacyLayoutThroughLevel,wordRevision:includeLocalWords?1:0,difficultyRevision:applyLevelDifficulty?1:0,
+    mode:hardcore?'hardcore':'classic',rulesRevision:hardcore?2:0,seed: campaignSeed, datasetRevision:poolData.datasetRevision, generatorVersion: GENERATOR_VERSION, layoutVersion, legacyLayoutThroughLevel,wordRevision:includeLocalWords?1:0,difficultyRevision:applyLevelDifficulty?2:0,
     legacyThroughLevel:0, legacyV3ThroughLevel:0, maxWordLength:poolData.maxWordLength,
-    probabilityDeckSize: CATEGORY_DECK.length });
+    probabilityDeckSize: 10 });
 }
 
 

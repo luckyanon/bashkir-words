@@ -55,8 +55,10 @@ public class BackgroundMotionPlugin extends Plugin implements SensorEventListene
             gamma = Math.toDegrees(Math.atan2(-gravity[0], Math.hypot(gravity[1], gravity[2])));
         } else {
             SensorManager.getRotationMatrixFromVector(rotation, event.values);
-            SensorManager.getOrientation(rotation, angles);
-            beta = -Math.toDegrees(angles[1]); gamma = -Math.toDegrees(angles[2]);
+            // Gravity in device coordinates stays continuous when a phone is held upright.
+            // Euler pitch/roll swap axes near 90 degrees and can pin the wallpaper at an edge.
+            beta = Math.toDegrees(Math.atan2(rotation[7], rotation[8]));
+            gamma = Math.toDegrees(Math.atan2(-rotation[6], Math.hypot(rotation[7], rotation[8])));
         }
         JSObject value = new JSObject();value.put("beta", beta);value.put("gamma", gamma);
         notifyListeners("orientation", value);

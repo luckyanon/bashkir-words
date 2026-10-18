@@ -4,6 +4,7 @@ import { Preferences } from '@capacitor/preferences';
 import { Haptics } from '@capacitor/haptics';
 window.Capacitor = Capacitor;
 const BackgroundMotion=registerPlugin('BackgroundMotion');
-window.BashkirNativePlugins = { App, Preferences, Haptics, BackgroundMotion };
+const DailyGift=registerPlugin('DailyGift');
+window.BashkirNativePlugins = { App, Preferences, Haptics, BackgroundMotion, DailyGift };
 await import('./main.mjs');
 

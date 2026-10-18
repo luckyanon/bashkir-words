@@ -15,6 +15,22 @@ npm start
 
 ## Android
 
+## iPhone
+
+Добавлена оболочка Swift / WKWebView для iOS 17 и новее с автономной игрой,
+сохранением прогресса, тактильным откликом и движением фона. Инструкции по
+сборке и установке через Windows + xtool: [IOS.md](IOS.md).
+
+```sh
+npm ci
+npm run build:ios
+```
+
+Workflow **iPhone build** собирает неподписанный IPA и проверяет запуск в
+симуляторе. Для установки IPA требуется локальная подпись Apple.
+
+## Android
+
 Требуются JDK 21 и Android SDK 36. Поддерживается Android 7.0 и новее.
 
 ```sh

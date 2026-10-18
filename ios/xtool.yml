@@ -1,0 +1,7 @@
+version: 1
+bundleID: ru.bashkir.words
+infoPath: Info.plist
+iconPath: Resources/AppIcon.png
+resources:
+  - Web
+  - PrivacyInfo.xcprivacy

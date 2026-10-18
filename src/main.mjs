@@ -298,7 +298,7 @@ async function boot(){
     installGame(provider,wordsMigrated.saved);
     if(migrated.changed || wordsMigrated.changed || saved && saved.layoutVersion!==2)await storage.save(game.snapshot());
     render();if(saved?.version===1){await storage.save(game.snapshot());toast(t.progressUpdated);}else if([2,3].includes(saved?.generatorVersion))await storage.save(game.snapshot());
-    if(!window.Capacitor?.isNativePlatform?.()&&'serviceWorker' in navigator&&location.protocol!=='file:')navigator.serviceWorker.register('./sw.js').catch(()=>{});
+    if(!window.BashkirNativePlugins&&!window.Capacitor?.isNativePlatform?.()&&'serviceWorker' in navigator&&location.protocol!=='file:')navigator.serviceWorker.register('./sw.js').catch(()=>{});
   }catch(error){console.error(error);app.setAttribute('aria-busy','false');app.innerHTML=`<div class="loading"><h1>${t.title}</h1><p>${t.loadError}</p><p class="menu-note">${t.loadErrorHelp}</p><button class="primary" onclick="location.reload()">${t.retry}</button></div>`;}
 }
 boot();

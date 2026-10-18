@@ -13,8 +13,6 @@ npm start
 
 Откройте http://127.0.0.1:5173/. Для автономной веб-сборки выполните `npm run build`, затем `npm run preview`.
 
-## Android
-
 ## iPhone
 
 Добавлена оболочка Swift / WKWebView для iOS 17 и новее с автономной игрой,

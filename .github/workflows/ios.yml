@@ -1,0 +1,50 @@
+name: iPhone build
+on:
+  workflow_dispatch:
+  push:
+    branches: [codex/iphone-app]
+  pull_request:
+    paths: ['ios/**', 'src/**', 'public/**', 'scripts/**', 'package*.json', '.github/workflows/ios.yml']
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run build:ios
+      - name: Compile iPhone binary and package unsigned IPA
+        run: bash scripts/package-ios.sh iphoneos
+      - name: Compile simulator app
+        run: bash scripts/package-ios.sh iphonesimulator
+      - name: Launch on iPhone simulator
+        run: |
+          device=$(xcrun simctl list devices available -j | python3 -c 'import json,sys; d=json.load(sys.stdin); print(next(x["udid"] for group in d["devices"].values() for x in group if x["name"].startswith("iPhone")))')
+          xcrun simctl boot "$device"
+          xcrun simctl bootstatus "$device" -b
+          xcrun simctl install "$device" ios/build/iphonesimulator/Payload/BashkirWords.app
+          xcrun simctl launch "$device" ru.bashkir.words --smoke-test
+          container=$(xcrun simctl get_app_container "$device" ru.bashkir.words data)
+          for i in {1..45}; do
+            test -f "$container/Documents/ios-smoke.json" && break
+            sleep 2
+          done
+          xcrun simctl io "$device" screenshot ios/build/iphone-preview.png
+          cp "$container/Documents/ios-smoke.json" ios/build/ios-smoke.json
+          python3 -c 'import json; r=json.load(open("ios/build/ios-smoke.json")); print(r); assert r["status"] == "passed", r'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: BashkirWords-iPhone
+          path: |
+            ios/build/iphoneos/BashkirWords-unsigned.ipa
+            ios/build/iphone-preview.png
+            ios/build/ios-smoke.json
+          if-no-files-found: error

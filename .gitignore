@@ -2,6 +2,13 @@
 node_modules/
 dist/
 dist-android/
+ios/Web/
+ios/Resources/AppIcon.png
+ios/.build/
+ios/.swiftpm/
+ios/xtool/
+ios/build/
+*.ipa
 .sites-runtime/
 .openai/
 

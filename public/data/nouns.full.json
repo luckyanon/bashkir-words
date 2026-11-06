@@ -6,7 +6,7 @@
   "partOfSpeech": "noun",
   "selectionPolicy": "Only source-marked noun readings; other parts of speech and their definitions are excluded. Homographs are retained only in the noun reading. Existing single-word/common-noun/modern-spelling filters retained. Academic-only OCR candidates are quarantined.",
   "reuseNotice": "Includes Belemle-derived data with unspecified reuse terms; see ATTRIBUTION.md.",
-  "entryCount": 6701,
+  "entryCount": 6689,
   "entries": [
     {
       "id": "ba-cb5c092c99c8",
@@ -1364,54 +1364,6 @@
         "type": "source_marked_noun",
         "linguistReviewed": false,
         "nounSourceCount": 2
-      }
-    },
-    {
-      "id": "ba-d7d1a93817f0",
-      "word": "агропром",
-      "display": "АГРОПРОМ",
-      "length": 8,
-      "signature": "АГМООПРР",
-      "letterCounts": {
-        "А": 1,
-        "Г": 1,
-        "Р": 2,
-        "О": 2,
-        "П": 1,
-        "М": 1
-      },
-      "partsOfSpeech": [
-        "noun"
-      ],
-      "definitions": {
-        "ru": [],
-        "en": []
-      },
-      "sources": [
-        {
-          "sourceId": "belemle-orthography",
-          "url": "https://belemle.ru/orfograficheskiy-slovar/1383/",
-          "originalHeadwords": [
-            "агропром"
-          ],
-          "recordLines": [
-            149
-          ],
-          "recordIds": [
-            1383
-          ],
-          "partOfSpeech": "noun"
-        }
-      ],
-      "eligibility": {
-        "game": true,
-        "target": false,
-        "starter": false
-      },
-      "quality": {
-        "type": "source_marked_noun",
-        "linguistReviewed": false,
-        "nounSourceCount": 1
       }
     },
     {
@@ -14145,75 +14097,6 @@
         "linguistReviewed": false,
         "nounSourceCount": 2,
         "translationSourceCount": 2
-      }
-    },
-    {
-      "id": "ba-c08a676746cd",
-      "word": "ана",
-      "display": "АНА",
-      "length": 3,
-      "signature": "ААН",
-      "letterCounts": {
-        "А": 2,
-        "Н": 1
-      },
-      "partsOfSpeech": [
-        "noun"
-      ],
-      "definitions": {
-        "ru": [
-          {
-            "text": "вон, вон там",
-            "partOfSpeech": "noun",
-            "sourceId": "tarat-ba-ru",
-            "url": "https://tarat.ru/ru/targema/search/ba/ru/%D0%B0%D0%BD%D0%B0",
-            "senseId": "ba-ru-added-cd1815e731b74fdb",
-            "translationAddedOn": "2026-10-08",
-            "validation": "Source-based extraction; not a completed linguistic review"
-          },
-          {
-            "text": "вот, вон",
-            "partOfSpeech": "noun",
-            "sourceId": "tarat-ba-ru",
-            "url": "https://tarat.ru/ru/targema/search/ba/ru/%D0%B0%D0%BD%D0%B0",
-            "senseId": "ba-ru-added-014895c32b05a475",
-            "translationAddedOn": "2026-10-08",
-            "validation": "Source-based extraction; not a completed linguistic review"
-          }
-        ],
-        "en": []
-      },
-      "sources": [
-        {
-          "sourceId": "belemle-orthography",
-          "url": "https://belemle.ru/orfograficheskiy-slovar/1990/",
-          "originalHeadwords": [
-            "ана"
-          ],
-          "recordLines": [
-            757
-          ],
-          "recordIds": [
-            1991
-          ],
-          "partOfSpeech": "noun"
-        },
-        {
-          "sourceId": "tarat-ba-ru",
-          "translationOnly": true,
-          "url": "https://tarat.ru/ru/targema/search/ba/ru/%D0%B0%D0%BD%D0%B0"
-        }
-      ],
-      "eligibility": {
-        "game": true,
-        "target": true,
-        "starter": false
-      },
-      "quality": {
-        "type": "source_marked_noun",
-        "linguistReviewed": false,
-        "nounSourceCount": 1,
-        "translationSourceCount": 1
       }
     },
     {
@@ -72680,72 +72563,6 @@
       }
     },
     {
-      "id": "ba-941974e2cc7b",
-      "word": "гер",
-      "display": "ГЕР",
-      "length": 3,
-      "signature": "ГЕР",
-      "letterCounts": {
-        "Г": 1,
-        "Е": 1,
-        "Р": 1
-      },
-      "partsOfSpeech": [
-        "noun"
-      ],
-      "definitions": {
-        "ru": [
-          {
-            "text": "гиря",
-            "partOfSpeech": "noun",
-            "sourceId": "auto-ba-ru-2011",
-            "pdfPage": 142,
-            "senseId": "ba-ru-added-dbb609e7275be3cd",
-            "translationAddedOn": "2026-10-08",
-            "validation": "Source-based extraction; not a completed linguistic review"
-          }
-        ],
-        "en": []
-      },
-      "sources": [
-        {
-          "sourceId": "belemle-orthography",
-          "url": "https://belemle.ru/orfograficheskiy-slovar/5181/",
-          "originalHeadwords": [
-            "гер"
-          ],
-          "recordLines": [
-            3947
-          ],
-          "recordIds": [
-            5181
-          ],
-          "partOfSpeech": "noun"
-        },
-        {
-          "sourceId": "auto-ba-ru-2011",
-          "translationOnly": true,
-          "url": "https://kitaptar.bashkort.org/storage/files/%D0%91%D0%B0%D1%88%D2%A1%D0%BE%D1%80%D1%82%D1%81%D0%B0-%D1%80%D1%83%D1%81%D1%81%D0%B0%20%D0%B0%D0%B2%D1%82%D0%BE%D2%BB%D1%83%D2%99%D0%BB%D0%B5%D0%BA.pdf",
-          "relativePath": "../bashkir-translation-sources/auto-ba-ru.pdf",
-          "title": "Башкирско-русский автословарь, Ахмедьянов Р. А., Ахмедьянова И. Р., 2011",
-          "pdfPages": [
-            142
-          ]
-        }
-      ],
-      "eligibility": {
-        "game": true,
-        "target": true,
-        "starter": false
-      },
-      "quality": {
-        "type": "source_marked_noun",
-        "linguistReviewed": false,
-        "nounSourceCount": 1,
-        "translationSourceCount": 1
-      }
-    },
-    {
       "id": "ba-64489d428653",
       "word": "герман",
       "display": "ГЕРМАН",
@@ -72850,55 +72667,6 @@
       ],
       "eligibility": {
         "game": false,
-        "target": false,
-        "starter": false
-      },
-      "quality": {
-        "type": "source_marked_noun",
-        "linguistReviewed": false,
-        "nounSourceCount": 1
-      }
-    },
-    {
-      "id": "ba-b645316b9bc5",
-      "word": "гестапо",
-      "display": "ГЕСТАПО",
-      "length": 7,
-      "signature": "АГЕОПСТ",
-      "letterCounts": {
-        "Г": 1,
-        "Е": 1,
-        "С": 1,
-        "Т": 1,
-        "А": 1,
-        "П": 1,
-        "О": 1
-      },
-      "partsOfSpeech": [
-        "noun"
-      ],
-      "definitions": {
-        "ru": [],
-        "en": []
-      },
-      "sources": [
-        {
-          "sourceId": "belemle-orthography",
-          "url": "https://belemle.ru/orfograficheskiy-slovar/5203/",
-          "originalHeadwords": [
-            "гестапо"
-          ],
-          "recordLines": [
-            3969
-          ],
-          "recordIds": [
-            5203
-          ],
-          "partOfSpeech": "noun"
-        }
-      ],
-      "eligibility": {
-        "game": true,
         "target": false,
         "starter": false
       },
@@ -140996,67 +140764,6 @@
         "type": "source_marked_noun",
         "linguistReviewed": false,
         "nounSourceCount": 1
-      }
-    },
-    {
-      "id": "ba-c08fb476eca4",
-      "word": "кг",
-      "display": "КГ",
-      "length": 2,
-      "signature": "ГК",
-      "letterCounts": {
-        "К": 1,
-        "Г": 1
-      },
-      "partsOfSpeech": [
-        "noun"
-      ],
-      "definitions": {
-        "ru": [
-          {
-            "text": "килограмм (сокращение)",
-            "partOfSpeech": "noun",
-            "sourceId": "kaikki-en",
-            "sourceSenseId": "en-кг-ba-noun--QXyaI7I",
-            "sourceLanguage": "en",
-            "translationMethod": "editorial_from_saved_english_gloss",
-            "senseId": "ba-ru-added-585e5173c5142697",
-            "translationAddedOn": "2026-10-08",
-            "validation": "Source-based extraction; not a completed linguistic review"
-          }
-        ],
-        "en": [
-          {
-            "text": "kg, kilogram",
-            "partOfSpeech": "noun",
-            "sourceId": "kaikki-en",
-            "senseId": "en-кг-ba-noun--QXyaI7I"
-          }
-        ]
-      },
-      "sources": [
-        {
-          "sourceId": "kaikki-en",
-          "url": "https://en.wiktionary.org/wiki/%D0%BA%D0%B3#Bashkir",
-          "originalHeadwords": [
-            "кг"
-          ],
-          "recordLines": [
-            161
-          ],
-          "partOfSpeech": "noun"
-        }
-      ],
-      "eligibility": {
-        "game": true,
-        "target": true,
-        "starter": false
-      },
-      "quality": {
-        "type": "source_marked_noun",
-        "linguistReviewed": false,
-        "nounSourceCount": 1,
-        "translationSourceCount": 1
       }
     },
     {
@@ -256450,88 +256157,6 @@
       }
     },
     {
-      "id": "ba-8c1bd4a70f7d",
-      "word": "мәк",
-      "display": "МӘК",
-      "length": 3,
-      "signature": "КМӘ",
-      "letterCounts": {
-        "М": 1,
-        "Ә": 1,
-        "К": 1
-      },
-      "partsOfSpeech": [
-        "noun"
-      ],
-      "definitions": {
-        "ru": [
-          {
-            "text": "мак",
-            "partOfSpeech": "noun",
-            "sourceId": "academic-06",
-            "pdfPage": 467,
-            "senseId": "ba-ru-added-90daf79a00399047",
-            "translationAddedOn": "2026-10-08",
-            "validation": "Source-based extraction; not a completed linguistic review",
-            "supportingSources": [
-              {
-                "sourceId": "auto-ba-ru-2011",
-                "pdfPage": 388
-              }
-            ]
-          }
-        ],
-        "en": []
-      },
-      "sources": [
-        {
-          "sourceId": "belemle-orthography",
-          "url": "https://belemle.ru/orfograficheskiy-slovar/14849/",
-          "originalHeadwords": [
-            "мәк"
-          ],
-          "recordLines": [
-            13615
-          ],
-          "recordIds": [
-            14849
-          ],
-          "partOfSpeech": "noun"
-        },
-        {
-          "sourceId": "academic-06",
-          "relativeOriginal": "../bashkir-dictionaries/sources/academic/volume-06.pdf",
-          "pdfPages": [
-            467
-          ],
-          "partOfSpeech": "noun",
-          "nounMarker": "и.",
-          "evidence": "Explicit noun marker plus exact headword agreement with a digital dictionary"
-        },
-        {
-          "sourceId": "auto-ba-ru-2011",
-          "translationOnly": true,
-          "url": "https://kitaptar.bashkort.org/storage/files/%D0%91%D0%B0%D1%88%D2%A1%D0%BE%D1%80%D1%82%D1%81%D0%B0-%D1%80%D1%83%D1%81%D1%81%D0%B0%20%D0%B0%D0%B2%D1%82%D0%BE%D2%BB%D1%83%D2%99%D0%BB%D0%B5%D0%BA.pdf",
-          "relativePath": "../bashkir-translation-sources/auto-ba-ru.pdf",
-          "title": "Башкирско-русский автословарь, Ахмедьянов Р. А., Ахмедьянова И. Р., 2011",
-          "pdfPages": [
-            388
-          ]
-        }
-      ],
-      "eligibility": {
-        "game": true,
-        "target": true,
-        "starter": false
-      },
-      "quality": {
-        "type": "source_marked_noun",
-        "linguistReviewed": false,
-        "nounSourceCount": 2,
-        "translationSourceCount": 2
-      }
-    },
-    {
       "id": "ba-c1d82561b9a3",
       "word": "мәке",
       "display": "МӘКЕ",
@@ -287983,71 +287608,6 @@
       }
     },
     {
-      "id": "ba-9f89f2a49368",
-      "word": "промтауар",
-      "display": "ПРОМТАУАР",
-      "length": 9,
-      "signature": "ААМОПРРТУ",
-      "letterCounts": {
-        "П": 1,
-        "Р": 2,
-        "О": 1,
-        "М": 1,
-        "Т": 1,
-        "А": 2,
-        "У": 1
-      },
-      "partsOfSpeech": [
-        "noun"
-      ],
-      "definitions": {
-        "ru": [
-          {
-            "text": "промтовары",
-            "partOfSpeech": "noun",
-            "sourceId": "tarat-ba-ru",
-            "url": "https://tarat.ru/ru/targema/search/ba/ru/%D0%BF%D1%80%D0%BE%D0%BC%D1%82%D0%B0%D1%83%D0%B0%D1%80",
-            "senseId": "ba-ru-added-6d47f880968a6169",
-            "translationAddedOn": "2026-10-08",
-            "validation": "Source-based extraction; not a completed linguistic review"
-          }
-        ],
-        "en": []
-      },
-      "sources": [
-        {
-          "sourceId": "belemle-orthography",
-          "url": "https://belemle.ru/orfograficheskiy-slovar/16788/",
-          "originalHeadwords": [
-            "промтауар"
-          ],
-          "recordLines": [
-            15554
-          ],
-          "recordIds": [
-            16788
-          ],
-          "partOfSpeech": "noun"
-        },
-        {
-          "sourceId": "tarat-ba-ru",
-          "translationOnly": true,
-          "url": "https://tarat.ru/ru/targema/search/ba/ru/%D0%BF%D1%80%D0%BE%D0%BC%D1%82%D0%B0%D1%83%D0%B0%D1%80"
-        }
-      ],
-      "eligibility": {
-        "game": false,
-        "target": false,
-        "starter": false
-      },
-      "quality": {
-        "type": "source_marked_noun",
-        "linguistReviewed": false,
-        "nounSourceCount": 1,
-        "translationSourceCount": 1
-      }
-    },
-    {
       "id": "ba-dee6df5c90db",
       "word": "промысла",
       "display": "ПРОМЫСЛА",
@@ -289174,102 +288734,6 @@
         "linguistReviewed": false,
         "nounSourceCount": 1,
         "translationSourceCount": 1
-      }
-    },
-    {
-      "id": "ba-3417dfc8b8e7",
-      "word": "районо",
-      "display": "РАЙОНО",
-      "length": 6,
-      "signature": "АЙНООР",
-      "letterCounts": {
-        "Р": 1,
-        "А": 1,
-        "Й": 1,
-        "О": 2,
-        "Н": 1
-      },
-      "partsOfSpeech": [
-        "noun"
-      ],
-      "definitions": {
-        "ru": [],
-        "en": []
-      },
-      "sources": [
-        {
-          "sourceId": "belemle-orthography",
-          "url": "https://belemle.ru/orfograficheskiy-slovar/16958/",
-          "originalHeadwords": [
-            "районо"
-          ],
-          "recordLines": [
-            15724
-          ],
-          "recordIds": [
-            16958
-          ],
-          "partOfSpeech": "noun"
-        }
-      ],
-      "eligibility": {
-        "game": true,
-        "target": false,
-        "starter": false
-      },
-      "quality": {
-        "type": "source_marked_noun",
-        "linguistReviewed": false,
-        "nounSourceCount": 1
-      }
-    },
-    {
-      "id": "ba-5cb8251b0ba8",
-      "word": "райсобес",
-      "display": "РАЙСОБЕС",
-      "length": 8,
-      "signature": "АБЕЙОРСС",
-      "letterCounts": {
-        "Р": 1,
-        "А": 1,
-        "Й": 1,
-        "С": 2,
-        "О": 1,
-        "Б": 1,
-        "Е": 1
-      },
-      "partsOfSpeech": [
-        "noun"
-      ],
-      "definitions": {
-        "ru": [],
-        "en": []
-      },
-      "sources": [
-        {
-          "sourceId": "belemle-orthography",
-          "url": "https://belemle.ru/orfograficheskiy-slovar/16960/",
-          "originalHeadwords": [
-            "райсобес"
-          ],
-          "recordLines": [
-            15726
-          ],
-          "recordIds": [
-            16960
-          ],
-          "partOfSpeech": "noun"
-        }
-      ],
-      "eligibility": {
-        "game": true,
-        "target": false,
-        "starter": false
-      },
-      "quality": {
-        "type": "source_marked_noun",
-        "linguistReviewed": false,
-        "nounSourceCount": 1
       }
     },
     {
@@ -297645,53 +297109,6 @@
         "type": "source_marked_noun",
         "linguistReviewed": false,
         "nounSourceCount": 3
-      }
-    },
-    {
-      "id": "ba-0b99914f7278",
-      "word": "самбо",
-      "display": "САМБО",
-      "length": 5,
-      "signature": "АБМОС",
-      "letterCounts": {
-        "С": 1,
-        "А": 1,
-        "М": 1,
-        "Б": 1,
-        "О": 1
-      },
-      "partsOfSpeech": [
-        "noun"
-      ],
-      "definitions": {
-        "ru": [],
-        "en": []
-      },
-      "sources": [
-        {
-          "sourceId": "belemle-orthography",
-          "url": "https://belemle.ru/orfograficheskiy-slovar/17601/",
-          "originalHeadwords": [
-            "самбо"
-          ],
-          "recordLines": [
-            16367
-          ],
-          "recordIds": [
-            17601
-          ],
-          "partOfSpeech": "noun"
-        }
-      ],
-      "eligibility": {
-        "game": true,
-        "target": false,
-        "starter": false
-      },
-      "quality": {
-        "type": "source_marked_noun",
-        "linguistReviewed": false,
-        "nounSourceCount": 1
       }
     },
     {
@@ -344952,88 +344369,6 @@
         "type": "source_marked_noun",
         "linguistReviewed": false,
         "nounSourceCount": 4
-      }
-    },
-    {
-      "id": "ba-558cea2abc2d",
-      "word": "тас",
-      "display": "ТАС",
-      "length": 3,
-      "signature": "АСТ",
-      "letterCounts": {
-        "Т": 1,
-        "А": 1,
-        "С": 1
-      },
-      "partsOfSpeech": [
-        "noun"
-      ],
-      "definitions": {
-        "ru": [
-          {
-            "text": "таз",
-            "partOfSpeech": "noun",
-            "sourceId": "academic-08",
-            "pdfPage": 183,
-            "senseId": "ba-ru-added-e4e62cd4fdc35106",
-            "translationAddedOn": "2026-10-08",
-            "validation": "Source-based extraction; not a completed linguistic review",
-            "supportingSources": [
-              {
-                "sourceId": "auto-ba-ru-2011",
-                "pdfPage": 489
-              }
-            ]
-          }
-        ],
-        "en": []
-      },
-      "sources": [
-        {
-          "sourceId": "belemle-orthography",
-          "url": "https://belemle.ru/orfograficheskiy-slovar/20048/",
-          "originalHeadwords": [
-            "тас"
-          ],
-          "recordLines": [
-            18814
-          ],
-          "recordIds": [
-            20048
-          ],
-          "partOfSpeech": "noun"
-        },
-        {
-          "sourceId": "academic-08",
-          "relativeOriginal": "../bashkir-dictionaries/sources/academic/volume-08.pdf",
-          "pdfPages": [
-            183
-          ],
-          "partOfSpeech": "noun",
-          "nounMarker": "и.",
-          "evidence": "Explicit noun marker plus exact headword agreement with a digital dictionary"
-        },
-        {
-          "sourceId": "auto-ba-ru-2011",
-          "translationOnly": true,
-          "url": "https://kitaptar.bashkort.org/storage/files/%D0%91%D0%B0%D1%88%D2%A1%D0%BE%D1%80%D1%82%D1%81%D0%B0-%D1%80%D1%83%D1%81%D1%81%D0%B0%20%D0%B0%D0%B2%D1%82%D0%BE%D2%BB%D1%83%D2%99%D0%BB%D0%B5%D0%BA.pdf",
-          "relativePath": "../bashkir-translation-sources/auto-ba-ru.pdf",
-          "title": "Башкирско-русский автословарь, Ахмедьянов Р. А., Ахмедьянова И. Р., 2011",
-          "pdfPages": [
-            489
-          ]
-        }
-      ],
-      "eligibility": {
-        "game": true,
-        "target": true,
-        "starter": false
-      },
-      "quality": {
-        "type": "source_marked_noun",
-        "linguistReviewed": false,
-        "nounSourceCount": 2,
-        "translationSourceCount": 2
       }
     },
     {
@@ -399236,53 +398571,6 @@
         "linguistReviewed": false,
         "nounSourceCount": 2,
         "translationSourceCount": 1
-      }
-    },
-    {
-      "id": "ba-bfa580911ef9",
-      "word": "унтер",
-      "display": "УНТЕР",
-      "length": 5,
-      "signature": "ЕНРТУ",
-      "letterCounts": {
-        "У": 1,
-        "Н": 1,
-        "Т": 1,
-        "Е": 1,
-        "Р": 1
-      },
-      "partsOfSpeech": [
-        "noun"
-      ],
-      "definitions": {
-        "ru": [],
-        "en": []
-      },
-      "sources": [
-        {
-          "sourceId": "belemle-orthography",
-          "url": "https://belemle.ru/orfograficheskiy-slovar/22616/",
-          "originalHeadwords": [
-            "унтер"
-          ],
-          "recordLines": [
-            21382
-          ],
-          "recordIds": [
-            22616
-          ],
-          "partOfSpeech": "noun"
-        }
-      ],
-      "eligibility": {
-        "game": true,
-        "target": false,
-        "starter": false
-      },
-      "quality": {
-        "type": "source_marked_noun",
-        "linguistReviewed": false,
-        "nounSourceCount": 1
       }
     },
     {
@@ -465402,93 +464690,6 @@
       }
     },
     {
-      "id": "ba-38ef2ff2449d",
-      "word": "шатун",
-      "display": "ШАТУН",
-      "length": 5,
-      "signature": "АНТУШ",
-      "letterCounts": {
-        "Ш": 1,
-        "А": 1,
-        "Т": 1,
-        "У": 1,
-        "Н": 1
-      },
-      "partsOfSpeech": [
-        "noun"
-      ],
-      "definitions": {
-        "ru": [
-          {
-            "text": "болезнь лошадей",
-            "partOfSpeech": "noun",
-            "sourceId": "academic-09",
-            "pdfPage": 788,
-            "senseId": "ba-ru-added-d46da8deb0577eb0",
-            "translationAddedOn": "2026-10-08",
-            "validation": "Source-based extraction; not a completed linguistic review"
-          },
-          {
-            "text": "шатун",
-            "partOfSpeech": "noun",
-            "sourceId": "auto-ba-ru-2011",
-            "pdfPage": 668,
-            "senseId": "ba-ru-added-4bdf55cee7ab0d26",
-            "translationAddedOn": "2026-10-08",
-            "validation": "Source-based extraction; not a completed linguistic review"
-          }
-        ],
-        "en": []
-      },
-      "sources": [
-        {
-          "sourceId": "belemle-orthography",
-          "url": "https://belemle.ru/orfograficheskiy-slovar/25658/",
-          "originalHeadwords": [
-            "шатун"
-          ],
-          "recordLines": [
-            24423
-          ],
-          "recordIds": [
-            25658
-          ],
-          "partOfSpeech": "noun"
-        },
-        {
-          "sourceId": "academic-09",
-          "relativeOriginal": "../bashkir-dictionaries/sources/academic/volume-09.pdf",
-          "pdfPages": [
-            788
-          ],
-          "partOfSpeech": "noun",
-          "nounMarker": "и.",
-          "evidence": "Explicit noun marker plus exact headword agreement with a digital dictionary"
-        },
-        {
-          "sourceId": "auto-ba-ru-2011",
-          "translationOnly": true,
-          "url": "https://kitaptar.bashkort.org/storage/files/%D0%91%D0%B0%D1%88%D2%A1%D0%BE%D1%80%D1%82%D1%81%D0%B0-%D1%80%D1%83%D1%81%D1%81%D0%B0%20%D0%B0%D0%B2%D1%82%D0%BE%D2%BB%D1%83%D2%99%D0%BB%D0%B5%D0%BA.pdf",
-          "relativePath": "../bashkir-translation-sources/auto-ba-ru.pdf",
-          "title": "Башкирско-русский автословарь, Ахмедьянов Р. А., Ахмедьянова И. Р., 2011",
-          "pdfPages": [
-            668
-          ]
-        }
-      ],
-      "eligibility": {
-        "game": true,
-        "target": true,
-        "starter": false
-      },
-      "quality": {
-        "type": "source_marked_noun",
-        "linguistReviewed": false,
-        "nounSourceCount": 2,
-        "translationSourceCount": 2
-      }
-    },
-    {
       "id": "ba-8212ba313a05",
       "word": "шатырлаҡ",
       "display": "ШАТЫРЛАҠ",
@@ -512774,6 +511975,57 @@
         "nounSourceCount": 2,
         "translationSourceCount": 1
       }
+    },
+    {
+      "id": "ba-editorial-qaysy",
+      "word": "ҡайсы",
+      "display": "ҠАЙСЫ",
+      "length": 5,
+      "signature": "АЙҠСЫ",
+      "letterCounts": {
+        "Ҡ": 1,
+        "А": 1,
+        "Й": 1,
+        "С": 1,
+        "Ы": 1
+      },
+      "partsOfSpeech": [
+        "noun"
+      ],
+      "definitions": {
+        "ru": [
+          {
+            "text": "ножницы",
+            "partOfSpeech": "noun",
+            "sourceId": "wiktionary-ru-editorial-2026-11-06"
+          }
+        ],
+        "en": []
+      },
+      "sources": [
+        {
+          "sourceId": "wiktionary-ru-editorial-2026-11-06",
+          "url": "https://ru.wiktionary.org/w/index.php?title=ҡайсы&oldid=9759191",
+          "originalHeadwords": [
+            "ҡайсы"
+          ],
+          "partOfSpeech": "noun",
+          "license": "CC-BY-SA-4.0",
+          "authors": "Участники русского Викисловаря",
+          "accessedOn": "2026-11-06"
+        }
+      ],
+      "eligibility": {
+        "game": true,
+        "target": true,
+        "starter": false
+      },
+      "quality": {
+        "type": "source_marked_noun",
+        "linguistReviewed": false,
+        "nounSourceCount": 1,
+        "translationSourceCount": 1
+      }
     }
   ],
   "identicalRussianTranslationFilter": {
@@ -512974,5 +512226,31 @@
     "removedCount": 1,
     "reason": "Explicit user request; supersedes previous exception for бор"
   },
-  "datasetRevision": "nouns-2026-10-19-rules-2"
+  "datasetRevision": "3e289d7b8e8e501e",
+  "editorialPolicy": {
+    "revision": "nouns-2026-11-06-review-2",
+    "excludedWords": [
+      "АГРОПРОМ",
+      "АЛМАС",
+      "АНА",
+      "ГЕР",
+      "ГЕСТАПО",
+      "КГ",
+      "МАК",
+      "МИЛ",
+      "МӘК",
+      "ПРОМТАУАР",
+      "РАЙОНО",
+      "РАЙСОБЕС",
+      "САМБО",
+      "ТАС",
+      "ТУК",
+      "ТӨРӨК",
+      "УНТЕР",
+      "ШАТУН"
+    ],
+    "addedWords": [
+      "ҠАЙСЫ"
+    ]
+  }
 }

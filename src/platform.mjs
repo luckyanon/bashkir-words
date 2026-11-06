@@ -9,18 +9,18 @@ export function createSound({ enabled = true, AudioContext = globalThis.AudioCon
     if (!enabled || disposed || !AudioContext) return;
     try {
       context ||= new AudioContext();
-      const tones = { select: [392], target: [523, 659], bonus: [659, 784], repeat: [330, 294, 330], invalid: [196], hint: [440, 523], victory: [523, 659, 784, 1047] };
+      const tones = { select: [392], target: [523, 659], bonus: [659, 784], repeat: [784, 659], invalid: [196], hint: [440, 523], victory: [523, 659, 784, 1047] };
       const frequencies = tones[type] || tones.select;
       const begin = () => frequencies.forEach((frequency, index) => {
         if (disposed || !enabled) return;
         const oscillator = context.createOscillator();
         const gain = context.createGain();
-        const time = context.currentTime + index * .08;
+        const time = context.currentTime + index * (type==='repeat'?.14:.08);
         oscillator.type = 'sine';
         oscillator.frequency.value = frequency;
         if(type==='invalid')oscillator.frequency.exponentialRampToValueAtTime(155,time+.1);
         gain.gain.setValueAtTime(.0001, time);
-        gain.gain.exponentialRampToValueAtTime(type==='invalid'?.025:.055, time + .01);
+        gain.gain.exponentialRampToValueAtTime(type==='invalid'?.025:type==='repeat'?.075:.055, time + .01);
         gain.gain.exponentialRampToValueAtTime(.0001, time + .11);
         oscillator.connect(gain); gain.connect(context.destination);
         active.add(oscillator);

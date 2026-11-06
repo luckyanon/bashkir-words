@@ -59,6 +59,21 @@ function insertRange(ranges, id) {
   ranges.splice(0, ranges.length, ...merged);
 }
 
+export function classicBonusWords(level, lexicon) {
+  const bonuses=unique((level.bonusWords||[]).map(normalizeWord));
+  if(level.generatorVersion>=6 && level.mode!=='hardcore'){
+    const targets=new Set(level.words.map(item=>item.word));
+    const extras=lexicon.findWords(level.letters,{minLength:level.minWordLength,targetsOnly:true}).filter(word=>lexicon.isTargetCandidate(word)&&!targets.has(word)&&!bonuses.includes(word));
+    while(bonuses.length<3)bonuses.push(null);
+    bonuses.push(...extras);
+  }
+  return bonuses;
+}
+export function alignBonusWords(previous, current) {
+  const available = new Set(current.filter(Boolean));
+  return [...previous.map(word => available.has(word) ? word : null),
+    ...current.filter(word => word && !previous.includes(word))];
+}
 function prepareSource(levelSource, lexicon) {
   const finite = Array.isArray(levelSource);
   if (finite && !levelSource.length) throw new TypeError('At least one level is required');
@@ -78,19 +93,18 @@ function prepareSource(levelSource, lexicon) {
     const report = validateLevel(level, lexicon);
     if (!report.valid) throw new TypeError(`Invalid level ${id}: ${report.errors.join('; ')}`);
     const words = level.words.map(placement => ({ word: normalizeWord(placement.word), keys: getWordCells(placement).map(cell => cell.key) }));
-    const bonuses = unique((Array.isArray(level.bonusWords) ? level.bonusWords : []).map(normalizeWord));
+    let bonuses = unique((Array.isArray(level.bonusWords) ? level.bonusWords : []).map(normalizeWord));
     const excludedLengths = Number(level.generatorVersion) >= 3 ? level.excludedWordLengths || (level.letters.length >= 7 ? [2, 3] : level.letters.length === 6 ? [2] : []) : [];
     if (bonuses.length > 3 || bonuses.some(word => !lexicon.hasWord(word) || !lexicon.canBuild(word, level.letters)
       || excludedLengths.includes([...word].length) || words.some(target => target.word === word))) {
       throw new TypeError(`Invalid bonus words in level ${id}`);
     }
-    // Keep the three original reward slots stable for existing saves. Translated
-    // nouns omitted by the classic field cap follow them in deterministic order.
-    if(level.generatorVersion>=6&&level.mode!=='hardcore'){
-      const targets=new Set(words.map(item=>item.word));
-      const extras=lexicon.findWords(level.letters,{minLength:level.minWordLength,targetsOnly:true}).filter(word=>lexicon.isTargetCandidate(word)&&!targets.has(word)&&!bonuses.includes(word));
-      while(bonuses.length<3)bonuses.push(null);
-      bonuses.push(...extras);
+    bonuses=classicBonusWords(level,lexicon);
+    // Preserve old slot identities, including removed words as empty slots.
+    // The old ledger remains compact and no migrated bonus can pay twice.
+    if(levelSource.legacyBonusWords){
+      const previous=levelSource.legacyBonusWords(id);
+      if(previous)bonuses=alignBonusWords(previous,bonuses);
     }
     const meta = { id, level, board: report.cells || buildBoard(level), words, bonuses, excludedLengths };
     cache.set(id, meta);
@@ -110,7 +124,7 @@ function prepareSource(levelSource, lexicon) {
   const nextId = id => finite ? ids[ids.indexOf(id) + 1] : id < MAX_LEVEL_ID ? id + 1 : undefined;
   getMeta(firstId);
   return { getMeta, hasLevel, firstId, reachable, canStart, nextId, ids,
-    bonusSlotLimit:Math.max(3,lexicon.dictionary?.size||lexicon.targetWords?.length||3),rulesRevision:Number(levelSource.rulesRevision||0),seed: String(levelSource.seed ?? 'legacy-array'), generatorVersion: Number(levelSource.generatorVersion ?? 1),
+    bonusLayouts:clone(levelSource.bonusLayouts||[]),bonusLayoutThroughLevel:safeCount(levelSource.bonusLayoutThroughLevel),bonusSlotLimit:Math.max(3,(lexicon.dictionary?.size||lexicon.targetWords?.length||3)*2),rulesRevision:Number(levelSource.rulesRevision||0),seed: String(levelSource.seed ?? 'legacy-array'), generatorVersion: Number(levelSource.generatorVersion ?? 1),
     legacyThroughLevel: safeCount(levelSource.legacyThroughLevel), legacyV3ThroughLevel: safeCount(levelSource.legacyV3ThroughLevel),
     layoutVersion:Number(levelSource.layoutVersion ?? 1), legacyLayoutThroughLevel:safeCount(levelSource.legacyLayoutThroughLevel),datasetRevision:String(levelSource.datasetRevision||""),difficultyRevision:Number(levelSource.difficultyRevision||0),wordRevision:Number(levelSource.wordRevision||0) };
 }
@@ -150,6 +164,8 @@ function sanitizePrepared(source, saved, hardcoreSource) {
   if (source.generatorVersion >= 3) state.legacyThroughLevel = source.legacyThroughLevel;
   if (source.generatorVersion >= 4) state.legacyV3ThroughLevel = source.legacyV3ThroughLevel;
   if(source.generatorVersion>=6){state.layoutVersion=source.layoutVersion;state.legacyLayoutThroughLevel=source.legacyLayoutThroughLevel;state.datasetRevision=source.datasetRevision;state.wordRevision=source.wordRevision;state.difficultyRevision=source.difficultyRevision;}
+  if(source.bonusLayoutThroughLevel)state.bonusLayoutThroughLevel=source.bonusLayoutThroughLevel;
+  if(source.bonusLayouts.length)state.bonusLayouts=clone(source.bonusLayouts);
   const valid = object(saved) && object(saved.levels) && (saved.version === SAVE_VERSION || saved.version === 1);
   if(hardcoreSource){state.mode='classic';state.hardcore=emptyHardcore();state.hardcore.datasetRevision=source.datasetRevision;state.hardcore.rulesRevision=hardcoreSource.rulesRevision;}
   if (valid) for (const key of ['sound', 'music', 'animations', 'backgroundMotion']) if (typeof saved.settings?.[key] === 'boolean') state.settings[key] = saved.settings[key];

@@ -49,33 +49,39 @@ export function createBoardCamera({width,height,boardWidth,boardHeight,overview=
 export function bindBoardCamera(viewport,board,{overview=false,rows,cols,cellSize=36,gap=3,focusArea}={}){
   const dimensions=()=>({width:viewport.clientWidth,height:viewport.clientHeight,boardWidth:cols*cellSize+(cols-1)*gap,boardHeight:rows*cellSize+(rows-1)*gap});
   const camera=createBoardCamera({...dimensions(),overview}),listeners=[],captured=new Set();
-  // Actual CSS dimensions re-rasterize text and edges at the requested size.
-  // Scaling a composited bitmap with transform/will-change makes them blurry.
-  const paint=()=>{const {x,y,scale}=camera.state;board.style.left=x+'px';board.style.top=y+'px';board.style.setProperty('--cell',cellSize*scale+'px');board.style.setProperty('--gap',gap*scale+'px');board.dataset.zoom=String(scale);};
-  const point=event=>{const rect=viewport.getBoundingClientRect();return {x:(event.clientX-rect.left)*viewport.clientWidth/rect.width,y:(event.clientY-rect.top)*viewport.clientHeight/rect.height};};
+  // Coalesce input to one paint per display frame. Translation never resizes
+  // the grid; zoom uses real CSS sizes so glyphs stay sharp at every scale.
+  let frame=null,paintedScale,viewportRect;
+  const paint=()=>{frame=null;const {x,y,scale}=camera.state;
+    board.style.transform=`translate3d(${x}px,${y}px,0)`;
+    if(scale!==paintedScale){board.style.setProperty('--cell',cellSize*scale+'px');board.style.setProperty('--gap',gap*scale+'px');board.dataset.zoom=String(scale);paintedScale=scale;}
+  };
+  const schedulePaint=()=>{if(frame===null)frame=requestAnimationFrame(paint);};
+  const flush=()=>{if(frame!==null)cancelAnimationFrame(frame);paint();};
+  const point=event=>{const rect=viewportRect??viewport.getBoundingClientRect();return {x:(event.clientX-rect.left)*viewport.clientWidth/rect.width,y:(event.clientY-rect.top)*viewport.clientHeight/rect.height};};
   const region=()=>{const element=focusArea?.();if(!element)return undefined;const r=element.getBoundingClientRect(),a=viewport.getBoundingClientRect();return {x:(r.left-a.left)*viewport.clientWidth/a.width,y:(r.top-a.top)*viewport.clientHeight/a.height,width:r.width*viewport.clientWidth/a.width,height:r.height*viewport.clientHeight/a.height};};
   const on=(target,type,fn,options)=>{target.addEventListener(type,fn,options);listeners.push(()=>target.removeEventListener(type,fn,options));};
   on(viewport,'pointerdown',event=>{
     if(event.target.closest('button')||(event.pointerType==='mouse'&&event.button!==0))return;
-    event.preventDefault();camera.down(event.pointerId,point(event));captured.add(event.pointerId);viewport.classList.add('panning');
+    viewportRect=viewport.getBoundingClientRect();event.preventDefault();camera.down(event.pointerId,point(event));captured.add(event.pointerId);viewport.classList.add('panning');
     try{viewport.setPointerCapture(event.pointerId);}catch{}
   });
-  on(viewport,'pointermove',event=>{if(!captured.has(event.pointerId))return;event.preventDefault();camera.move(event.pointerId,point(event));paint();});
-  function release(event){camera.up(event.pointerId);captured.delete(event.pointerId);if(!captured.size)viewport.classList.remove('panning');}
+  on(viewport,'pointermove',event=>{if(!captured.has(event.pointerId))return;event.preventDefault();camera.move(event.pointerId,point(event));schedulePaint();});
+  function release(event){camera.up(event.pointerId);captured.delete(event.pointerId);if(!captured.size){viewport.classList.remove('panning');viewportRect=null;flush();}}
   for(const type of ['pointerup','pointercancel','lostpointercapture'])on(viewport,type,release);
-  on(viewport,'wheel',event=>{event.preventDefault();camera.zoom(Math.exp(-clamp(event.deltaY*(event.deltaMode===1?16:1),-300,300)*.003),point(event));paint();},{passive:false});
+  on(viewport,'wheel',event=>{event.preventDefault();camera.zoom(Math.exp(-clamp(event.deltaY*(event.deltaMode===1?16:1),-300,300)*.003),point(event));schedulePaint();},{passive:false});
   on(viewport,'click',event=>{const control=event.target.closest('[data-zoom]');if(control){camera.zoom(Number(control.dataset.zoom));paint();}});
-  const cancel=()=>{camera.cancel();for(const id of captured){try{viewport.releasePointerCapture(id);}catch{}}captured.clear();viewport.classList.remove('panning');};
+  const cancel=()=>{camera.cancel();for(const id of captured){try{viewport.releasePointerCapture(id);}catch{}}captured.clear();viewportRect=null;viewport.classList.remove('panning');flush();};
   on(window,'blur',cancel);on(document,'visibilitychange',cancel);
   const initial=dimensions();camera.reveal({x:initial.boardWidth/2,y:initial.boardHeight/2,width:0,height:0},region());paint();
   return {
     cancel,
-    resize(){camera.resize(dimensions());paint();},
+    resize(){viewportRect=null;camera.resize(dimensions());flush();},
     reveal(elements){
-      if(!elements.length)return;const left=Math.min(...elements.map(el=>el.offsetLeft)),top=Math.min(...elements.map(el=>el.offsetTop));
+      if(!elements.length)return;flush();const left=Math.min(...elements.map(el=>el.offsetLeft)),top=Math.min(...elements.map(el=>el.offsetTop));
       const scale=camera.state.scale;
       camera.reveal({x:left/scale,y:top/scale,width:(Math.max(...elements.map(el=>el.offsetLeft+el.offsetWidth))-left)/scale,height:(Math.max(...elements.map(el=>el.offsetTop+el.offsetHeight))-top)/scale},region());paint();
     },
-    dispose(){cancel();listeners.forEach(remove=>remove());},
+    dispose(){cancel();if(frame!==null)cancelAnimationFrame(frame);frame=null;listeners.forEach(remove=>remove());},
   };
 }

@@ -12,6 +12,7 @@ import {bindBoardCamera} from './board-camera.mjs';
 import {ru as t} from './i18n.mjs';
 import {coinIcon as coin} from './coin.mjs';
 import {layoutOptionsForSave} from './layout-migration.mjs';
+import {needsReleaseHistory,releaseHistoryFiles,restoreRelease} from './release-migration.mjs';
 import {migrateNounSave} from './noun-migration.mjs';
 import {migrateLocalWords} from './local-word-migration.mjs';
 import {BACKGROUNDS,availableBackground} from './backgrounds.mjs';
@@ -41,6 +42,7 @@ function startIdleHints(){
 
 let lexicon,poolData,levels,game,storage,platform,view='menu',wheelInput,boardObserver,toastTimer,restoreFocus,lastCompletionReward=0,uiTiles=[],tilesLevel='',shuffleTimer,completionTimer,giftTimer;
 const cellTimers=new Map();
+const boardElements=new Map();
 const closingDialogs=new WeakMap();let screenTransition=false;
 async function animateExit(element,duration=180){
   if(!element||!motionEnabled())return;
@@ -75,7 +77,7 @@ function toast(message,duration=2400){
   toastTimer=setTimeout(()=>{el.classList.remove('visible');toastHideTimer=setTimeout(()=>{if(typeof el.hidePopover==='function'&&el.matches(':popover-open'))el.hidePopover();},200);},duration);
 }
 function cancelInput(){wheelInput?.cancel();boardCamera?.cancel();}
-function disposeInput(){stopIdleHints();boardCamera?.dispose();boardCamera=null;wheelInput?.dispose();wheelInput=null;boardObserver?.disconnect();boardObserver=null;clearTimeout(shuffleTimer);clearTimeout(completionTimer);completionTimer=null;for(const timer of cellTimers.values())clearTimeout(timer);cellTimers.clear();}
+function disposeInput(){boardElements.clear();stopIdleHints();boardCamera?.dispose();boardCamera=null;wheelInput?.dispose();wheelInput=null;boardObserver?.disconnect();boardObserver=null;clearTimeout(shuffleTimer);clearTimeout(completionTimer);completionTimer=null;for(const timer of cellTimers.values())clearTimeout(timer);cellTimers.clear();}
 async function closeLicense(){await dismissDialog(licenseModal);const focus=licenseRestoreFocus;licenseRestoreFocus=null;if(focus?.isConnected)focus.focus({preventScroll:true});}
 let translationReturn;
 async function closeModal(all=false){
@@ -143,15 +145,16 @@ function sizeBoard(){
   const area=document.querySelector('.board-area'),board=document.querySelector('.crossword');if(!area||!board)return;
   const level=game.getCurrentLevel(),gap=3;
   const size=game.isHardcore?36:Math.max(12,Math.min(44,Math.floor((area.clientWidth-4-(level.cols-1)*gap)/level.cols),Math.floor((area.clientHeight-16-(level.rows-1)*gap)/level.rows)));
-  board.style.setProperty('--cell',size+'px');board.style.setProperty('--gap',gap+'px');
+  if(!game.isHardcore){board.style.setProperty('--cell',size+'px');board.style.setProperty('--gap',gap+'px');}
   boardCamera?.resize();
   const wheel=document.querySelector('.wheel');
   if(wheel){const tileSize=Math.min(window.innerHeight<=620?42:53,Math.floor(wheel.clientWidth*.68*Math.sin(Math.PI/uiTiles.length)));wheel.style.setProperty('--letter-size',tileSize+'px');wheel.style.setProperty('--letter-font-size',Math.min(34,Math.floor(tileSize*.65))+'px');}
 }
 function renderGame(){
-  const level=game.getCurrentLevel(),saved=game.getLevelState(),board=buildBoard(level),revealed=new Set(saved.revealed),solved=new Set(saved.solved);
+  const level=game.getCurrentLevel(),saved=game.getLevelState(),board=game.getBoard(),revealed=new Set(saved.revealed),solved=new Set(saved.solved);
   arrangeTiles(game.rack);
   app.innerHTML=`<section class="game-screen ${game.isHardcore?'hardcore-screen':''}"><header class="game-header"><div class="menu-controls">${button('menu',icon('menu'),'icon-button',`aria-label="${t.menu}"`)}${game.isHardcore?'':button('hint',`<span class="hint-square">${icon('bulb')}</span><span class="hint-price">${HINT_COST}${coin}</span>`,'hint-button compact-hint',`${game.state.coins<HINT_COST||!game.getHiddenCells().length?'disabled':''} aria-label="${t.hint}, ${HINT_COST} ${t.coinsLabel}" title="${t.hint}, ${HINT_COST} ${t.coinsLabel}"`)}</div><div class="level-label"><strong>${game.isHardcore?'Хардкор':`${t.level} ${level.id}`}</strong>${game.isHardcore?`<span class="hardcore-word-count" aria-label="Найдено ${saved.solved.length} из ${level.words.length} слов на поле">${saved.solved.length}/${level.words.length}</span>`:''}</div><div class="game-bank"><div class="coin-balance" aria-label="${game.state.coins} ${t.coinsLabel}">${coin}<span>${game.state.coins}</span></div>${game.isHardcore?button('hardcore-regenerate','<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5M6 7a7 7 0 0 1 12-1l2 3M4 15l2 3a7 7 0 0 0 12-1"/></svg>','hardcore-regenerate','aria-label="Перегенерировать уровень" title="Перегенерировать уровень"'):''}</div></header>${game.isHardcore?'<div class="board-space" aria-hidden="true"></div>':''}<div class="board-area ${game.isHardcore?'map-viewport':''}"><div class="crossword" role="group" aria-label="${t.crossword}" style="grid-template-columns:repeat(${level.cols},var(--cell));grid-template-rows:repeat(${level.rows},var(--cell));--cell:24px">${board.map(cell=>{const shown=revealed.has(cell.key),complete=cell.wordIndexes.some(index=>solved.has(level.words[index].word));return `<div class="cell ${shown?'revealed':''} ${shown&&!complete?'partial':''}" data-cell="${cell.key}" style="grid-row:${cell.row+1};grid-column:${cell.col+1}" aria-label="${shown?escape(cell.letter):t.hiddenCell}">${shown?escape(cell.letter):''}</div>`;}).join('')}</div>${game.isHardcore?'<div class="board-zoom" aria-label="Масштаб поля"><button type="button" data-zoom="1.25" aria-label="Приблизить поле">+</button><button type="button" data-zoom="0.8" aria-label="Отдалить поле">−</button></div>':''}</div><div class="wheel-area"><div id="word-preview" role="status" aria-live="polite">· · ·</div><span id="keyboard-help" class="visually-hidden">${t.keyboardHelp}</span><div class="wheel" aria-label="${t.letterWheel}" aria-describedby="keyboard-help"><svg viewBox="0 0 100 100" aria-hidden="true"><polyline points=""/></svg>${uiTiles.map(tile=>{const p=tilePosition(tile.slot,uiTiles.length);return `<button class="letter" data-tile="${tile.id}" data-slot="${tile.slot}" style="left:${p.left}%;top:${p.top}%" aria-label="${escape(tile.letter)}; ${t.tileLabel} ${tile.id+1}" aria-pressed="false">${escape(tile.letter)}</button>`;}).join('')}${button('shuffle',icon('shuffle'),'wheel-center',`aria-label="${t.shuffle}" title="${t.shuffle}"`)}</div></div><footer class="bottom-actions">${button('found',`${icon('book')}<span>${t.found}</span>`,'found-button','id="found-words"')}</footer></section>`;
+  for(const el of document.querySelectorAll('[data-cell]'))boardElements.set(el.dataset.cell,el);
   wheelInput=bindWheel(document.querySelector('.wheel'),{tiles:uiTiles,onSubmit:submitWord,onSelect:()=>{wordAttempt();platform.sound('select');},onPreview:renderPreview});
   sizeBoard();if(game.isHardcore)boardCamera=bindBoardCamera(document.querySelector('.board-area'),document.querySelector('.crossword'),{overview:true,rows:level.rows,cols:level.cols,focusArea:()=>document.querySelector('.board-space')});boardObserver=new ResizeObserver(sizeBoard);boardObserver.observe(document.querySelector('.board-area'));if(game.isHardcore)boardObserver.observe(document.querySelector('.board-space'));
   startIdleHints();
@@ -185,11 +188,11 @@ function showTranslation(word){
 function motionEnabled(){return game.state.settings.animations&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches;}
 function refreshGameBoard(result){
   const level=game.getCurrentLevel(),saved=game.getLevelState(),revealed=new Set(saved.revealed),solved=new Set(saved.solved),newWords=new Set(result.newlySolved||[]),animated=[];
-  for(const cell of buildBoard(level)){
-    const el=document.querySelector(`[data-cell="${cell.key}"]`);if(!el)continue;
+  for(const cell of game.getBoard()){
+    const el=boardElements.get(cell.key);if(!el)continue;
     const shown=revealed.has(cell.key),complete=cell.wordIndexes.some(index=>solved.has(level.words[index].word));
-    el.textContent=shown?cell.letter:'';el.setAttribute('aria-label',shown?cell.letter:t.hiddenCell);
-    el.classList.toggle('revealed',shown);el.classList.toggle('partial',shown&&!complete);
+    if(el.classList.contains('revealed')!==shown){el.textContent=shown?cell.letter:'';el.setAttribute('aria-label',shown?cell.letter:t.hiddenCell);el.classList.toggle('revealed',shown);}
+    if(el.classList.contains('partial')!==(shown&&!complete))el.classList.toggle('partial',shown&&!complete);
     const found=cell.wordIndexes.some(index=>newWords.has(level.words[index].word));
     if(found||cell.key===result.key){clearTimeout(cellTimers.get(el));el.classList.remove('word-found','hint-reveal');animated.push({el,found});}
   }
@@ -210,8 +213,10 @@ function finishOnBoard(result){
 }
 function shakeFoundWord(word){
   const level=game.getCurrentLevel(),indexes=new Set(level.words.map((p,i)=>p.word===word?i:-1));
-  const cells=buildBoard(level).filter(cell=>cell.wordIndexes.some(i=>indexes.has(i)));
-  for(const cell of cells){const el=document.querySelector(`[data-cell="${cell.key}"]`);if(!el)continue;clearTimeout(cellTimers.get(el));el.classList.remove('word-found','hint-reveal','word-repeat');void el.offsetWidth;el.classList.add('word-repeat');cellTimers.set(el,setTimeout(()=>{el.classList.remove('word-repeat');cellTimers.delete(el);},400));}
+  const elements=game.getBoard().filter(cell=>cell.wordIndexes.some(i=>indexes.has(i))).map(cell=>boardElements.get(cell.key)).filter(Boolean);
+  for(const el of elements){clearTimeout(cellTimers.get(el));el.classList.remove('word-found','hint-reveal','word-repeat');}
+  if(elements.length){boardCamera?.reveal(elements);void elements[0].offsetWidth;}
+  for(const el of elements){el.classList.add('word-repeat');cellTimers.set(el,setTimeout(()=>{el.classList.remove('word-repeat');cellTimers.delete(el);},1000));}
 }
 function rejectWord(word){
   renderPreview(word);
@@ -316,11 +321,19 @@ async function boot(){
     const [loadedLexicon,pools,saved]=await Promise.all([loadLexicon('./',globalThis.fetch),fetch('./data/level-pools.json').then(r=>{if(!r.ok)throw new Error('level pools');return r.json();}),storage.load()]);
     lexicon=loadedLexicon;poolData=pools;
     const seed=saved?.campaignSeed||campaignSeed();
-    const provider=createLevelProvider(pools,lexicon,{seed,...layoutOptionsForSave(saved,pools.generatorVersion)});
-    const migrated=migrateNounSave(saved,provider);
-    const wordsMigrated=migrateLocalWords(migrated.saved,createLevelProvider(pools,lexicon,{seed,...layoutOptionsForSave(saved,pools.generatorVersion),includeLocalWords:!!saved?.wordRevision,applyLevelDifficulty:!!saved?.difficultyRevision}),provider);
+    let provider=createLevelProvider(pools,lexicon,{seed,...layoutOptionsForSave(saved,pools.generatorVersion)});
+    let restored={saved,provider,changed:false};
+    if(needsReleaseHistory(saved)){
+      const histories=await Promise.all(releaseHistoryFiles(saved).map(async file=>{
+        const response=await fetch('./data/migrations/'+file);if(!response.ok)throw new Error('Migration history unavailable');return response.json();
+      }));
+      restored=restoreRelease(saved,provider,lexicon,{histories,currentPools:pools});provider=restored.provider;
+    }
+    const migrated=migrateNounSave(restored.saved,provider);
+    const needsWords=migrated.saved?.generatorVersion===6&&(migrated.saved.wordRevision!==provider.wordRevision||(migrated.saved.difficultyRevision||0)!==provider.difficultyRevision);
+    const wordsMigrated=needsWords?migrateLocalWords(migrated.saved,createLevelProvider(pools,lexicon,{seed,...layoutOptionsForSave(saved,pools.generatorVersion),includeLocalWords:!!saved?.wordRevision,applyLevelDifficulty:!!saved?.difficultyRevision}),provider):{saved:migrated.saved,changed:false};
     installGame(provider,wordsMigrated.saved);
-    if(migrated.changed || wordsMigrated.changed || saved && saved.layoutVersion!==2)await storage.save(game.snapshot());
+    if(restored.changed || migrated.changed || wordsMigrated.changed || saved && saved.layoutVersion!==2)await storage.save(game.snapshot());
     plugins.DailyGift?.sync({claimedDay:game.state.dailyGift.lastClaimDay??-1,requestPermission:false}).catch(()=>{});
     render();if(saved?.version===1){await storage.save(game.snapshot());toast(t.progressUpdated);}else if([2,3].includes(saved?.generatorVersion))await storage.save(game.snapshot());
     if(!window.Capacitor?.isNativePlatform?.()&&'serviceWorker' in navigator&&location.protocol!=='file:')navigator.serviceWorker.register('./sw.js').catch(()=>{});

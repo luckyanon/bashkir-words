@@ -1,0 +1,78 @@
+{
+  "revision": "nouns-2026-11-06-review-2",
+  "excludedWords": [
+    "МИЛ",
+    "ТӨРӨК",
+    "АЛМАС",
+    "ТАС",
+    "ШАТУН",
+    "АНА",
+    "ТУК",
+    "МАК",
+    "МӘК",
+    "ГЕР"
+  ],
+  "abbreviations": {
+    "КГ": "килограмм",
+    "АГРОПРОМ": "агропромышленный комплекс / комитет",
+    "ГЕСТАПО": "Geheime Staatspolizei",
+    "ПРОМТАУАР": "промышленный тауар (промышленный товар)",
+    "РАЙОНО": "районный отдел народного образования",
+    "РАЙСОБЕС": "районный отдел социального обеспечения",
+    "САМБО": "самооборона без оружия",
+    "УНТЕР": "унтер-офицер"
+  },
+  "additions": [
+    {
+      "id": "ba-editorial-qaysy",
+      "word": "ҡайсы",
+      "display": "ҠАЙСЫ",
+      "length": 5,
+      "signature": "АЙҠСЫ",
+      "letterCounts": {
+        "Ҡ": 1,
+        "А": 1,
+        "Й": 1,
+        "С": 1,
+        "Ы": 1
+      },
+      "partsOfSpeech": [
+        "noun"
+      ],
+      "definitions": {
+        "ru": [
+          {
+            "text": "ножницы",
+            "partOfSpeech": "noun",
+            "sourceId": "wiktionary-ru-editorial-2026-11-06"
+          }
+        ],
+        "en": []
+      },
+      "sources": [
+        {
+          "sourceId": "wiktionary-ru-editorial-2026-11-06",
+          "url": "https://ru.wiktionary.org/w/index.php?title=ҡайсы&oldid=9759191",
+          "originalHeadwords": [
+            "ҡайсы"
+          ],
+          "partOfSpeech": "noun",
+          "license": "CC-BY-SA-4.0",
+          "authors": "Участники русского Викисловаря",
+          "accessedOn": "2026-11-06"
+        }
+      ],
+      "eligibility": {
+        "game": true,
+        "target": true,
+        "starter": false
+      },
+      "quality": {
+        "type": "source_marked_noun",
+        "linguistReviewed": false,
+        "nounSourceCount": 1,
+        "translationSourceCount": 1
+      }
+    }
+  ]
+}

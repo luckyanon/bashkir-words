@@ -58,7 +58,7 @@ export function createDictionary(data) {
     const length = [...word].length;
     if (length < minLength || length > maxLength) throw new TypeError('Word outside the declared length range');
     if (!buckets.has(length)) buckets.set(length, []);
-    buckets.get(length).push({ word, counts: letterCounts(word) });
+    buckets.get(length).push({ word, counts: Object.entries(letterCounts(word)) });
   }
   return Object.freeze({
     size: words.size,
@@ -76,7 +76,7 @@ export function createDictionary(data) {
       for (let length = min; length <= max; length++) {
         for (const item of buckets.get(length) || []) {
           if (options.targetsOnly && !targets.has(item.word)) continue;
-          if (Object.entries(item.counts).every(([letter, count]) => (available[letter] || 0) >= count)) found.push(item.word);
+          if (item.counts.every(([letter, count]) => (available[letter] || 0) >= count)) found.push(item.word);
         }
       }
       return found;

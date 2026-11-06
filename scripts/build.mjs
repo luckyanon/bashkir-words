@@ -1,3 +1,4 @@
+import {writeRuntimeDictionary} from './runtime-data.mjs';
 import { mkdir, cp, readFile, writeFile, readdir, rm } from 'node:fs/promises';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
@@ -7,6 +8,7 @@ if(path.resolve(out)!==path.join(root,'dist'))throw Error('Invalid build directo
 await rm(out,{recursive:true,force:true});
 await mkdir(out,{recursive:true});
 await cp(path.join(root,'public'),out,{recursive:true});
+await writeRuntimeDictionary(out);
 await cp(path.join(root,'src'),path.join(out,'src'),{recursive:true});
 await cp(path.join(root,'index.html'),path.join(out,'index.html'));
 const files = [];

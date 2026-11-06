@@ -58,24 +58,26 @@ export function createStorage(adapter = createWebStorageAdapter(), { key = STORA
       if (!decodeSave(value)) throw new TypeError('Unsupported save format');
     } catch (error) { status.error = error.message; return Promise.resolve(false); }
     // Serialize writes, including native asynchronous saves, to prevent old progress winning a race.
+    const snapshot = JSON.parse(value);
     const operation = queue.then(async () => {
+      const state = snapshot;
       try {
-        if(state.datasetRevision){const prior=await adapter.get(key),old=decodeSave(prior);if(old&&old.datasetRevision!==state.datasetRevision){const revisionBackup=`${key}:before-dataset-${state.datasetRevision}`;if(!(await adapter.get(revisionBackup)))await adapter.set(revisionBackup,prior);}}
+        const previous = await adapter.get(key);
+        const priorState = decodeSave(previous);
+        if(state.datasetRevision){const prior=previous,old=priorState;if(old&&old.datasetRevision!==state.datasetRevision){const revisionBackup=`${key}:before-dataset-${state.datasetRevision}`;if(!(await adapter.get(revisionBackup)))await adapter.set(revisionBackup,prior);}}
         // Back up the exact old save before the first migration write. A failed
         // backup leaves the original key intact and reports a save failure.
         if (state.version === STORAGE_VERSION) {
-          const previous = await adapter.get(key);
-          const priorState = decodeSave(previous);
           if (priorState?.version === 1 && await adapter.get(backupKey) == null) await adapter.set(backupKey, previous);
           if (priorState?.version === STORAGE_VERSION && priorState.generatorVersion === 2 && state.generatorVersion >= 3
             && await adapter.get(generatorBackupKey) == null) await adapter.set(generatorBackupKey, previous);
           if (priorState?.version === STORAGE_VERSION && priorState.generatorVersion === 3 && state.generatorVersion >= 4
             && await adapter.get(`${key}:generator-v3`) == null) await adapter.set(`${key}:generator-v3`, previous);
         }
-        if(state.rackRepairVersion===1){const previous=await adapter.get(key);const prior=decodeSave(previous);if(prior && prior.rackRepairVersion!==1 && await adapter.get(`${key}:before-rack-repair`)==null)await adapter.set(`${key}:before-rack-repair`,previous);}
-        if(state.generatorVersion>=5){const previous=await adapter.get(key);const prior=decodeSave(previous);if(prior && prior.generatorVersion!==state.generatorVersion && await adapter.get(`${key}:before-nouns-v${state.generatorVersion}`)==null)await adapter.set(`${key}:before-nouns-v${state.generatorVersion}`,previous);}
-        if(state.layoutVersion===2){const previous=await adapter.get(key);const prior=decodeSave(previous);if(prior && (prior.layoutVersion??1)<2 && await adapter.get(`${key}:before-layout-v2`)==null)await adapter.set(`${key}:before-layout-v2`,previous);}
-        if(state.wordRevision===1){const previous=await adapter.get(key);const prior=decodeSave(previous);if(prior && prior.wordRevision!==1 && await adapter.get(`${key}:before-local-words-v1`)==null)await adapter.set(`${key}:before-local-words-v1`,previous);}
+        if(state.rackRepairVersion===1){const prior=priorState;if(prior && prior.rackRepairVersion!==1 && await adapter.get(`${key}:before-rack-repair`)==null)await adapter.set(`${key}:before-rack-repair`,previous);}
+        if(state.generatorVersion>=5){const prior=priorState;if(prior && prior.generatorVersion!==state.generatorVersion && await adapter.get(`${key}:before-nouns-v${state.generatorVersion}`)==null)await adapter.set(`${key}:before-nouns-v${state.generatorVersion}`,previous);}
+        if(state.layoutVersion===2){const prior=priorState;if(prior && (prior.layoutVersion??1)<2 && await adapter.get(`${key}:before-layout-v2`)==null)await adapter.set(`${key}:before-layout-v2`,previous);}
+        if(state.wordRevision===1){const prior=priorState;if(prior && prior.wordRevision!==1 && await adapter.get(`${key}:before-local-words-v1`)==null)await adapter.set(`${key}:before-local-words-v1`,previous);}
         await adapter.set(key, value); status.persistent = adapter.persistent !== false; status.error = null; return true;
       }
       catch (error) { status.persistent = adapter.persistent !== false; status.error = error?.message || 'Не удалось сохранить прогресс'; return false; }

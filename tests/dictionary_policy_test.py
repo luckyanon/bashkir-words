@@ -40,6 +40,26 @@ class DictionaryPolicyTest(unittest.TestCase):
         self.assertEqual(raw['starterWords'], ['БАШҠОРТ'])
         self.assertFalse(EXCLUDED.intersection(raw['targetWords']))
 
+    def test_2_10_1_selection_is_removed_without_excluding_other_near_translations(self):
+        selected = POLICY['requestedRemovalBatches']['2.10.1']['words']
+        self.assertEqual(len(selected), 61)
+        self.assertEqual(len(set(selected)), 61)
+        preserved = {'АЛЛА': 'аллах', 'АУЫЛ': 'аул', 'КАНАУЫС': 'канаус',
+                     'НУЖА': 'нужда', 'ҠАРБУЗ': 'арбуз'}
+        entries = [{'display': word, 'definitions': {'ru': [{'text': 'старое значение'}]}}
+                   for word in selected]
+        entries += [{'display': word, 'definitions': {'ru': [{'text': text}]}}
+                    for word, text in preserved.items()]
+        original_preserved = copy.deepcopy(entries[-len(preserved):])
+        raw, full = {'starterWords': ['ИМБИР', 'АУЫЛ']}, {'entries': entries}
+        apply_policy(raw, full)
+        self.assertEqual(set(raw['words']), set(preserved) | {'ҠАЙСЫ'})
+        self.assertEqual(raw['starterWords'], ['АУЫЛ'])
+        self.assertEqual([e for e in full['entries'] if e['display'] in preserved], original_preserved)
+        before = copy.deepcopy((raw, full))
+        apply_policy(raw, full)
+        self.assertEqual((raw, full), before)
+
 
 if __name__ == '__main__':
     unittest.main()

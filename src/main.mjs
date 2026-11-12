@@ -51,7 +51,7 @@ async function animateExit(element,duration=180){
     await Promise.all([...element.querySelectorAll('.game-header,.wheel-area,.bottom-actions')].map(child=>animateExit(child,duration)).concat(field?[field.animate([{opacity:getComputedStyle(field).opacity},{opacity:0}],{duration,fill:'forwards'}).finished.catch(()=>{})]:[]));return;
   }
   const current=getComputedStyle(element);const from={opacity:current.opacity,transform:current.transform};element.style.animation='none';
-  try{await element.animate([from,{opacity:0,transform:'translateY(-6px)'}],{duration,easing:'cubic-bezier(.22,1,.36,1)',fill:'forwards'}).finished;}catch{}
+  try{await element.animate([from,{opacity:0,transform:'scale(.94)'}],{duration,easing:'ease-in',fill:'forwards'}).finished;}catch{}
 }
 function dismissDialog(dialog){
   if(closingDialogs.has(dialog))return closingDialogs.get(dialog);
@@ -120,8 +120,8 @@ function animateGift(origin){
   const target=balance.querySelector('.coin').getBoundingClientRect();
   const flight=document.createElement('div');flight.className='gift-flight';flight.setAttribute('aria-hidden','true');flight.innerHTML=coin;flight.style.left=origin.left+origin.width/2-16+'px';flight.style.top=origin.top+origin.height/2-16+'px';document.body.append(flight);
   const dx=target.left+target.width/2-origin.left-origin.width/2,dy=target.top+target.height/2-origin.top-origin.height/2;
-  const animation=flight.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:`translate(${dx}px,${dy}px) scale(.75)`,opacity:1}],{duration:420,easing:'cubic-bezier(.22,1,.36,1)'});
-  animation.oncancel=()=>flight.remove();animation.onfinish=()=>flight.remove();
+  const animation=flight.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:`translate(${dx*.2}px,${dy*.35-45}px) scale(1.6) rotate(-15deg)`,offset:.35,opacity:1},{transform:`translate(${dx}px,${dy}px) scale(.7) rotate(12deg)`,opacity:1}],{duration:638,easing:'cubic-bezier(.25,.65,.4,1)'});
+  animation.oncancel=()=>flight.remove();animation.onfinish=()=>{flight.remove();if(balance.isConnected&&motionEnabled())balance.animate([{transform:'scale(1)'},{transform:'scale(1.18)'},{transform:'scale(1)'}],{duration:225});};
 }
 function refreshGiftButton(){
   if(!game||view!=='menu')return;
@@ -239,19 +239,10 @@ async function regenerateHardcore(){
 }
 function animateShuffle(){
   const wheel=document.querySelector('.wheel');if(!wheel)return;
-  clearTimeout(shuffleTimer);cancelInput();
-  const previous=new Map([...wheel.querySelectorAll('.letter')].map(el=>[Number(el.dataset.tile),el.getBoundingClientRect()]));
-  arrangeTiles(game.shuffle());wheel.classList.add('is-shuffling');
-  for(const tile of uiTiles){
-    const el=wheel.querySelector(`[data-tile="${tile.id}"]`),p=tilePosition(tile.slot,uiTiles.length);
-    el.style.left=p.left+'%';el.style.top=p.top+'%';el.dataset.slot=tile.slot;
-    if(motionEnabled()){
-      const before=previous.get(tile.id),after=el.getBoundingClientRect();
-      el.animate([{transform:`translate(calc(-50% + ${before.left-after.left}px),calc(-50% + ${before.top-after.top}px))`},{transform:'translate(-50%,-50%)'}],{duration:240,easing:'cubic-bezier(.22,1,.36,1)'});
-    }
-  }
+  clearTimeout(shuffleTimer);cancelInput();arrangeTiles(game.shuffle());wheel.classList.add('is-shuffling');
+  for(const tile of uiTiles){const el=wheel.querySelector(`[data-tile="${tile.id}"]`),p=tilePosition(tile.slot,uiTiles.length);el.style.left=p.left+'%';el.style.top=p.top+'%';el.dataset.slot=tile.slot;}
   wheelInput?.refresh();
-  shuffleTimer=setTimeout(()=>{wheel.classList.remove('is-shuffling');wheelInput?.refresh();},motionEnabled()?260:0);
+  shuffleTimer=setTimeout(()=>{wheel.classList.remove('is-shuffling');wheelInput?.refresh();},motionEnabled()?405:0);
 }
 function campaignSeed(){return String(Date.now())+'-'+crypto.getRandomValues(new Uint32Array(1))[0];}
 function installGame(provider,saved=null){levels=provider;game=createGame(provider,lexicon,saved,{hardcoreSource:createLevelProvider(poolData,lexicon,{seed:provider.seed+':hardcore',hardcore:true}),onChange:state=>{storage.save(state).then(ok=>{if(!ok)toast(t.storageWarning);});}});}

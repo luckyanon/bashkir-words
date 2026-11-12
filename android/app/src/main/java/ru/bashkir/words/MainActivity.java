@@ -18,7 +18,7 @@ public class MainActivity extends BridgeActivity {
         WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView()).setAppearanceLightStatusBars(false);
         WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView()).setAppearanceLightNavigationBars(false);
         View content = findViewById(android.R.id.content);
-        content.setBackgroundColor(Color.rgb(37, 42, 39));
+        content.setBackgroundColor(Color.rgb(52, 32, 72));
         // Native padding also protects dialogs and older WebViews whose CSS safe-area is zero.
         ViewCompat.setOnApplyWindowInsetsListener(content, (view, windowInsets) -> {
             Insets safe = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars()

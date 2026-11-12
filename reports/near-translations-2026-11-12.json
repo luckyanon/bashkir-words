@@ -1,0 +1,2267 @@
+{
+  "datasetRevision": "0f4edc6e8c823fa9",
+  "rule": "NFC, casefold, accent marks ignored; one entire single-word Russian alternative; shorter must be a subsequence of longer; difference 1, or 2/3 with Bashkir word length >=6. е/ё and Bashkir letters stay distinct.",
+  "pairs": [
+    {
+      "word": "АЛИМЕНТ",
+      "translation": "алименты",
+      "wordLength": 7,
+      "translationLength": 8,
+      "bothAtLeastSix": true,
+      "sourceText": "алименты",
+      "sourceId": "auto-ba-ru-2011",
+      "sourceUrl": null,
+      "pdfPage": 27,
+      "difference": 1,
+      "longer": "алименты",
+      "extraLetters": "ы",
+      "insertions": [
+        {
+          "position": 8,
+          "letter": "ы"
+        }
+      ]
+    },
+    {
+      "word": "АЛЛА",
+      "translation": "аллах",
+      "wordLength": 4,
+      "translationLength": 5,
+      "bothAtLeastSix": false,
+      "sourceText": "аллах",
+      "sourceId": "auto-ba-ru-2011",
+      "sourceUrl": null,
+      "pdfPage": 28,
+      "difference": 1,
+      "longer": "аллах",
+      "extraLetters": "х",
+      "insertions": [
+        {
+          "position": 5,
+          "letter": "х"
+        }
+      ]
+    },
+    {
+      "word": "АНАЭРОБ",
+      "translation": "анаэробы",
+      "wordLength": 7,
+      "translationLength": 8,
+      "bothAtLeastSix": true,
+      "sourceText": "анаэробы",
+      "sourceId": "tarat-ba-ru",
+      "sourceUrl": "https://tarat.ru/ru/targema/search/ba/ru/%D0%B0%D0%BD%D0%B0%D1%8D%D1%80%D0%BE%D0%B1",
+      "pdfPage": null,
+      "difference": 1,
+      "longer": "анаэробы",
+      "extraLetters": "ы",
+      "insertions": [
+        {
+          "position": 8,
+          "letter": "ы"
+        }
+      ]
+    },
+    {
+      "word": "АУЫЛ",
+      "translation": "аул",
+      "wordLength": 4,
+      "translationLength": 3,
+      "bothAtLeastSix": false,
+      "sourceText": "деревня, село; аул",
+      "sourceId": "kaikki-ru",
+      "sourceUrl": null,
+      "pdfPage": null,
+      "difference": 1,
+      "longer": "ауыл",
+      "extraLetters": "ы",
+      "insertions": [
+        {
+          "position": 3,
+          "letter": "ы"
+        }
+      ]
+    },
+    {
+      "word": "БАКЕНБАРД",
+      "translation": "бакенбарды",
+      "wordLength": 9,
+      "translationLength": 10,
+      "bothAtLeastSix": true,
+      "sourceText": "бакенбарды",
+      "sourceId": "tarat-ba-ru",
+      "sourceUrl": "https://tarat.ru/ru/targema/search/ba/ru/%D0%B1%D0%B0%D0%BA%D0%B5%D0%BD%D0%B1%D0%B0%D1%80%D0%B4",
+      "pdfPage": null,
+      "difference": 1,
+      "longer": "бакенбарды",
+      "extraLetters": "ы",
+      "insertions": [
+        {
+          "position": 10,
+          "letter": "ы"
+        }
+      ]
+    },
+    {
+      "word": "БАРЫС",
+      "translation": "барс",
+      "wordLength": 5,
+      "translationLength": 4,
+      "bothAtLeastSix": false,
+      "sourceText": "зоол. барс",
+      "sourceId": "kaikki-ru",
+      "sourceUrl": null,
+      "pdfPage": null,
+      "difference": 1,
+      "longer": "барыс",
+      "extraLetters": "ы",
+      "insertions": [
+        {
+          "position": 4,
+          "letter": "ы"
+        }
+      ]
+    },
+    {
+      "word": "БОРЖОМ",
+      "translation": "боржоми",
+      "wordLength": 6,
+      "translationLength": 7,
+      "bothAtLeastSix": true,
+      "sourceText": "боржоми",
+      "sourceId": "tarat-ba-ru",
+      "sourceUrl": "https://tarat.ru/ru/targema/search/ba/ru/%D0%B1%D0%BE%D1%80%D0%B6%D0%BE%D0%BC",
+      "pdfPage": null,
+      "difference": 1,
+      "longer": "боржоми",
+      "extraLetters": "и",
+      "insertions": [
+        {
+          "position": 7,
+          "letter": "и"
+        }
+      ]
+    },
+    {
+      "word": "ВАЛЕРИАН",
+      "translation": "валериана",
+      "wordLength": 8,
+      "translationLength": 9,
+      "bothAtLeastSix": true,
+      "sourceText": "валериана, валерьяна",
+      "sourceId": "tarat-ba-ru",
+      "sourceUrl": "https://tarat.ru/ru/targema/search/ba/ru/%D0%B2%D0%B0%D0%BB%D0%B5%D1%80%D0%B8%D0%B0%D0%BD",
+      "pdfPage": null,
+      "difference": 1,
+      "longer": "валериана",
+      "extraLetters": "а",
+      "insertions": [
+        {
+          "position": 9,
+          "letter": "а"
+        }
+      ]
+    },
+    {
+      "word": "ВИЛДАН",
+      "translation": "вильдан",
+      "wordLength": 6,
+      "translationLength": 7,
+      "bothAtLeastSix": true,
+      "sourceText": "Вильдан",
+      "sourceId": "tarat-ba-ru",
+      "sourceUrl": "https://tarat.ru/ru/targema/search/ba/ru/%D0%B2%D0%B8%D0%BB%D0%B4%D0%B0%D0%BD",
+      "pdfPage": null,
+      "difference": 1,
+      "longer": "вильдан",
+      "extraLetters": "ь",
+      "insertions": [
+        {
+          "position": 4,
+          "letter": "ь"
+        }
+      ]
+    },
+    {
+      "word": "ГАЛЕТ",
+      "translation": "галета",
+      "wordLength": 5,
+      "translationLength": 6,
+      "bothAtLeastSix": false,
+      "sourceText": "галета",
+      "sourceId": "auto-ba-ru-2011",
+      "sourceUrl": null,
+      "pdfPage": 140,
+      "difference": 1,
+      "longer": "галета",
+      "extraLetters": "а",
+      "insertions": [
+        {
+          "position": 6,
+          "letter": "а"
+        }
+      ]
+    },
+    {
+      "word": "ГАМАШ",
+      "translation": "гамаша",
+      "wordLength": 5,
+      "translationLength": 6,
+      "bothAtLeastSix": false,
+      "sourceText": "гамаша",
+      "sourceId": "auto-ba-ru-2011",
+      "sourceUrl": null,
+      "pdfPage": 140,
+      "difference": 1,
+      "longer": "гамаша",
+      "extraLetters": "а",
+      "insertions": [
+        {
+          "position": 6,
+          "letter": "а"
+        }
+      ]
+    },
+    {
+      "word": "ГАМАШ",
+      "translation": "гамаши",
+      "wordLength": 5,
+      "translationLength": 6,
+      "bothAtLeastSix": false,
+      "sourceText": "гамаши",
+      "sourceId": "auto-ba-ru-2011",
+      "sourceUrl": null,
+      "pdfPage": 140,
+      "difference": 1,
+      "longer": "гамаши",
+      "extraLetters": "и",
+      "insertions": [
+        {
+          "position": 6,
+          "letter": "и"
+        }
+      ]
+    },
+    {
+      "word": "ГАРДИН",
+      "translation": "гардина",
+      "wordLength": 6,
+      "translationLength": 7,
+      "bothAtLeastSix": true,
+      "sourceText": "гардина",
+      "sourceId": "auto-ba-ru-2011",
+      "sourceUrl": null,
+      "pdfPage": 140,
+      "difference": 1,
+      "longer": "гардина",
+      "extraLetters": "а",
+      "insertions": [
+        {
+          "position": 7,
+          "letter": "а"
+        }
+      ]
+    },
+    {
+      "word": "ГЕТР",
+      "translation": "гетра",
+      "wordLength": 4,
+      "translationLength": 5,
+      "bothAtLeastSix": false,
+      "sourceText": "гетра",
+      "sourceId": "auto-ba-ru-2011",
+      "sourceUrl": null,
+      "pdfPage": 143,
+      "difference": 1,
+      "longer": "гетра",
+      "extraLetters": "а",
+      "insertions": [
+        {
+          "position": 5,
+          "letter": "а"
+        }
+      ]
+    },
+    {
+      "word": "ГЕТР",
+      "translation": "гетры",
+      "wordLength": 4,
+      "translationLength": 5,
+      "bothAtLeastSix": false,
+      "sourceText": "гетры",
+      "sourceId": "auto-ba-ru-2011",
+      "sourceUrl": null,
+      "pdfPage": 143,
+      "difference": 1,
+      "longer": "гетры",
+      "extraLetters": "ы",
+      "insertions": [
+        {
+          "position": 5,
+          "letter": "ы"
+        }
+      ]
+    },
+    {
+      "word": "ДЕБАТ",
+      "translation": "дебаты",
+      "wordLength": 5,
+      "translationLength": 6,
+      "bothAtLeastSix": false,
+      "sourceText": "дебаты",
+      "sourceId": "tarat-ba-ru",
+      "sourceUrl": "https://tarat.ru/ru/targema/search/ba/ru/%D0%B4%D0%B5%D0%B1%D0%B0%D1%82",
+      "pdfPage": null,
+      "difference": 1,
+      "longer": "дебаты",
+      "extraLetters": "ы",
+      "insertions": [
+        {
+          "position": 6,
+          "letter": "ы"
+        }
+      ]
+    },
+    {
+      "word": "ИМБИР",
+      "translation": "имбирь",
+      "wordLength": 5,
+      "translationLength": 6,
+      "bothAtLeastSix": false,
+      "sourceText": "имбирь",
+      "sourceId": "auto-ba-ru-2011",
+      "sourceUrl": null,
+      "pdfPage": 204,
+      "difference": 1,
+      "longer": "имбирь",
+      "extraLetters": "ь",
+      "insertions": [
+        {
+          "position": 6,
+          "letter": "ь"
+        }
+      ]
+    },
+    {
+      "word": "ИНИЦИАЛ",
+      "translation": "инициалы",
+      "wordLength": 7,
+      "translationLength": 8,
+      "bothAtLeastSix": true,
+      "sourceText": "инициалы",
+      "sourceId": "auto-ba-ru-2011",
+      "sourceUrl": null,
+      "pdfPage": 208,
+      "difference": 1,
+      "longer": "инициалы",
+      "extraLetters": "ы",
+      "insertions": [
+        {
+          "position": 8,
+          "letter": "ы"
+        }
+      ]
+    },
+    {
+      "word": "КАНАУЫС",
+      "translation": "канаус",
+      "wordLength": 7,
+      "translationLength": 6,
+      "bothAtLeastSix": true,
+      "sourceText": "канаус",
+      "sourceId": "tarat-ba-ru",
+      "sourceUrl": "https://tarat.ru/ru/targema/search/ba/ru/%D0%BA%D0%B0%D0%BD%D0%B0%D1%83%D1%8B%D1%81",
+      "pdfPage": null,
+      "difference": 1,
+      "longer": "канауыс",
+      "extraLetters": "ы",
+      "insertions": [
+        {
+          "position": 6,
+          "letter": "ы"
+        }
+      ]
+    },
+    {
+      "word": "КАНИКУЛ",
+      "translation": "каникулы",
+      "wordLength": 7,
+      "translationLength": 8,
+      "bothAtLeastSix": true,
+      "sourceText": "каникулы",
+      "sourceId": "tarat-ba-ru",
+      "sourceUrl": "https://tarat.ru/ru/targema/search/ba/ru/%D0%BA%D0%B0%D0%BD%D0%B8%D0%BA%D1%83%D0%BB",
+      "pdfPage": null,
+      "difference": 1,
+      "longer": "каникулы",
+      "extraLetters": "ы",
+      "insertions": [
+        {
+          "position": 8,
+          "letter": "ы"
+        }
+      ]
+    },
+    {
+      "word": "КАНИСТР",
+      "translation": "канистра",
+      "wordLength": 7,
+      "translationLength": 8,
+      "bothAtLeastSix": true,
+      "sourceText": "канистра",
+      "sourceId": "auto-ba-ru-2011",
+      "sourceUrl": null,
+      "pdfPage": 252,
+      "difference": 1,
+      "longer": "канистра",
+      "extraLetters": "а",
+      "insertions": [
+        {
+          "position": 8,
+          "letter": "а"
+        }
+      ]
+    },
+    {
+      "word": "КАТАПУЛЬТ",
+      "translation": "катапульта",
+      "wordLength": 9,
+      "translationLength": 10,
+      "bothAtLeastSix": true,
+      "sourceText": "катапульта",
+      "sourceId": "auto-ba-ru-2011",
+      "sourceUrl": null,
+      "pdfPage": 255,
+      "difference": 1,
+      "longer": "катапульта",
+      "extraLetters": "а",
+      "insertions": [
+        {
+          "position": 10,
+          "letter": "а"
+        }
+      ]
+    },
+    {
+      "word": "КОТЛЕТ",
+      "translation": "котлета",
+      "wordLength": 6,
+      "translationLength": 7,
+      "bothAtLeastSix": true,
+      "sourceText": "котлета",
+      "sourceId": "tarat-ba-ru",
+      "sourceUrl": "https://tarat.ru/ru/targema/search/ba/ru/%D0%BA%D0%BE%D1%82%D0%BB%D0%B5%D1%82",
+      "pdfPage": null,
+      "difference": 1,
+      "longer": "котлета",
+      "extraLetters": "а",
+      "insertions": [
+        {
+          "position": 7,
+          "letter": "а"
+        }
+      ]
+    },
+    {
+      "word": "КРЕП",
+      "translation": "крепь",
+      "wordLength": 4,
+      "translationLength": 5,
+      "bothAtLeastSix": false,
+      "sourceText": "крепь; крепление",
+      "sourceId": "tarat-ba-ru",
+      "sourceUrl": "https://tarat.ru/ru/targema/search/ba/ru/%D0%BA%D1%80%D0%B5%D0%BF",
+      "pdfPage": null,
+      "difference": 1,
+      "longer": "крепь",
+      "extraLetters": "ь",
+      "insertions": [
+        {
+          "position": 5,
+          "letter": "ь"
+        }
+      ]
+    },
+    {
+      "word": "КУКУРУЗ",
+      "translation": "кукуруза",
+      "wordLength": 7,
+      "translationLength": 8,
+      "bothAtLeastSix": true,
+      "sourceText": "ботан. кукуруза",
+      "sourceId": "kaikki-ru",
+      "sourceUrl": null,
+      "pdfPage": null,
+      "difference": 1,
+      "longer": "кукуруза",
+      "extraLetters": "а",
+      "insertions": [
+        {
+          "position": 8,
+          "letter": "а"
+        }
+      ]
+    },
+    {
+      "word": "КУЛУАР",
+      "translation": "кулуары",
+      "wordLength": 6,
+      "translationLength": 7,
+      "bothAtLeastSix": true,
+      "sourceText": "кулуары",
+      "sourceId": "tarat-ba-ru",
+      "sourceUrl": "https://tarat.ru/ru/targema/search/ba/ru/%D0%BA%D1%83%D0%BB%D1%83%D0%B0%D1%80",
+      "pdfPage": null,
+      "difference": 1,
+      "longer": "кулуары",
+      "extraLetters": "ы",
+      "insertions": [
+        {
+          "position": 7,
+          "letter": "ы"
+        }
+      ]
+    },
+    {
+      "word": "МАКАРОН",
+      "translation": "макароны",
+      "wordLength": 7,
+      "translationLength": 8,
+      "bothAtLeastSix": true,
+      "sourceText": "макароны",
+      "sourceId": "kaikki-ru",
+      "sourceUrl": null,
+      "pdfPage": null,
+      "difference": 1,
+      "longer": "макароны",
+      "extraLetters": "ы",
+      "insertions": [
+        {
+          "position": 8,
+          "letter": "ы"
+        }
+      ]
+    },
+    {
+      "word": "МЕМУАР",
+      "translation": "мемуары",
+      "wordLength": 6,
+      "translationLength": 7,
+      "bothAtLeastSix": true,
+      "sourceText": "мемуары",
+      "sourceId": "auto-ba-ru-2011",
+      "sourceUrl": null,
+      "pdfPage": 369,
+      "difference": 1,
+      "longer": "мемуары",
+      "extraLetters": "ы",
+      "insertions": [
+        {
+          "position": 7,
+          "letter": "ы"
+        }
+      ]
+    },
+    {
+      "word": "МИНУТ",
+      "translation": "минута",
+      "wordLength": 5,
+      "translationLength": 6,
+      "bothAtLeastSix": false,
+      "sourceText": "минута",
+      "sourceId": "kaikki-ru",
+      "sourceUrl": null,
+      "pdfPage": null,
+      "difference": 1,
+      "longer": "минута",
+      "extraLetters": "а",
+      "insertions": [
+        {
+          "position": 6,
+          "letter": "а"
+        }
+      ]
+    },
+    {
+      "word": "НАНОСЕКУНД",
+      "translation": "наносекунда",
+      "wordLength": 10,
+      "translationLength": 11,
+      "bothAtLeastSix": true,
+      "sourceText": "наносекунда",
+      "sourceId": "kaikki-ru",
+      "sourceUrl": null,
+      "pdfPage": null,
+      "difference": 1,
+      "longer": "наносекунда",
+      "extraLetters": "а",
+      "insertions": [
+        {
+          "position": 11,
+          "letter": "а"
+        }
+      ]
+    },
+    {
+      "word": "НЕРВЫ",
+      "translation": "нерв",
+      "wordLength": 5,
+      "translationLength": 4,
+      "bothAtLeastSix": false,
+      "sourceText": "нерв",
+      "sourceId": "tarat-ba-ru",
+      "sourceUrl": "https://tarat.ru/ru/targema/search/ba/ru/%D0%BD%D0%B5%D1%80%D0%B2%D1%8B",
+      "pdfPage": null,
+      "difference": 1,
+      "longer": "нервы",
+      "extraLetters": "ы",
+      "insertions": [
+        {
+          "position": 5,
+          "letter": "ы"
+        }
+      ]
+    },
+    {
+      "word": "НУЖА",
+      "translation": "нужда",
+      "wordLength": 4,
+      "translationLength": 5,
+      "bothAtLeastSix": false,
+      "sourceText": "нужда",
+      "sourceId": "auto-ba-ru-2011",
+      "sourceUrl": null,
+      "pdfPage": 397,
+      "difference": 1,
+      "longer": "нужда",
+      "extraLetters": "д",
+      "insertions": [
+        {
+          "position": 4,
+          "letter": "д"
+        }
+      ]
+    },
+    {
+      "word": "ОДЕЯЛ",
+      "translation": "одеяло",
+      "wordLength": 5,
+      "translationLength": 6,
+      "bothAtLeastSix": false,
+      "sourceText": "одеяло",
+      "sourceId": "tarat-ba-ru",
+      "sourceUrl": "https://tarat.ru/ru/targema/search/ba/ru/%D0%BE%D0%B4%D0%B5%D1%8F%D0%BB",
+      "pdfPage": null,
+      "difference": 1,
+      "longer": "одеяло",
+      "extraLetters": "о",
+      "insertions": [
+        {
+          "position": 6,
+          "letter": "о"
+        }
+      ]
+    },
+    {
+      "word": "ПАНТ",
+      "translation": "панты",
+      "wordLength": 4,
+      "translationLength": 5,
+      "bothAtLeastSix": false,
+      "sourceText": "панты",
+      "sourceId": "auto-ba-ru-2011",
+      "sourceUrl": null,
+      "pdfPage": 423,
+      "difference": 1,
+      "longer": "панты",
+      "extraLetters": "ы",
+      "insertions": [
+        {
+          "position": 5,
+          "letter": "ы"
+        }
+      ]
+    },
+    {
+      "word": "ПАНТАЛОН",
+      "translation": "панталоны",
+      "wordLength": 8,
+      "translationLength": 9,
+      "bothAtLeastSix": true,
+      "sourceText": "панталоны",
+      "sourceId": "auto-ba-ru-2011",
+      "sourceUrl": null,
+      "pdfPage": 423,
+      "difference": 1,
+      "longer": "панталоны",
+      "extraLetters": "ы",
+      "insertions": [
+        {
+          "position": 9,
+          "letter": "ы"
+        }
+      ]
+    },
+    {
+      "word": "ПАПИРОС",
+      "translation": "папироса",
+      "wordLength": 7,
+      "translationLength": 8,
+      "bothAtLeastSix": true,
+      "sourceText": "папироса",
+      "sourceId": "auto-ba-ru-2011",
+      "sourceUrl": null,
+      "pdfPage": 423,
+      "difference": 1,
+      "longer": "папироса",
+      "extraLetters": "а",
+      "insertions": [
+        {
+          "position": 8,
+          "letter": "а"
+        }
+      ]
+    },
+    {
+      "word": "ПЛАЦКАРТ",
+      "translation": "плацкарта",
+      "wordLength": 8,
+      "translationLength": 9,
+      "bothAtLeastSix": true,
+      "sourceText": "плацкарта",
+      "sourceId": "tarat-ba-ru",
+      "sourceUrl": "https://tarat.ru/ru/targema/search/ba/ru/%D0%BF%D0%BB%D0%B0%D1%86%D0%BA%D0%B0%D1%80%D1%82",
+      "pdfPage": null,
+      "difference": 1,
+      "longer": "плацкарта",
+      "extraLetters": "а",
+      "insertions": [
+        {
+          "position": 9,
+          "letter": "а"
+        }
+      ]
+    },
+    {
+      "word": "ПОРТЬЕР",
+      "translation": "портьера",
+      "wordLength": 7,
+      "translationLength": 8,
+      "bothAtLeastSix": true,
+      "sourceText": "портьера",
+      "sourceId": "tarat-ba-ru",
+      "sourceUrl": "https://tarat.ru/ru/targema/search/ba/ru/%D0%BF%D0%BE%D1%80%D1%82%D1%8C%D0%B5%D1%80",
+      "pdfPage": null,
+      "difference": 1,
+      "longer": "портьера",
+      "extraLetters": "а",
+      "insertions": [
+        {
+          "position": 8,
+          "letter": "а"
+        }
+      ]
+    },
+    {
+      "word": "ПРИПАС",
+      "translation": "припасы",
+      "wordLength": 6,
+      "translationLength": 7,
+      "bothAtLeastSix": true,
+      "sourceText": "припасы",
+      "sourceId": "tarat-ba-ru",
+      "sourceUrl": "https://tarat.ru/ru/targema/search/ba/ru/%D0%BF%D1%80%D0%B8%D0%BF%D0%B0%D1%81",
+      "pdfPage": null,
+      "difference": 1,
+      "longer": "припасы",
+      "extraLetters": "ы",
+      "insertions": [
+        {
+          "position": 7,
+          "letter": "ы"
+        }
+      ]
+    },
+    {
+      "word": "РАМ",
+      "translation": "рама",
+      "wordLength": 3,
+      "translationLength": 4,
+      "bothAtLeastSix": false,
+      "sourceText": "рама",
+      "sourceId": "tarat-ba-ru",
+      "sourceUrl": "https://tarat.ru/ru/targema/search/ba/ru/%D1%80%D0%B0%D0%BC",
+      "pdfPage": null,
+      "difference": 1,
+      "longer": "рама",
+      "extraLetters": "а",
+      "insertions": [
+        {
+          "position": 4,
+          "letter": "а"
+        }
+      ]
+    },
+    {
+      "word": "РЕССОР",
+      "translation": "рессора",
+      "wordLength": 6,
+      "translationLength": 7,
+      "bothAtLeastSix": true,
+      "sourceText": "рессора",
+      "sourceId": "tarat-ba-ru",
+      "sourceUrl": "https://tarat.ru/ru/targema/search/ba/ru/%D1%80%D0%B5%D1%81%D1%81%D0%BE%D1%80",
+      "pdfPage": null,
+      "difference": 1,
+      "longer": "рессора",
+      "extraLetters": "а",
+      "insertions": [
+        {
+          "position": 7,
+          "letter": "а"
+        }
+      ]
+    },
+    {
+      "word": "СЕКУНД",
+      "translation": "секунда",
+      "wordLength": 6,
+      "translationLength": 7,
+      "bothAtLeastSix": true,
+      "sourceText": "секунда",
+      "sourceId": "kaikki-ru",
+      "sourceUrl": null,
+      "pdfPage": null,
+      "difference": 1,
+      "longer": "секунда",
+      "extraLetters": "а",
+      "insertions": [
+        {
+          "position": 7,
+          "letter": "а"
+        }
+      ]
+    },
+    {
+      "word": "СИГАРЕТ",
+      "translation": "сигарета",
+      "wordLength": 7,
+      "translationLength": 8,
+      "bothAtLeastSix": true,
+      "sourceText": "сигарета",
+      "sourceId": "tarat-ba-ru",
+      "sourceUrl": "https://tarat.ru/ru/targema/search/ba/ru/%D1%81%D0%B8%D0%B3%D0%B0%D1%80%D0%B5%D1%82",
+      "pdfPage": null,
+      "difference": 1,
+      "longer": "сигарета",
+      "extraLetters": "а",
+      "insertions": [
+        {
+          "position": 8,
+          "letter": "а"
+        }
+      ]
+    },
+    {
+      "word": "ТРЕФ",
+      "translation": "трефы",
+      "wordLength": 4,
+      "translationLength": 5,
+      "bothAtLeastSix": false,
+      "sourceText": "трефы",
+      "sourceId": "auto-ba-ru-2011",
+      "sourceUrl": null,
+      "pdfPage": 529,
+      "difference": 1,
+      "longer": "трефы",
+      "extraLetters": "ы",
+      "insertions": [
+        {
+          "position": 5,
+          "letter": "ы"
+        }
+      ]
+    },
+    {
+      "word": "ФАНЕР",
+      "translation": "фанера",
+      "wordLength": 5,
+      "translationLength": 6,
+      "bothAtLeastSix": false,
+      "sourceText": "фанера",
+      "sourceId": "auto-ba-ru-2011",
+      "sourceUrl": null,
+      "pdfPage": 595,
+      "difference": 1,
+      "longer": "фанера",
+      "extraLetters": "а",
+      "insertions": [
+        {
+          "position": 6,
+          "letter": "а"
+        }
+      ]
+    },
+    {
+      "word": "ФЕМТОСЕКУНД",
+      "translation": "фемтосекунда",
+      "wordLength": 11,
+      "translationLength": 12,
+      "bothAtLeastSix": true,
+      "sourceText": "фемтосекунда",
+      "sourceId": "kaikki-ru",
+      "sourceUrl": null,
+      "pdfPage": null,
+      "difference": 1,
+      "longer": "фемтосекунда",
+      "extraLetters": "а",
+      "insertions": [
+        {
+          "position": 12,
+          "letter": "а"
+        }
+      ]
+    },
+    {
+      "word": "ФИНАНС",
+      "translation": "финансы",
+      "wordLength": 6,
+      "translationLength": 7,
+      "bothAtLeastSix": true,
+      "sourceText": "финансы",
+      "sourceId": "tarat-ba-ru",
+      "sourceUrl": "https://tarat.ru/ru/targema/search/ba/ru/%D1%84%D0%B8%D0%BD%D0%B0%D0%BD%D1%81",
+      "pdfPage": null,
+      "difference": 1,
+      "longer": "финансы",
+      "extraLetters": "ы",
+      "insertions": [
+        {
+          "position": 7,
+          "letter": "ы"
+        }
+      ]
+    },
+    {
+      "word": "ХАЖ",
+      "translation": "хадж",
+      "wordLength": 3,
+      "translationLength": 4,
+      "bothAtLeastSix": false,
+      "sourceText": "религ. хадж, паломничество в Мекку, совершаемое мусульманами",
+      "sourceId": "kaikki-ru",
+      "sourceUrl": null,
+      "pdfPage": null,
+      "difference": 1,
+      "longer": "хадж",
+      "extraLetters": "д",
+      "insertions": [
+        {
+          "position": 3,
+          "letter": "д"
+        }
+      ]
+    },
+    {
+      "word": "ЦИФР",
+      "translation": "цифра",
+      "wordLength": 4,
+      "translationLength": 5,
+      "bothAtLeastSix": false,
+      "sourceText": "цифра",
+      "sourceId": "auto-ba-ru-2011",
+      "sourceUrl": null,
+      "pdfPage": 663,
+      "difference": 1,
+      "longer": "цифра",
+      "extraLetters": "а",
+      "insertions": [
+        {
+          "position": 5,
+          "letter": "а"
+        }
+      ]
+    },
+    {
+      "word": "ШАХМАТ",
+      "translation": "шахматы",
+      "wordLength": 6,
+      "translationLength": 7,
+      "bothAtLeastSix": true,
+      "sourceText": "шахматы",
+      "sourceId": "auto-ba-ru-2011",
+      "sourceUrl": null,
+      "pdfPage": 668,
+      "difference": 1,
+      "longer": "шахматы",
+      "extraLetters": "ы",
+      "insertions": [
+        {
+          "position": 7,
+          "letter": "ы"
+        }
+      ]
+    },
+    {
+      "word": "ШИН",
+      "translation": "шина",
+      "wordLength": 3,
+      "translationLength": 4,
+      "bothAtLeastSix": false,
+      "sourceText": "шина",
+      "sourceId": "auto-ba-ru-2011",
+      "sourceUrl": null,
+      "pdfPage": 672,
+      "difference": 1,
+      "longer": "шина",
+      "extraLetters": "а",
+      "insertions": [
+        {
+          "position": 4,
+          "letter": "а"
+        }
+      ]
+    },
+    {
+      "word": "ШПАЛ",
+      "translation": "шпала",
+      "wordLength": 4,
+      "translationLength": 5,
+      "bothAtLeastSix": false,
+      "sourceText": "шпала",
+      "sourceId": "auto-ba-ru-2011",
+      "sourceUrl": null,
+      "pdfPage": 674,
+      "difference": 1,
+      "longer": "шпала",
+      "extraLetters": "а",
+      "insertions": [
+        {
+          "position": 5,
+          "letter": "а"
+        }
+      ]
+    },
+    {
+      "word": "ШПАЛЕР",
+      "translation": "шпалеры",
+      "wordLength": 6,
+      "translationLength": 7,
+      "bothAtLeastSix": true,
+      "sourceText": "шпалеры",
+      "sourceId": "auto-ba-ru-2011",
+      "sourceUrl": null,
+      "pdfPage": 674,
+      "difference": 1,
+      "longer": "шпалеры",
+      "extraLetters": "ы",
+      "insertions": [
+        {
+          "position": 7,
+          "letter": "ы"
+        }
+      ]
+    },
+    {
+      "word": "ШПРОТ",
+      "translation": "шпроты",
+      "wordLength": 5,
+      "translationLength": 6,
+      "bothAtLeastSix": false,
+      "sourceText": "шпроты",
+      "sourceId": "auto-ba-ru-2011",
+      "sourceUrl": null,
+      "pdfPage": 674,
+      "difference": 1,
+      "longer": "шпроты",
+      "extraLetters": "ы",
+      "insertions": [
+        {
+          "position": 6,
+          "letter": "ы"
+        }
+      ]
+    },
+    {
+      "word": "ҠАРБУЗ",
+      "translation": "арбуз",
+      "wordLength": 6,
+      "translationLength": 5,
+      "bothAtLeastSix": false,
+      "sourceText": "арбуз",
+      "sourceId": "kaikki-ru",
+      "sourceUrl": null,
+      "pdfPage": null,
+      "difference": 1,
+      "longer": "ҡарбуз",
+      "extraLetters": "ҡ",
+      "insertions": [
+        {
+          "position": 1,
+          "letter": "ҡ"
+        }
+      ]
+    },
+    {
+      "word": "АЛЮМИН",
+      "translation": "алюминий",
+      "wordLength": 6,
+      "translationLength": 8,
+      "bothAtLeastSix": true,
+      "sourceText": "хим. алюминий",
+      "sourceId": "kaikki-ru",
+      "sourceUrl": null,
+      "pdfPage": null,
+      "difference": 2,
+      "longer": "алюминий",
+      "extraLetters": "ий",
+      "insertions": [
+        {
+          "position": 7,
+          "letter": "и"
+        },
+        {
+          "position": 8,
+          "letter": "й"
+        }
+      ]
+    },
+    {
+      "word": "ВЕГЕТАРИАН",
+      "translation": "вегетарианец",
+      "wordLength": 10,
+      "translationLength": 12,
+      "bothAtLeastSix": true,
+      "sourceText": "вегетарианец",
+      "sourceId": "kaikki-ru",
+      "sourceUrl": null,
+      "pdfPage": null,
+      "difference": 2,
+      "longer": "вегетарианец",
+      "extraLetters": "ец",
+      "insertions": [
+        {
+          "position": 11,
+          "letter": "е"
+        },
+        {
+          "position": 12,
+          "letter": "ц"
+        }
+      ]
+    },
+    {
+      "word": "ГРАЖДАН",
+      "translation": "гражданин",
+      "wordLength": 7,
+      "translationLength": 9,
+      "bothAtLeastSix": true,
+      "sourceText": "гражданин",
+      "sourceId": "kaikki-ru",
+      "sourceUrl": null,
+      "pdfPage": null,
+      "difference": 2,
+      "longer": "гражданин",
+      "extraLetters": "ин",
+      "insertions": [
+        {
+          "position": 8,
+          "letter": "и"
+        },
+        {
+          "position": 9,
+          "letter": "н"
+        }
+      ]
+    },
+    {
+      "word": "ДВОРЯН",
+      "translation": "дворянин",
+      "wordLength": 6,
+      "translationLength": 8,
+      "bothAtLeastSix": true,
+      "sourceText": "дворянин",
+      "sourceId": "auto-ba-ru-2011",
+      "sourceUrl": null,
+      "pdfPage": 158,
+      "difference": 2,
+      "longer": "дворянин",
+      "extraLetters": "ин",
+      "insertions": [
+        {
+          "position": 7,
+          "letter": "и"
+        },
+        {
+          "position": 8,
+          "letter": "н"
+        }
+      ]
+    },
+    {
+      "word": "ДВОРЯН",
+      "translation": "дворянка",
+      "wordLength": 6,
+      "translationLength": 8,
+      "bothAtLeastSix": true,
+      "sourceText": "дворянка",
+      "sourceId": "auto-ba-ru-2011",
+      "sourceUrl": null,
+      "pdfPage": 158,
+      "difference": 2,
+      "longer": "дворянка",
+      "extraLetters": "ка",
+      "insertions": [
+        {
+          "position": 7,
+          "letter": "к"
+        },
+        {
+          "position": 8,
+          "letter": "а"
+        }
+      ]
+    },
+    {
+      "word": "ДЮРАЛЮМИН",
+      "translation": "дюралюминий",
+      "wordLength": 9,
+      "translationLength": 11,
+      "bothAtLeastSix": true,
+      "sourceText": "дюралюминий, дюраль",
+      "sourceId": "kaikki-ru",
+      "sourceUrl": null,
+      "pdfPage": null,
+      "difference": 2,
+      "longer": "дюралюминий",
+      "extraLetters": "ий",
+      "insertions": [
+        {
+          "position": 10,
+          "letter": "и"
+        },
+        {
+          "position": 11,
+          "letter": "й"
+        }
+      ]
+    },
+    {
+      "word": "КАТОРЖАН",
+      "translation": "каторжанин",
+      "wordLength": 8,
+      "translationLength": 10,
+      "bothAtLeastSix": true,
+      "sourceText": "каторжанин",
+      "sourceId": "auto-ba-ru-2011",
+      "sourceUrl": null,
+      "pdfPage": 255,
+      "difference": 2,
+      "longer": "каторжанин",
+      "extraLetters": "ин",
+      "insertions": [
+        {
+          "position": 9,
+          "letter": "и"
+        },
+        {
+          "position": 10,
+          "letter": "н"
+        }
+      ]
+    },
+    {
+      "word": "КАТОРЖАН",
+      "translation": "каторжанка",
+      "wordLength": 8,
+      "translationLength": 10,
+      "bothAtLeastSix": true,
+      "sourceText": "каторжанка",
+      "sourceId": "auto-ba-ru-2011",
+      "sourceUrl": null,
+      "pdfPage": 255,
+      "difference": 2,
+      "longer": "каторжанка",
+      "extraLetters": "ка",
+      "insertions": [
+        {
+          "position": 9,
+          "letter": "к"
+        },
+        {
+          "position": 10,
+          "letter": "а"
+        }
+      ]
+    },
+    {
+      "word": "КОЛОННА",
+      "translation": "колоннада",
+      "wordLength": 7,
+      "translationLength": 9,
+      "bothAtLeastSix": true,
+      "sourceText": "колоннада",
+      "sourceId": "tarat-ba-ru",
+      "sourceUrl": "https://tarat.ru/ru/targema/search/ba/ru/%D0%BA%D0%BE%D0%BB%D0%BE%D0%BD%D0%BD%D0%B0",
+      "pdfPage": null,
+      "difference": 2,
+      "longer": "колоннада",
+      "extraLetters": "да",
+      "insertions": [
+        {
+          "position": 8,
+          "letter": "д"
+        },
+        {
+          "position": 9,
+          "letter": "а"
+        }
+      ]
+    },
+    {
+      "word": "ЛЮТЕРАН",
+      "translation": "лютеранин",
+      "wordLength": 7,
+      "translationLength": 9,
+      "bothAtLeastSix": true,
+      "sourceText": "лютеранин",
+      "sourceId": "auto-ba-ru-2011",
+      "sourceUrl": null,
+      "pdfPage": 357,
+      "difference": 2,
+      "longer": "лютеранин",
+      "extraLetters": "ин",
+      "insertions": [
+        {
+          "position": 8,
+          "letter": "и"
+        },
+        {
+          "position": 9,
+          "letter": "н"
+        }
+      ]
+    },
+    {
+      "word": "ЛЮТЕРАН",
+      "translation": "лютеранка",
+      "wordLength": 7,
+      "translationLength": 9,
+      "bothAtLeastSix": true,
+      "sourceText": "лютеранка",
+      "sourceId": "auto-ba-ru-2011",
+      "sourceUrl": null,
+      "pdfPage": 357,
+      "difference": 2,
+      "longer": "лютеранка",
+      "extraLetters": "ка",
+      "insertions": [
+        {
+          "position": 8,
+          "letter": "к"
+        },
+        {
+          "position": 9,
+          "letter": "а"
+        }
+      ]
+    },
+    {
+      "word": "ПРОЛЕТАР",
+      "translation": "пролетарий",
+      "wordLength": 8,
+      "translationLength": 10,
+      "bothAtLeastSix": true,
+      "sourceText": "пролетарий",
+      "sourceId": "tarat-ba-ru",
+      "sourceUrl": "https://tarat.ru/ru/targema/search/ba/ru/%D0%BF%D1%80%D0%BE%D0%BB%D0%B5%D1%82%D0%B0%D1%80",
+      "pdfPage": null,
+      "difference": 2,
+      "longer": "пролетарий",
+      "extraLetters": "ий",
+      "insertions": [
+        {
+          "position": 9,
+          "letter": "и"
+        },
+        {
+          "position": 10,
+          "letter": "й"
+        }
+      ]
+    },
+    {
+      "word": "РАЗНОЧИН",
+      "translation": "разночинец",
+      "wordLength": 8,
+      "translationLength": 10,
+      "bothAtLeastSix": true,
+      "sourceText": "разночинец",
+      "sourceId": "tarat-ba-ru",
+      "sourceUrl": "https://tarat.ru/ru/targema/search/ba/ru/%D1%80%D0%B0%D0%B7%D0%BD%D0%BE%D1%87%D0%B8%D0%BD",
+      "pdfPage": null,
+      "difference": 2,
+      "longer": "разночинец",
+      "extraLetters": "ец",
+      "insertions": [
+        {
+          "position": 9,
+          "letter": "е"
+        },
+        {
+          "position": 10,
+          "letter": "ц"
+        }
+      ]
+    },
+    {
+      "word": "ТАЛЬЯН",
+      "translation": "тальянка",
+      "wordLength": 6,
+      "translationLength": 8,
+      "bothAtLeastSix": true,
+      "sourceText": "тальянка",
+      "sourceId": "auto-ba-ru-2011",
+      "sourceUrl": null,
+      "pdfPage": 479,
+      "difference": 2,
+      "longer": "тальянка",
+      "extraLetters": "ка",
+      "insertions": [
+        {
+          "position": 7,
+          "letter": "к"
+        },
+        {
+          "position": 8,
+          "letter": "а"
+        }
+      ]
+    },
+    {
+      "word": "ХРИСТИАН",
+      "translation": "христианин",
+      "wordLength": 8,
+      "translationLength": 10,
+      "bothAtLeastSix": true,
+      "sourceText": "христианин",
+      "sourceId": "auto-ba-ru-2011",
+      "sourceUrl": null,
+      "pdfPage": 617,
+      "difference": 2,
+      "longer": "христианин",
+      "extraLetters": "ин",
+      "insertions": [
+        {
+          "position": 9,
+          "letter": "и"
+        },
+        {
+          "position": 10,
+          "letter": "н"
+        }
+      ]
+    },
+    {
+      "word": "ХРИСТИАН",
+      "translation": "христианка",
+      "wordLength": 8,
+      "translationLength": 10,
+      "bothAtLeastSix": true,
+      "sourceText": "христианка",
+      "sourceId": "auto-ba-ru-2011",
+      "sourceUrl": null,
+      "pdfPage": 617,
+      "difference": 2,
+      "longer": "христианка",
+      "extraLetters": "ка",
+      "insertions": [
+        {
+          "position": 9,
+          "letter": "к"
+        },
+        {
+          "position": 10,
+          "letter": "а"
+        }
+      ]
+    },
+    {
+      "word": "ФРИКАТИВ",
+      "translation": "фрикативный",
+      "wordLength": 8,
+      "translationLength": 11,
+      "bothAtLeastSix": true,
+      "sourceText": "фрикативный",
+      "sourceId": "academic-09",
+      "sourceUrl": null,
+      "pdfPage": 326,
+      "difference": 3,
+      "longer": "фрикативный",
+      "extraLetters": "ный",
+      "insertions": [
+        {
+          "position": 9,
+          "letter": "н"
+        },
+        {
+          "position": 10,
+          "letter": "ы"
+        },
+        {
+          "position": 11,
+          "letter": "й"
+        }
+      ]
+    }
+  ],
+  "removedPairs": [
+    {
+      "word": "АВАР",
+      "translation": "авары",
+      "wordLength": 4,
+      "translationLength": 5,
+      "bothAtLeastSix": false,
+      "sourceText": "авары",
+      "sourceId": "academic-01",
+      "sourceUrl": null,
+      "pdfPage": 124,
+      "difference": 1,
+      "longer": "авары",
+      "extraLetters": "ы",
+      "insertions": [
+        {
+          "position": 5,
+          "letter": "ы"
+        }
+      ],
+      "status": "removed"
+    },
+    {
+      "word": "ИНК",
+      "translation": "инки",
+      "wordLength": 3,
+      "translationLength": 4,
+      "bothAtLeastSix": false,
+      "sourceText": "инки",
+      "sourceId": "tarat-ba-ru",
+      "sourceUrl": "https://tarat.ru/ru/targema/search/ba/ru/%D0%B8%D0%BD%D0%BA",
+      "pdfPage": null,
+      "difference": 1,
+      "longer": "инки",
+      "extraLetters": "и",
+      "insertions": [
+        {
+          "position": 4,
+          "letter": "и"
+        }
+      ],
+      "status": "removed"
+    },
+    {
+      "word": "ЛАР",
+      "translation": "ларь",
+      "wordLength": 3,
+      "translationLength": 4,
+      "bothAtLeastSix": false,
+      "sourceText": "ларь",
+      "sourceId": "auto-ba-ru-2011",
+      "sourceUrl": null,
+      "pdfPage": 353,
+      "difference": 1,
+      "longer": "ларь",
+      "extraLetters": "ь",
+      "insertions": [
+        {
+          "position": 4,
+          "letter": "ь"
+        }
+      ],
+      "status": "removed"
+    },
+    {
+      "word": "ЛАТИН",
+      "translation": "латины",
+      "wordLength": 5,
+      "translationLength": 6,
+      "bothAtLeastSix": false,
+      "sourceText": "латины",
+      "sourceId": "academic-06",
+      "sourceUrl": null,
+      "pdfPage": 82,
+      "difference": 1,
+      "longer": "латины",
+      "extraLetters": "ы",
+      "insertions": [
+        {
+          "position": 6,
+          "letter": "ы"
+        }
+      ],
+      "status": "removed"
+    },
+    {
+      "word": "РУН",
+      "translation": "руна",
+      "wordLength": 3,
+      "translationLength": 4,
+      "bothAtLeastSix": false,
+      "sourceText": "руна",
+      "sourceId": "tarat-ba-ru",
+      "sourceUrl": "https://tarat.ru/ru/targema/search/ba/ru/%D1%80%D1%83%D0%BD",
+      "pdfPage": null,
+      "difference": 1,
+      "longer": "руна",
+      "extraLetters": "а",
+      "insertions": [
+        {
+          "position": 4,
+          "letter": "а"
+        }
+      ],
+      "status": "removed"
+    },
+    {
+      "word": "ТАЖИК",
+      "translation": "таджик",
+      "wordLength": 5,
+      "translationLength": 6,
+      "bothAtLeastSix": false,
+      "sourceText": "таджик",
+      "sourceId": "tarat-ba-ru",
+      "sourceUrl": "https://tarat.ru/ru/targema/search/ba/ru/%D1%82%D0%B0%D0%B6%D0%B8%D0%BA",
+      "pdfPage": null,
+      "difference": 1,
+      "longer": "таджик",
+      "extraLetters": "д",
+      "insertions": [
+        {
+          "position": 3,
+          "letter": "д"
+        }
+      ],
+      "status": "removed"
+    },
+    {
+      "word": "ФИН",
+      "translation": "финн",
+      "wordLength": 3,
+      "translationLength": 4,
+      "bothAtLeastSix": false,
+      "sourceText": "финн",
+      "sourceId": "academic-09",
+      "sourceUrl": null,
+      "pdfPage": 303,
+      "difference": 1,
+      "longer": "финн",
+      "extraLetters": "н",
+      "insertions": [
+        {
+          "position": 4,
+          "letter": "н"
+        }
+      ],
+      "status": "removed"
+    },
+    {
+      "word": "АБАЗИН",
+      "translation": "абазинец",
+      "wordLength": 6,
+      "translationLength": 8,
+      "bothAtLeastSix": true,
+      "sourceText": "абазинец",
+      "sourceId": "academic-01",
+      "sourceUrl": null,
+      "pdfPage": 111,
+      "difference": 2,
+      "longer": "абазинец",
+      "extraLetters": "ец",
+      "insertions": [
+        {
+          "position": 7,
+          "letter": "е"
+        },
+        {
+          "position": 8,
+          "letter": "ц"
+        }
+      ],
+      "status": "removed"
+    },
+    {
+      "word": "АМЕРИКАН",
+      "translation": "американец",
+      "wordLength": 8,
+      "translationLength": 10,
+      "bothAtLeastSix": true,
+      "sourceText": "американец",
+      "sourceId": "auto-ba-ru-2011",
+      "sourceUrl": null,
+      "pdfPage": 33,
+      "difference": 2,
+      "longer": "американец",
+      "extraLetters": "ец",
+      "insertions": [
+        {
+          "position": 9,
+          "letter": "е"
+        },
+        {
+          "position": 10,
+          "letter": "ц"
+        }
+      ],
+      "status": "removed"
+    },
+    {
+      "word": "АМЕРИКАН",
+      "translation": "американцы",
+      "wordLength": 8,
+      "translationLength": 10,
+      "bothAtLeastSix": true,
+      "sourceText": "американцы",
+      "sourceId": "academic-01",
+      "sourceUrl": null,
+      "pdfPage": 271,
+      "difference": 2,
+      "longer": "американцы",
+      "extraLetters": "цы",
+      "insertions": [
+        {
+          "position": 9,
+          "letter": "ц"
+        },
+        {
+          "position": 10,
+          "letter": "ы"
+        }
+      ],
+      "status": "removed"
+    },
+    {
+      "word": "АРГЕНТИН",
+      "translation": "аргентинец",
+      "wordLength": 8,
+      "translationLength": 10,
+      "bothAtLeastSix": true,
+      "sourceText": "аргентинец",
+      "sourceId": "tarat-ba-ru",
+      "sourceUrl": "https://tarat.ru/ru/targema/search/ba/ru/%D0%B0%D1%80%D0%B3%D0%B5%D0%BD%D1%82%D0%B8%D0%BD",
+      "pdfPage": null,
+      "difference": 2,
+      "longer": "аргентинец",
+      "extraLetters": "ец",
+      "insertions": [
+        {
+          "position": 9,
+          "letter": "е"
+        },
+        {
+          "position": 10,
+          "letter": "ц"
+        }
+      ],
+      "status": "removed"
+    },
+    {
+      "word": "АФРИКАН",
+      "translation": "африканец",
+      "wordLength": 7,
+      "translationLength": 9,
+      "bothAtLeastSix": true,
+      "sourceText": "африканец",
+      "sourceId": "auto-ba-ru-2011",
+      "sourceUrl": null,
+      "pdfPage": 62,
+      "difference": 2,
+      "longer": "африканец",
+      "extraLetters": "ец",
+      "insertions": [
+        {
+          "position": 8,
+          "letter": "е"
+        },
+        {
+          "position": 9,
+          "letter": "ц"
+        }
+      ],
+      "status": "removed"
+    },
+    {
+      "word": "БИРМАН",
+      "translation": "бирманец",
+      "wordLength": 6,
+      "translationLength": 8,
+      "bothAtLeastSix": true,
+      "sourceText": "бирманец",
+      "sourceId": "academic-02",
+      "sourceUrl": null,
+      "pdfPage": 284,
+      "difference": 2,
+      "longer": "бирманец",
+      "extraLetters": "ец",
+      "insertions": [
+        {
+          "position": 7,
+          "letter": "е"
+        },
+        {
+          "position": 8,
+          "letter": "ц"
+        }
+      ],
+      "status": "removed"
+    },
+    {
+      "word": "БОЛГАР",
+      "translation": "болгарин",
+      "wordLength": 6,
+      "translationLength": 8,
+      "bothAtLeastSix": true,
+      "sourceText": "болгарин",
+      "sourceId": "tarat-ba-ru",
+      "sourceUrl": "https://tarat.ru/ru/targema/search/ba/ru/%D0%B1%D0%BE%D0%BB%D0%B3%D0%B0%D1%80",
+      "pdfPage": null,
+      "difference": 2,
+      "longer": "болгарин",
+      "extraLetters": "ин",
+      "insertions": [
+        {
+          "position": 7,
+          "letter": "и"
+        },
+        {
+          "position": 8,
+          "letter": "н"
+        }
+      ],
+      "status": "removed"
+    },
+    {
+      "word": "БРАЗИЛ",
+      "translation": "бразилец",
+      "wordLength": 6,
+      "translationLength": 8,
+      "bothAtLeastSix": true,
+      "sourceText": "бразилец",
+      "sourceId": "tarat-ba-ru",
+      "sourceUrl": "https://tarat.ru/ru/targema/search/ba/ru/%D0%B1%D1%80%D0%B0%D0%B7%D0%B8%D0%BB",
+      "pdfPage": null,
+      "difference": 2,
+      "longer": "бразилец",
+      "extraLetters": "ец",
+      "insertions": [
+        {
+          "position": 7,
+          "letter": "е"
+        },
+        {
+          "position": 8,
+          "letter": "ц"
+        }
+      ],
+      "status": "removed"
+    },
+    {
+      "word": "ВЬЕТНАМ",
+      "translation": "вьетнамец",
+      "wordLength": 7,
+      "translationLength": 9,
+      "bothAtLeastSix": true,
+      "sourceText": "вьетнамец",
+      "sourceId": "tarat-ba-ru",
+      "sourceUrl": "https://tarat.ru/ru/targema/search/ba/ru/%D0%B2%D1%8C%D0%B5%D1%82%D0%BD%D0%B0%D0%BC",
+      "pdfPage": null,
+      "difference": 2,
+      "longer": "вьетнамец",
+      "extraLetters": "ец",
+      "insertions": [
+        {
+          "position": 8,
+          "letter": "е"
+        },
+        {
+          "position": 9,
+          "letter": "ц"
+        }
+      ],
+      "status": "removed"
+    },
+    {
+      "word": "ГЕРМАН",
+      "translation": "германец",
+      "wordLength": 6,
+      "translationLength": 8,
+      "bothAtLeastSix": true,
+      "sourceText": "германец",
+      "sourceId": "tarat-ba-ru",
+      "sourceUrl": "https://tarat.ru/ru/targema/search/ba/ru/%D0%B3%D0%B5%D1%80%D0%BC%D0%B0%D0%BD",
+      "pdfPage": null,
+      "difference": 2,
+      "longer": "германец",
+      "extraLetters": "ец",
+      "insertions": [
+        {
+          "position": 7,
+          "letter": "е"
+        },
+        {
+          "position": 8,
+          "letter": "ц"
+        }
+      ],
+      "status": "removed"
+    },
+    {
+      "word": "ГОЛЛАНД",
+      "translation": "голландец",
+      "wordLength": 7,
+      "translationLength": 9,
+      "bothAtLeastSix": true,
+      "sourceText": "голландец",
+      "sourceId": "tarat-ba-ru",
+      "sourceUrl": "https://tarat.ru/ru/targema/search/ba/ru/%D0%B3%D0%BE%D0%BB%D0%BB%D0%B0%D0%BD%D0%B4",
+      "pdfPage": null,
+      "difference": 2,
+      "longer": "голландец",
+      "extraLetters": "ец",
+      "insertions": [
+        {
+          "position": 8,
+          "letter": "е"
+        },
+        {
+          "position": 9,
+          "letter": "ц"
+        }
+      ],
+      "status": "removed"
+    },
+    {
+      "word": "ИРЛАНД",
+      "translation": "ирландец",
+      "wordLength": 6,
+      "translationLength": 8,
+      "bothAtLeastSix": true,
+      "sourceText": "ирландец",
+      "sourceId": "tarat-ba-ru",
+      "sourceUrl": "https://tarat.ru/ru/targema/search/ba/ru/%D0%B8%D1%80%D0%BB%D0%B0%D0%BD%D0%B4",
+      "pdfPage": null,
+      "difference": 2,
+      "longer": "ирландец",
+      "extraLetters": "ец",
+      "insertions": [
+        {
+          "position": 7,
+          "letter": "е"
+        },
+        {
+          "position": 8,
+          "letter": "ц"
+        }
+      ],
+      "status": "removed"
+    },
+    {
+      "word": "ИСЛАНД",
+      "translation": "исландец",
+      "wordLength": 6,
+      "translationLength": 8,
+      "bothAtLeastSix": true,
+      "sourceText": "исландец",
+      "sourceId": "tarat-ba-ru",
+      "sourceUrl": "https://tarat.ru/ru/targema/search/ba/ru/%D0%B8%D1%81%D0%BB%D0%B0%D0%BD%D0%B4",
+      "pdfPage": null,
+      "difference": 2,
+      "longer": "исландец",
+      "extraLetters": "ец",
+      "insertions": [
+        {
+          "position": 7,
+          "letter": "е"
+        },
+        {
+          "position": 8,
+          "letter": "ц"
+        }
+      ],
+      "status": "removed"
+    },
+    {
+      "word": "ИТАЛЬЯН",
+      "translation": "итальянец",
+      "wordLength": 7,
+      "translationLength": 9,
+      "bothAtLeastSix": true,
+      "sourceText": "итальянец",
+      "sourceId": "tarat-ba-ru",
+      "sourceUrl": "https://tarat.ru/ru/targema/search/ba/ru/%D0%B8%D1%82%D0%B0%D0%BB%D1%8C%D1%8F%D0%BD",
+      "pdfPage": null,
+      "difference": 2,
+      "longer": "итальянец",
+      "extraLetters": "ец",
+      "insertions": [
+        {
+          "position": 8,
+          "letter": "е"
+        },
+        {
+          "position": 9,
+          "letter": "ц"
+        }
+      ],
+      "status": "removed"
+    },
+    {
+      "word": "МАВРИТАН",
+      "translation": "мавританец",
+      "wordLength": 8,
+      "translationLength": 10,
+      "bothAtLeastSix": true,
+      "sourceText": "мавританец",
+      "sourceId": "academic-06",
+      "sourceUrl": null,
+      "pdfPage": 141,
+      "difference": 2,
+      "longer": "мавританец",
+      "extraLetters": "ец",
+      "insertions": [
+        {
+          "position": 9,
+          "letter": "е"
+        },
+        {
+          "position": 10,
+          "letter": "ц"
+        }
+      ],
+      "status": "removed"
+    },
+    {
+      "word": "МАНЖУР",
+      "translation": "маньчжур",
+      "wordLength": 6,
+      "translationLength": 8,
+      "bothAtLeastSix": true,
+      "sourceText": "маньчжур",
+      "sourceId": "academic-06",
+      "sourceUrl": null,
+      "pdfPage": 197,
+      "difference": 2,
+      "longer": "маньчжур",
+      "extraLetters": "ьч",
+      "insertions": [
+        {
+          "position": 4,
+          "letter": "ь"
+        },
+        {
+          "position": 5,
+          "letter": "ч"
+        }
+      ],
+      "status": "removed"
+    },
+    {
+      "word": "МЕКСИКАН",
+      "translation": "мексиканец",
+      "wordLength": 8,
+      "translationLength": 10,
+      "bothAtLeastSix": true,
+      "sourceText": "мексиканец",
+      "sourceId": "academic-06",
+      "sourceUrl": null,
+      "pdfPage": 253,
+      "difference": 2,
+      "longer": "мексиканец",
+      "extraLetters": "ец",
+      "insertions": [
+        {
+          "position": 9,
+          "letter": "е"
+        },
+        {
+          "position": 10,
+          "letter": "ц"
+        }
+      ],
+      "status": "removed"
+    },
+    {
+      "word": "МОЛДАВАН",
+      "translation": "молдаванин",
+      "wordLength": 8,
+      "translationLength": 10,
+      "bothAtLeastSix": true,
+      "sourceText": "молдаванин",
+      "sourceId": "academic-06",
+      "sourceUrl": null,
+      "pdfPage": 325,
+      "difference": 2,
+      "longer": "молдаванин",
+      "extraLetters": "ин",
+      "insertions": [
+        {
+          "position": 9,
+          "letter": "и"
+        },
+        {
+          "position": 10,
+          "letter": "н"
+        }
+      ],
+      "status": "removed"
+    },
+    {
+      "word": "ПОРТУГАЛ",
+      "translation": "португалец",
+      "wordLength": 8,
+      "translationLength": 10,
+      "bothAtLeastSix": true,
+      "sourceText": "португалец",
+      "sourceId": "academic-07",
+      "sourceUrl": null,
+      "pdfPage": 150,
+      "difference": 2,
+      "longer": "португалец",
+      "extraLetters": "ец",
+      "insertions": [
+        {
+          "position": 9,
+          "letter": "е"
+        },
+        {
+          "position": 10,
+          "letter": "ц"
+        }
+      ],
+      "status": "removed"
+    },
+    {
+      "word": "СЛАВЯН",
+      "translation": "славянин",
+      "wordLength": 6,
+      "translationLength": 8,
+      "bothAtLeastSix": true,
+      "sourceText": "славянин",
+      "sourceId": "academic-07",
+      "sourceUrl": null,
+      "pdfPage": 564,
+      "difference": 2,
+      "longer": "славянин",
+      "extraLetters": "ин",
+      "insertions": [
+        {
+          "position": 7,
+          "letter": "и"
+        },
+        {
+          "position": 8,
+          "letter": "н"
+        }
+      ],
+      "status": "removed"
+    },
+    {
+      "word": "СЛОВЕН",
+      "translation": "словенец",
+      "wordLength": 6,
+      "translationLength": 8,
+      "bothAtLeastSix": true,
+      "sourceText": "словенец",
+      "sourceId": "academic-07",
+      "sourceUrl": null,
+      "pdfPage": 566,
+      "difference": 2,
+      "longer": "словенец",
+      "extraLetters": "ец",
+      "insertions": [
+        {
+          "position": 7,
+          "letter": "е"
+        },
+        {
+          "position": 8,
+          "letter": "ц"
+        }
+      ],
+      "status": "removed"
+    },
+    {
+      "word": "СПАРТАН",
+      "translation": "спартанец",
+      "wordLength": 7,
+      "translationLength": 9,
+      "bothAtLeastSix": true,
+      "sourceText": "спартанец",
+      "sourceId": "tarat-ba-ru",
+      "sourceUrl": "https://tarat.ru/ru/targema/search/ba/ru/%D1%81%D0%BF%D0%B0%D1%80%D1%82%D0%B0%D0%BD",
+      "pdfPage": null,
+      "difference": 2,
+      "longer": "спартанец",
+      "extraLetters": "ец",
+      "insertions": [
+        {
+          "position": 8,
+          "letter": "е"
+        },
+        {
+          "position": 9,
+          "letter": "ц"
+        }
+      ],
+      "status": "removed"
+    },
+    {
+      "word": "УКРАИН",
+      "translation": "украинец",
+      "wordLength": 6,
+      "translationLength": 8,
+      "bothAtLeastSix": true,
+      "sourceText": "украинец",
+      "sourceId": "academic-09",
+      "sourceUrl": null,
+      "pdfPage": 96,
+      "difference": 2,
+      "longer": "украинец",
+      "extraLetters": "ец",
+      "insertions": [
+        {
+          "position": 7,
+          "letter": "е"
+        },
+        {
+          "position": 8,
+          "letter": "ц"
+        }
+      ],
+      "status": "removed"
+    },
+    {
+      "word": "ШОТЛАНД",
+      "translation": "шотландец",
+      "wordLength": 7,
+      "translationLength": 9,
+      "bothAtLeastSix": true,
+      "sourceText": "шотландец",
+      "sourceId": "academic-09",
+      "sourceUrl": null,
+      "pdfPage": 836,
+      "difference": 2,
+      "longer": "шотландец",
+      "extraLetters": "ец",
+      "insertions": [
+        {
+          "position": 8,
+          "letter": "е"
+        },
+        {
+          "position": 9,
+          "letter": "ц"
+        }
+      ],
+      "status": "removed"
+    }
+  ]
+}

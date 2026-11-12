@@ -2,6 +2,6 @@
   "appId": "ru.bashkir.words",
   "appName": "Слова",
   "webDir": "dist-android",
-  "android": { "backgroundColor": "#342048" },
+  "android": { "backgroundColor": "#faf8f3" },
   "plugins": { "SystemBars": { "insetsHandling": "disable" } }
 }

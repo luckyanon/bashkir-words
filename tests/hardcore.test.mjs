@@ -36,7 +36,9 @@ test('every hardcore rack includes all eligible translated nouns and every place
 
 test('largest field fits every target, and SARA and KISHER are accepted on formerly omitted racks',()=>{
  const pool=data.pools.reduce((largest,p)=>p.hardcoreWordCount>largest.hardcoreWordCount?p:largest),largest=forPool(pool);
- assert.equal(largest.words.length,183);assert(largest.rows>24||largest.cols>24);
+ // Editorial removals change the maximum; still exercise a genuinely large
+ // field and require every word recorded by the current eligibility index.
+ assert(largest.words.length>=150);assert.equal(largest.words.length,pool.hardcoreWordCount);assert(largest.rows>24||largest.cols>24);
  assert(largest.words.some(w=>w.word.length===2));assert(largest.words.some(w=>w.word.length===3));
  assert(!validateLevel({...largest,words:largest.words.slice(0,29)},lexicon).valid);
  const game=gameForLevel(largest);for(const target of largest.words)assert(['target','repeat'].includes(game.submit(target.word).type));

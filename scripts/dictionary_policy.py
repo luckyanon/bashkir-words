@@ -5,7 +5,8 @@ import pathlib
 import re
 
 POLICY = json.loads(pathlib.Path(__file__).with_name('dictionary-policy.json').read_text('utf-8'))
-EXCLUDED = set(POLICY['excludedWords']) | set(POLICY['abbreviations'])
+EXCLUDED = (set(POLICY['excludedWords']) | set(POLICY['abbreviations']) |
+            set(POLICY.get('excludedEthnonyms', {})))
 ABBREVIATION_TAGS = {'abbreviation', 'acronym', 'initialism'}
 
 

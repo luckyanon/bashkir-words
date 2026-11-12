@@ -4,10 +4,10 @@ import {readFile} from 'node:fs/promises';
 import {createLexicon} from '../src/dictionary-service.mjs';
 import {createLevelProvider} from '../src/level-generator.mjs';
 import {createGame,classicBonusWords} from '../src/game.mjs';
-import {restoreRelease,needsReleaseHistory} from '../src/release-migration.mjs';
+import {restoreRelease,needsReleaseHistory,releaseHistoryFiles} from '../src/release-migration.mjs';
 import {createStorage,STORAGE_KEY} from '../src/storage.mjs';
 const load=async name=>JSON.parse(await readFile(new URL('../public/data/'+name,import.meta.url),'utf8'));
-const [raw,full,pools,history,reviewHistory]=await Promise.all(['game-lexicon.nouns.json','nouns.full.json','level-pools.json','migrations/2.9.0.json','migrations/2.9.4.json'].map(load));
+const [raw,full,pools,history,reviewHistory,latestHistory]=await Promise.all(['game-lexicon.nouns.json','nouns.full.json','level-pools.json','migrations/2.9.0.json','migrations/2.9.4.json','migrations/2.9.5.json'].map(load));
 history.currentPools=pools;
 const lexicon=createLexicon(raw,full),oldLexicon=createLexicon(history.raw,{entries:[...full.entries,...history.removedEntries]});
 
@@ -106,4 +106,64 @@ test('queued saves use immutable revision metadata and read the primary save onc
   assert(await operation);assert.equal(reads,1);
   assert(values.has(`${STORAGE_KEY}:before-dataset-new`));assert(!values.has(`${STORAGE_KEY}:before-dataset-mutated`));
   assert.equal(JSON.parse(values.get(STORAGE_KEY)).datasetRevision,'new');
+});
+
+
+test('2.9.5 update preserves purchases, paid hints and bonus identity across direct and chained upgrades',()=>{
+ const resources={histories:[history,reviewHistory,latestHistory],currentPools:pools};
+ const previousLexicon=createLexicon(latestHistory.raw,{entries:[...full.entries,...latestHistory.removedEntries]});
+ for(const chainLength of [0,1,2]){
+  const seed='release-2.10-'+chainLength;
+  const current=createLevelProvider(pools,lexicon,{seed});
+  const hardcore=createLevelProvider(pools,lexicon,{seed:seed+':hardcore',hardcore:true});
+  const previous=createLevelProvider(latestHistory.pools,previousLexicon,{seed});
+  const previousHard=createLevelProvider(latestHistory.pools,previousLexicon,{seed:seed+':hardcore',hardcore:true});
+  let priorProvider=previous, initial=null;
+  if(chainLength){
+   const origin=createLevelProvider(history.pools,oldLexicon,{seed});
+   const oldGame=createGame(origin,oldLexicon);
+   initial={...oldGame.snapshot(),currentLevel:120,maxUnlocked:120,completedRanges:[[1,119]],coins:5000};
+   if(chainLength===2){
+    const middleLexicon=createLexicon(reviewHistory.raw,{entries:[...full.entries,...reviewHistory.removedEntries]});
+    const middle=createLevelProvider(reviewHistory.pools,middleLexicon,{seed});
+    const step=restoreRelease(initial,middle,middleLexicon,{...resources,currentPools:reviewHistory.pools});
+    initial=createGame(step.provider,middleLexicon,step.saved).snapshot();
+   }
+   const migrated=restoreRelease(initial,previous,previousLexicon,{...resources,currentPools:latestHistory.pools});
+   priorProvider=migrated.provider;initial=migrated.saved;
+  }else initial={...createGame(previous,previousLexicon).snapshot(),currentLevel:120,maxUnlocked:120,completedRanges:[[1,119]],coins:5000};
+  const game=createGame(priorProvider,previousLexicon,initial,{hardcoreSource:previousHard});
+  game.purchaseBackground('salavat');game.claimDailyGift();game.setSettings({music:false,sound:false});
+  for(const word of classicBonusWords(game.getCurrentLevel(),previousLexicon).filter(Boolean))game.submit(word);
+  game.hint();game.hint();game.setMode('hardcore');game.submit(game.getCurrentLevel().words[0].word);
+  const saved=game.snapshot();assert(releaseHistoryFiles(saved).includes('2.9.5.json'));
+  let migration=restoreRelease(saved,current,lexicon,resources);
+  assert(migration.changed);assert.equal(migration.saved.bonusLayouts.length,chainLength+1);
+  for(let reload=0;reload<3;reload++){
+   const restored=createGame(migration.provider,lexicon,migration.saved,{hardcoreSource:hardcore});
+   assert.equal(restored.state.coins,saved.coins);assert.equal(restored.state.currentLevel,120);
+   assert.equal(restored.state.maxUnlocked,120);assert.equal(restored.state.hintCount,saved.hintCount);
+   assert.deepEqual(restored.state.dailyGift,saved.dailyGift);assert.deepEqual(restored.state.backgrounds,saved.backgrounds);
+   assert.deepEqual(restored.state.settings,saved.settings);assert.deepEqual(restored.state.bonusRanges,saved.bonusRanges);
+   assert(restored.state.hardcore.progress.revealed.length>=Math.min(saved.hardcore.progress.revealed.length,restored.getBoard().length));
+   restored.setMode('classic');
+   if(!reload)assert(restored.getLevelState().revealed.length>=Math.min(saved.levels[120].revealed.length,restored.getBoard().length));
+   restored.replay(120);
+   for(const word of saved.levels[120].bonus){
+    if(classicBonusWords(restored.getCurrentLevel(),lexicon).includes(word))assert(restored.state.bonusRewards.includes('120:'+word),word);
+    const before=restored.state.coins;restored.submit(word);assert.equal(restored.state.coins,before);
+   }
+   for(const entry of latestHistory.removedEntries)assert(!lexicon.hasWord(entry.display),entry.display);
+   restored.setMode('hardcore');migration=restoreRelease(restored.snapshot(),current,lexicon,resources);
+   assert.equal(migration.changed,false);
+  }
+ }
+});
+
+test('each release archive retains every formerly translated target after later removals',()=>{
+ for(const archive of [history,reviewHistory,latestHistory]){
+  const historical=createLexicon(archive.raw,{entries:[...full.entries,...archive.removedEntries]});
+  assert.equal(historical.targetWords.length,archive.raw.targetWords.length,archive.raw.datasetRevision);
+  for(const word of archive.raw.words)assert(historical.getEntry(word),'Missing historical entry: '+word);
+ }
 });

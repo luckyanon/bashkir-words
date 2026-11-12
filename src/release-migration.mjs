@@ -8,6 +8,7 @@ export const PREVIOUS_DATASET = 'nouns-2026-10-19-rules-2';
 const HISTORY_FILES = {
   [PREVIOUS_DATASET]: '2.9.0.json',
   'nouns-2026-11-01-review-1': '2.9.4.json',
+  '3e289d7b8e8e501e': '2.9.5.json',
 };
 const validThrough = value => Number.isSafeInteger(value) && value > 0;
 function savedLayouts(saved) {

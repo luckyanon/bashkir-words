@@ -1,5 +1,9 @@
 # Локальные ресурсы
 
+## Оформление 2.10.0
+
+Интерфейс переработан с помощью [unslop](https://github.com/heydamir/unslop) — skill автора [Damir Sokolovsky / @heydamir](https://x.com/heydamir), лицензия [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Рекомендации адаптированы к мобильной словесной игре: нейтральные поверхности, тёмно-зелёный акцент, читаемые башкирские буквы и короткая обратная связь. Существующие иллюстрации, монета и локальные шрифты сохранены; новые изображения не генерировались. Подробности — [отчёт об интерфейсе](reports/interface-unslop-2.10.0.md).
+
 - Основные файлы `game-lexicon.json`, `dictionary.full.json`, `starter-words.json` и оба экземпляра `dictionary.mjs` скопированы из пользовательского пакета без изменений. Авторство и условия словарных данных — в `public/ATTRIBUTION.md`.
 - `evening-city.webp`: оригинальный фон, созданный для этой игры по описанию вечернего городского пейзажа. Исходный PNG сохранён в рабочем каталоге разработки; в сборке используется WebP.
 - `Ubuntu-R.ttf` и `Ubuntu-B.ttf`: локальные шрифты Ubuntu Font Family, Ubuntu Font Licence 1.0. Полный текст лицензии сохранён в `public/assets/FONT-LICENSE.txt`; источник текста — https://github.com/google/fonts/blob/main/ufl/ubuntu/UFL.txt. Проверено наличие всех 42 букв башкирского алфавита в обеих таблицах символов шрифтов.

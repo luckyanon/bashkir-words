@@ -3,8 +3,9 @@ import {createLexicon} from '../src/dictionary-service.mjs';import {createLevelP
 import {createGame} from '../src/game.mjs';import {validateLevel,getWordCells} from '../src/levels.mjs';import {signature} from '../src/lib/dictionary.mjs';import {migrateNounSave} from '../src/noun-migration.mjs';
 const load=async n=>JSON.parse(await readFile(new URL('../public/data/'+n,import.meta.url),'utf8'));
 const [raw,full,pools]=await Promise.all(['game-lexicon.nouns.json','nouns.full.json','level-pools.json'].map(load));const lexicon=createLexicon(raw,full);
+const policy=JSON.parse(await readFile(new URL('../scripts/dictionary-policy.json',import.meta.url),'utf8'));
 test('all accepted words come from supplied noun entries, and original meanings and IDs remain intact',()=>{
- assert.equal(lexicon.dictionary.size,6689);assert.equal(raw.maxLength,12);assert(raw.words.every(w=>w.length<=12));
+ assert.equal(lexicon.dictionary.size,6588);assert.equal(raw.maxLength,12);assert(raw.words.every(w=>w.length<=12));
  assert.deepEqual(raw.words.sort(),full.entries.map(e=>e.display).sort());
  for(const entry of full.entries){assert(entry.partsOfSpeech.includes('noun'));assert.equal(lexicon.getEntry(entry.display),entry);for(const meaning of [...(entry.definitions.ru||[]),...(entry.definitions.en||[])])assert.equal(meaning.partOfSpeech,'noun');}
  for(const word of raw.targetWords)assert(lexicon.getMeanings(word).length);
@@ -32,7 +33,7 @@ test('new difficulty stages respect 20,40,60,80,100 boundaries and sample every 
  assert.deepEqual(provider.getLevel(1000000),reload.getLevel(1000000));
 });
 test('removed words are absent from targets, bonuses and detailed entries',()=>{
- for(const word of ['МИЛ','ТӨРӨК','АЛМАС','ТАС','ШАТУН','АНА','ТУК','МАК','МӘК','ГЕР','КГ','АГРОПРОМ','ГЕСТАПО','ПРОМТАУАР','РАЙОНО','РАЙСОБЕС','САМБО','УНТЕР']){assert(!lexicon.hasWord(word),word);assert.equal(lexicon.getEntry(word),undefined);assert(!raw.targetWords.includes(word));for(const pool of pools.pools){assert(!pool.words.some(p=>p.word===word));assert(!pool.bonusWords.includes(word));}}
+ for(const word of new Set([...policy.excludedWords,...Object.keys(policy.abbreviations),...Object.keys(policy.excludedEthnonyms)])){assert(!lexicon.hasWord(word),word);assert.equal(lexicon.getEntry(word),undefined);assert(!raw.targetWords.includes(word));for(const pool of pools.pools){assert(!pool.words.some(p=>p.word===word));assert(!pool.bonusWords.includes(word));}}
 });
 
 test('ҡайсы is a playable translated noun, while ordinary short words remain valid',()=>{

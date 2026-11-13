@@ -5,7 +5,7 @@ const load=async n=>JSON.parse(await readFile(new URL('../public/data/'+n,import
 const [raw,full,pools]=await Promise.all(['game-lexicon.nouns.json','nouns.full.json','level-pools.json'].map(load));const lexicon=createLexicon(raw,full);
 const policy=JSON.parse(await readFile(new URL('../scripts/dictionary-policy.json',import.meta.url),'utf8'));
 test('all accepted words come from supplied noun entries, and original meanings and IDs remain intact',()=>{
- assert.equal(lexicon.dictionary.size,6527);assert.equal(raw.maxLength,12);assert(raw.words.every(w=>w.length<=12));
+ assert.equal(lexicon.dictionary.size,6526);assert.equal(raw.maxLength,12);assert(raw.words.every(w=>w.length<=12));
  assert.deepEqual(raw.words.sort(),full.entries.map(e=>e.display).sort());
  for(const entry of full.entries){assert(entry.partsOfSpeech.includes('noun'));assert.equal(lexicon.getEntry(entry.display),entry);for(const meaning of [...(entry.definitions.ru||[]),...(entry.definitions.en||[])])assert.equal(meaning.partOfSpeech,'noun');}
  for(const word of raw.targetWords)assert(lexicon.getMeanings(word).length);
@@ -41,7 +41,7 @@ test('ҡайсы is a playable translated noun, while ordinary short words remai
  assert.equal(lexicon.getMeanings('ҡайсы')[0].text,'ножницы');
  assert.equal(lexicon.getEntry('ҡайсы').signature,signature('ҠАЙСЫ'));
  assert(pools.pools.some(pool=>pool.words.some(word=>word.word==='ҠАЙСЫ')));
- for(const word of ['АЙ','АТ','ИТ','УТ','ИҢЕШ','ҠЫҪҠАРТМА'])assert(lexicon.hasWord(word));
+ for(const word of ['АЙ','АТ','ИТ','УТ','ИҢЕШ','ҠЫҪҠАРТМА','ҠЫҘ'])assert(lexicon.hasWord(word));
 });
 
 test('replacement preserves device economy, level, gift and settings; completion and repeated words cannot farm rewards',()=>{

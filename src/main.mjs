@@ -84,12 +84,16 @@ async function closeModal(all=false){
   if(all)translationReturn=null;
   else if(translationReturn && modal.open){
     const previous=translationReturn;translationReturn=null;
-    await showModal(t.found,`<div class="found-scroll" tabindex="0" role="region" aria-label="${t.found}">${wordList()}</div>`);
-    const list=modal.querySelector('.found-scroll');if(list)list.scrollTop=previous.scrollTop;
-    [...modal.querySelectorAll('[data-action=translate]')].find(el=>el.dataset.word===previous.word)?.focus({preventScroll:true});return;
+    await showFoundWords(previous);return;
   }
 if(licenseModal.open){await closeLicense();if(!all)return;}await dismissDialog(modal);const focus=restoreFocus;restoreFocus=null;if(focus?.isConnected)focus.focus({preventScroll:true});else document.querySelector('#found-words,[data-action="continue"]')?.focus({preventScroll:true});}
 async function showModal(title,body){wordAttempt();translationReturn=null;cancelInput();const focus=modal.open?restoreFocus:document.activeElement;if(modal.open)await dismissDialog(modal);restoreFocus=focus;modal.innerHTML=`<div class="modal-inner"><div class="modal-header">${title?`<h2 id="modal-title">${escape(title)}</h2>`:'<span id="modal-title" class="visually-hidden">Обратная связь</span>'}${button('close',icon('close'),'close-modal',`aria-label="${t.close}"`)}</div>${body}</div>`;modal.style.animation='';modal.getAnimations().forEach(animation=>animation.cancel());modal.showModal();}
+async function showFoundWords({scrollTop,word}={}){
+  await showModal(t.found,`<div class="found-scroll" tabindex="0" role="region" aria-label="${t.found}">${wordList()}</div>`);
+  const list=modal.querySelector('.found-scroll');if(!list)return;
+  list.scrollTop=scrollTop??list.scrollHeight;
+  if(word)[...list.querySelectorAll('[data-action=translate]')].find(el=>el.dataset.word===word)?.focus({preventScroll:true});
+}
 modal.addEventListener('click',event=>{if(event.target===modal){const r=modal.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)closeModal();}});
 modal.addEventListener('cancel',event=>{event.preventDefault();closeModal();});
 licenseModal.addEventListener('cancel',event=>{event.preventDefault();closeLicense();});
@@ -170,13 +174,14 @@ function renderPreview(word){
   preview.style.setProperty('--preview-size',Math.min(36,Math.floor((document.querySelector('.wheel-area').clientWidth-Math.max(0,letters.length-1)*4)/Math.max(1,letters.length)))+'px');
 }
 function wordList(withTranslations=true){
-  const saved=game.getLevelState();
-  const items=[...saved.solved.map(word=>({word,type:t.target})),...saved.bonus.map(word=>({word,type:t.bonus}))];
+  const solved=new Set(game.getLevelState().solved);
+  const items=game.getFoundWords().map(word=>({word,type:solved.has(word)?t.target:t.bonus}));
   return items.length?`<ul class="word-list">${items.map(item=>`<li class="word-row"><div><strong>${escape(item.word)}</strong><small>${item.type}</small></div>${withTranslations?button('translate',t.translation,'',`data-word="${escape(item.word)}" aria-label="${t.translation}: ${escape(item.word)}"`):''}</li>`).join('')}</ul>`:`<p>${t.noWords}</p>`;
 }
 function renderVictory(){
   const level=game.getCurrentLevel();
   app.innerHTML=`<section class="victory-screen"><div class="victory-heading"><div class="victory-badge">${icon('trophy')}</div><span class="eyebrow">${game.isHardcore?'Хардкор':`${t.level} ${level.id}`}</span><h1>${t.victory}</h1><p class="muted">${t.victoryNote}</p><div class="reward-chip">${coin}<span>${lastCompletionReward?`${t.reward}: +${lastCompletionReward}`:t.rewardAlready}</span></div></div><div class="victory-words" tabindex="0" role="region" aria-label="${t.found}">${wordList()}</div><div class="victory-actions">${button('next',t.next,'primary')}${button('menu',t.menu,'secondary')}</div></section>`;
+  const list=app.querySelector('.victory-words');list.scrollTop=list.scrollHeight;
 }
 function showTranslation(word){
   const state=game.getLevelState();if(!state.solved.includes(word)&&!state.bonus.includes(word))return;
@@ -259,7 +264,7 @@ async function action(name,element){
   if(name==='next'){if(game.isHardcore){await regenerateHardcore();return;}await start(game.getNextLevelId());return;}
   if(name==='shuffle'){animateShuffle();return;}
   if(name==='hint'){if(game.isHardcore)return;wordAttempt();cancelInput();const result=game.hint();if(result.type==='insufficient')toast(t.insufficient);else if(result.type==='hint'){platform.sound(result.completed?'victory':'hint');finishOnBoard(result);}return;}
-  if(name==='found'){await showModal(t.found,`<div class="found-scroll" tabindex="0" role="region" aria-label="${t.found}">${wordList()}</div>`);return;}
+  if(name==='found'){await showFoundWords();return;}
   if(name==='translate'){const list=modal.open?modal.querySelector('.found-scroll'):null;const previous=list?{scrollTop:list.scrollTop,word:element.dataset.word}:null;await showTranslation(element.dataset.word);translationReturn=previous;return;}
   if(name==='settings'){await showSettings();return;}
   if(name==='dictionary-feedback'){await showModal('',`<form id="dictionary-feedback-form"><label class="feedback-label" for="dictionary-feedback-text">Каких слов не хватает?</label><textarea id="dictionary-feedback-text" name="message" rows="5" placeholder="Напишите слово и его перевод" required></textarea><p class="dialog-note">Отправка пока недоступна.</p><button type="submit" class="primary purple feedback-submit">Отправить</button></form>`);return;}

@@ -82,6 +82,32 @@ test('hardcore persists independently, shares coins/settings and regenerates wit
  restored.reset();assert(!restored.isHardcore);assert.equal(restored.state.currentLevel,1);assert.equal(restored.state.hardcore.currentLevel,1);assert.equal(restored.state.coins,90);
 });
 
+test('hardcore discovery history survives mode changes and reloads and resets on regeneration', () => {
+ const {normal,hardcore}=engines('hardcore-discovery-order');
+ const game=createGame(normal,lexicon,null,{hardcoreSource:hardcore});
+ game.submit(game.getCurrentLevel().words[0].word);
+ const classicOrder=game.getFoundWords();
+ game.setMode('hardcore');
+ for(const target of game.getCurrentLevel().words.slice(-4).reverse()){
+  const before=game.getFoundWords();
+  const result=game.submit(target.word);
+  if(result.type==='target'){
+   assert.deepEqual(game.getFoundWords().slice(0,before.length),before);
+   assert.equal(game.getFoundWords().at(-1),target.word);
+  }
+ }
+ for(const word of game.getCurrentLevel().bonusWords){
+  assert.equal(game.submit(word).type,'bonus');
+  assert.equal(game.getFoundWords().at(-1),word);
+ }
+ const found=game.getFoundWords(),snapshot=game.snapshot();
+ const restored=createGame(normal,lexicon,snapshot,{hardcoreSource:hardcore});
+ assert.deepEqual(restored.getFoundWords(),found);
+ restored.setMode('classic');assert.deepEqual(restored.getFoundWords(),classicOrder);
+ restored.setMode('hardcore');assert.deepEqual(restored.getFoundWords(),found);
+ assert(restored.regenerateHardcore());assert.deepEqual(restored.getFoundWords(),[]);
+});
+
 test('hardcore pays the exact completion formula once, preserves saves, and blocks hints',()=>{
  const {normal,hardcore}=engines('hardcore-economy'),game=createGame(normal,lexicon,null,{hardcoreSource:hardcore});game.setMode('hardcore');
  for(let i=0;i<20&&!game.getCurrentLevel().bonusWords.length;i++)game.regenerateHardcore();

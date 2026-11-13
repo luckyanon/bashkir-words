@@ -67,6 +67,53 @@ test('bonus without Russian translation is accepted and rewards only once', () =
   assert.deepEqual(game.state.bonusRewards, ['1:АЛА']);
 });
 
+test('found words mix targets and bonuses chronologically and retain order across reloads', () => {
+  const game = createGame(levels, lexicon);
+  game.submit('АЛМА');
+  game.submit('АЛА');
+  assert.deepEqual(game.getFoundWords(), ['АЛМА', 'АЛА']);
+  const restored = createGame(levels, lexicon, game.snapshot());
+  restored.submit('БАЛ');
+  // The crossing finishes in the same move; the entered word stays last.
+  assert.deepEqual(restored.getFoundWords(), ['АЛМА', 'АЛА', 'АЛ', 'БАЛ']);
+  const snapshot = restored.snapshot();
+  assert.deepEqual(createGame(levels, lexicon, snapshot).getFoundWords(), restored.getFoundWords());
+  const copy = restored.getFoundWords(); copy.reverse();
+  restored.submit('АЛА'); restored.submit('БАЛ'); restored.submit('ЛА'); restored.shuffle();
+  assert.deepEqual(restored.snapshot(), snapshot);
+  restored.replay(1);
+  assert.deepEqual(restored.getFoundWords(), []);
+  restored.submit('АЛА'); restored.submit('БАЛ');
+  assert.deepEqual(restored.getFoundWords(), ['АЛА', 'БАЛ']);
+  restored.reset();
+  assert.deepEqual(restored.getFoundWords(), []);
+});
+
+test('a target completed by a paid hint is appended to discovery history', () => {
+  const game = createGame([levels[1]], lexicon);
+  game.submit('ҠАЛА');
+  assert.deepEqual(game.getFoundWords(), ['ҠАЛА']);
+  game.hint();
+  assert.deepEqual(game.getFoundWords(), ['ҠАЛА', 'АҠ']);
+  assert.deepEqual(createGame([levels[1]], lexicon, game.snapshot()).getFoundWords(), ['ҠАЛА', 'АҠ']);
+});
+
+test('legacy and damaged discovery history cannot invent found words or bonus rewards', () => {
+  const game = createGame(levels, lexicon);
+  game.submit('АЛА'); game.submit('АЛМА');
+  const legacy = game.snapshot();
+  delete legacy.levels[1].foundOrder;
+  assert.deepEqual(createGame(levels, lexicon, legacy).getFoundWords(), ['АЛМА', 'АЛА']);
+  const damaged = game.snapshot();
+  damaged.levels[1].foundOrder = ['ала', 'АЛА', null, {}, 'БАЛ', 'НЕСУЩЕСТВУЕТ'];
+  const restored = createGame(levels, lexicon, damaged);
+  assert.deepEqual(restored.getFoundWords(), ['АЛА', 'АЛМА']);
+  assert.equal(restored.state.coins, game.state.coins);
+  assert.deepEqual(restored.getLevelState().solved, ['АЛМА']);
+  damaged.bonusRanges = [[], [], []];
+  assert.deepEqual(createGame(levels, lexicon, damaged).getFoundWords(), ['АЛМА']);
+});
+
 test('tile multiplicity, invalid words and shuffle preserve dictionary rules', () => {
   const game = createGame(levels, lexicon);
   assert.equal(lexicon.canBuild('АЛМА', ['А', 'Л', 'М']), false);

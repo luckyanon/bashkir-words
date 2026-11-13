@@ -1,0 +1,104 @@
+{
+  "release": "2.10.3",
+  "date": "2026-11-13",
+  "baselineRef": "v2.10.2",
+  "baselineCommit": "9ef2050ef75e3c95e5c1e9ad43461a892e4ae389",
+  "baselineDatasetRevision": "6987d31ccbc93291",
+  "requestedWords": [
+    "ҠЫҘЫ"
+  ],
+  "removedCount": 1,
+  "removedEntries": [
+    {
+      "id": "ba-fe5178cf05fd",
+      "word": "ҡыҙы",
+      "display": "ҠЫҘЫ",
+      "length": 4,
+      "signature": "ҘҠЫЫ",
+      "letterCounts": {
+        "Ҡ": 1,
+        "Ы": 2,
+        "Ҙ": 1
+      },
+      "partsOfSpeech": [
+        "noun"
+      ],
+      "definitions": {
+        "ru": [
+          {
+            "text": "его или её дочь; притяжательная форма слова «дочь»",
+            "partOfSpeech": "noun",
+            "sourceId": "kaikki-en",
+            "sourceSenseId": "en-ҡыҙы-ba-noun-ChWlFTDu",
+            "sourceLanguage": "en",
+            "translationMethod": "editorial_from_saved_english_gloss",
+            "senseId": "ba-ru-added-eba5665a808d034b",
+            "translationAddedOn": "2026-10-08",
+            "validation": "Source-based extraction; not a completed linguistic review"
+          },
+          {
+            "text": "компонент женского отчества со значением «дочь»",
+            "partOfSpeech": "noun",
+            "sourceId": "kaikki-en",
+            "sourceSenseId": "en-ҡыҙы-ba-noun-ItryDx9g",
+            "sourceLanguage": "en",
+            "translationMethod": "editorial_from_saved_english_gloss",
+            "senseId": "ba-ru-added-0fea75c6318bf112",
+            "translationAddedOn": "2026-10-08",
+            "validation": "Source-based extraction; not a completed linguistic review"
+          }
+        ],
+        "en": [
+          {
+            "text": "third-person singular possessed nominative of ҡыҙ (qıð, “daughter”)",
+            "partOfSpeech": "noun",
+            "sourceId": "kaikki-en",
+            "senseId": "en-ҡыҙы-ba-noun-ChWlFTDu"
+          },
+          {
+            "text": "Used to form patronymics for women",
+            "partOfSpeech": "noun",
+            "sourceId": "kaikki-en",
+            "senseId": "en-ҡыҙы-ba-noun-ItryDx9g"
+          }
+        ]
+      },
+      "sources": [
+        {
+          "sourceId": "kaikki-en",
+          "url": "https://en.wiktionary.org/wiki/%D2%A1%D1%8B%D2%99%D1%8B#Bashkir",
+          "originalHeadwords": [
+            "ҡыҙы"
+          ],
+          "recordLines": [
+            2832
+          ],
+          "partOfSpeech": "noun"
+        }
+      ],
+      "eligibility": {
+        "game": true,
+        "target": true,
+        "starter": false
+      },
+      "quality": {
+        "type": "source_marked_noun",
+        "linguistReviewed": false,
+        "nounSourceCount": 1,
+        "translationSourceCount": 1
+      }
+    }
+  ],
+  "datasetRevision": "dd0523ec354e3366",
+  "beforeWordCount": 6527,
+  "afterWordCount": 6526,
+  "beforeTargetWordCount": 5874,
+  "afterTargetWordCount": 5873,
+  "untranslatedWordCount": 653,
+  "retainedEntriesUnchanged": true,
+  "morphology": "ҠЫҘЫ is third-person possessed singular nominative of ҠЫҘ; it is not a plural. Also used as a feminine patronymic component.",
+  "evidenceUrl": "https://en.wiktionary.org/w/index.php?title=ҡыҙы&oldid=81594358",
+  "additionalWordsRemoved": [],
+  "beforePoolCount": 2345,
+  "poolCount": 2344
+}

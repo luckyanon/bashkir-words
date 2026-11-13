@@ -7,7 +7,7 @@ import {createGame,classicBonusWords} from '../src/game.mjs';
 import {restoreRelease,needsReleaseHistory,releaseHistoryFiles} from '../src/release-migration.mjs';
 import {createStorage,STORAGE_KEY} from '../src/storage.mjs';
 const load=async name=>JSON.parse(await readFile(new URL('../public/data/'+name,import.meta.url),'utf8'));
-const [raw,full,pools,history,reviewHistory,latestHistory,unslopHistory]=await Promise.all(['game-lexicon.nouns.json','nouns.full.json','level-pools.json','migrations/2.9.0.json','migrations/2.9.4.json','migrations/2.9.5.json','migrations/2.10.0.json'].map(load));
+const [raw,full,pools,history,reviewHistory,latestHistory,unslopHistory,classicUiHistory]=await Promise.all(['game-lexicon.nouns.json','nouns.full.json','level-pools.json','migrations/2.9.0.json','migrations/2.9.4.json','migrations/2.9.5.json','migrations/2.10.0.json','migrations/2.10.2.json'].map(load));
 history.currentPools=pools;
 const lexicon=createLexicon(raw,full),oldLexicon=createLexicon(history.raw,{entries:[...full.entries,...history.removedEntries]});
 
@@ -161,7 +161,7 @@ test('2.9.5 update preserves purchases, paid hints and bonus identity across dir
 });
 
 test('each release archive retains every formerly translated target after later removals',()=>{
- for(const archive of [history,reviewHistory,latestHistory,unslopHistory]){
+ for(const archive of [history,reviewHistory,latestHistory,unslopHistory,classicUiHistory]){
   const historical=createLexicon(archive.raw,{entries:[...full.entries,...archive.removedEntries]});
   assert.equal(historical.targetWords.length,archive.raw.targetWords.length,archive.raw.datasetRevision);
   for(const word of archive.raw.words)assert(historical.getEntry(word),'Missing historical entry: '+word);
@@ -244,4 +244,81 @@ test('2.10.1 preserves changed boards and reward identities after direct and ful
  }
  assert(replayedBonuses>=9,'Every chain checks paid bonuses after reload and replay');
  assert(freshBonuses>0,'New bonus slots remain payable after preserving old slots');
+});
+
+test('shared 2.10.1/2.10.2 revision migrates removed words without losing legacy or explicit found order',()=>{
+ const archives=[history,reviewHistory,latestHistory,unslopHistory,classicUiHistory];
+ const resources={histories:archives,currentPools:pools},seed='release-qyzy-order',id=374;
+ const historicalLexicon=archive=>createLexicon(archive.raw,{entries:[...full.entries,...archive.removedEntries]});
+ const previousLexicon=historicalLexicon(classicUiHistory);
+ const previous=createLevelProvider(classicUiHistory.pools,previousLexicon,{seed});
+ const previousHard=createLevelProvider(classicUiHistory.pools,previousLexicon,{seed:seed+':hardcore',hardcore:true});
+ const current=createLevelProvider(pools,lexicon,{seed}),hard=createLevelProvider(pools,lexicon,{seed:seed+':hardcore',hardcore:true});
+ const before=previous.getLevel(id),after=current.getLevel(id);
+ assert(before.words.some(item=>item.word==='ҠЫҘЫ'));assert(!lexicon.hasWord('ҠЫҘЫ'));
+ const common=before.words.filter(item=>after.words.some(next=>next.word===item.word)).map(item=>item.word);
+ const commonBonus=classicBonusWords(before,previousLexicon).find(word=>word&&classicBonusWords(after,lexicon).includes(word));
+ assert(common.length>=2&&commonBonus,'Real changed board must retain targets and a bonus');
+ const dropOrder=saved=>{
+  for(const progress of Object.values(saved.levels))delete progress.foundOrder;
+  if(saved.hardcore)delete saved.hardcore.progress.foundOrder;
+  return saved;
+ };
+ for(const scenario of ['direct-legacy','direct-explicit','full-chain-legacy']){
+  const chained=scenario.startsWith('full'),explicit=scenario.endsWith('explicit');
+  let priorProvider=previous,initial;
+  if(chained){
+   const originalLexicon=historicalLexicon(history),original=createLevelProvider(history.pools,originalLexicon,{seed});
+   initial={...createGame(original,originalLexicon).snapshot(),currentLevel:id,maxUnlocked:id,completedRanges:[[1,id-1]],coins:5000};
+   for(const archive of archives.slice(1)){
+    const nextLexicon=historicalLexicon(archive),next=createLevelProvider(archive.pools,nextLexicon,{seed});
+    const migration=restoreRelease(dropOrder(initial),next,nextLexicon,{...resources,currentPools:archive.pools});
+    assert(migration.changed);priorProvider=migration.provider;
+    initial=createGame(priorProvider,nextLexicon,migration.saved).snapshot();
+   }
+  }else initial={...createGame(previous,previousLexicon).snapshot(),currentLevel:id,maxUnlocked:id,completedRanges:[[1,id-1]],coins:5000};
+  const game=createGame(priorProvider,previousLexicon,initial,{hardcoreSource:previousHard});
+  game.purchaseBackground('salavat');game.claimDailyGift();game.setSettings({sound:false,music:false});
+  // Interleave a bonus and targets so an explicit history differs from board order.
+  game.submit(commonBonus);game.submit(common[1]);game.submit('ҠЫҘЫ');game.submit(common[0]);game.hint();game.hint();
+  game.setMode('hardcore');
+  const hardWords=game.getCurrentLevel().words;
+  game.submit(hardWords[1].word);game.submit(hardWords[0].word);
+  const saved=game.snapshot();if(!explicit)dropOrder(saved);
+  const priorOrder=explicit?saved.levels[id].foundOrder:[...saved.levels[id].solved,...saved.levels[id].bonus];
+  const priorHardOrder=explicit?saved.hardcore.progress.foundOrder:[...saved.hardcore.progress.solved,...saved.hardcore.progress.bonus];
+  const original=JSON.stringify(saved);
+  assert.equal(saved.datasetRevision,'6987d31ccbc93291');
+  assert(releaseHistoryFiles(saved).includes('2.10.2.json'));
+  let migration=restoreRelease(saved,current,lexicon,resources);
+  assert(migration.changed);assert.equal(JSON.stringify(saved),original);
+  assert.deepEqual(migration.saved.levels[id].foundOrder,priorOrder,'Remap preserves available order before deriving new solved words');
+  let restored=createGame(migration.provider,lexicon,migration.saved,{hardcoreSource:hard});
+  assert.equal(restored.state.coins,saved.coins);assert.equal(restored.state.hintCount,saved.hintCount);
+  assert.deepEqual(restored.state.bonusRanges,saved.bonusRanges);
+  assert.deepEqual(restored.state.settings,saved.settings);assert.deepEqual(restored.state.backgrounds,saved.backgrounds);
+  assert.deepEqual(restored.state.dailyGift,saved.dailyGift);assert.equal(restored.state.currentLevel,id);assert.equal(restored.state.maxUnlocked,id);
+  assert.equal(restored.state.bonusLayouts.length,chained?5:1,'All five historical layouts fit the eight-layout cap');
+  const hardProgress=restored.getLevelState(),hardAvailable=new Set([...hardProgress.solved,...hardProgress.bonus]);
+  const expectedHard=[...new Set(priorHardOrder)].filter(word=>hardAvailable.has(word));
+  assert.deepEqual(hardProgress.foundOrder.slice(0,expectedHard.length),expectedHard);
+  assert(hardProgress.revealed.length>=Math.min(saved.hardcore.progress.revealed.length,restored.getBoard().length));
+  restored.setMode('classic');
+  const progress=restored.getLevelState(),available=new Set([...progress.solved,...progress.bonus]);
+  const expected=[...new Set(priorOrder)].filter(word=>available.has(word));
+  assert(expected.includes(common[0])&&expected.includes(common[1])&&expected.includes(commonBonus));
+  assert.deepEqual(progress.foundOrder.slice(0,expected.length),expected);
+  assert(!progress.foundOrder.includes('ҠЫҘЫ'));
+  assert(progress.revealed.length>=Math.min(saved.levels[id].revealed.length,restored.getBoard().length));
+  for(let reload=0;reload<2;reload++){
+   const snapshot=restored.snapshot();migration=restoreRelease(snapshot,current,lexicon,resources);assert.equal(migration.changed,false);
+   restored=createGame(migration.provider,lexicon,migration.saved,{hardcoreSource:hard});
+   assert.deepEqual(restored.getLevelState().foundOrder,snapshot.levels[id].foundOrder);
+   assert.equal(restored.state.coins,snapshot.coins);assert.deepEqual(restored.state.bonusRanges,snapshot.bonusRanges);
+   assert.equal(restored.state.bonusLayouts.length,chained?5:1);
+  }
+  restored.replay(id);const coins=restored.state.coins,result=restored.submit(commonBonus);
+  assert.equal(result.type,'bonus');assert.equal(result.reward,0);assert.equal(restored.state.coins,coins);
+  assert.deepEqual(restored.getLevelState().foundOrder,[commonBonus]);
+ }
 });

@@ -1,5 +1,5 @@
 {
-  "revision": "nouns-2026-11-12-review-4",
+  "revision": "nouns-2026-11-13-review-1",
   "excludedWords": [
     "МИЛ",
     "ТӨРӨК",
@@ -87,7 +87,8 @@
     "ПРОЛЕТАР",
     "РАЗНОЧИН",
     "ТАЛЬЯН",
-    "ФРИКАТИВ"
+    "ФРИКАТИВ",
+    "ҠЫҘЫ"
   ],
   "abbreviations": {
     "КГ": "килограмм",
@@ -388,6 +389,13 @@
         "РАЗНОЧИН",
         "ТАЛЬЯН",
         "ФРИКАТИВ"
+      ]
+    },
+    "2.10.3": {
+      "date": "2026-11-13",
+      "reason": "Explicit user request: кызы — дочери. Exact entry ҠЫҘЫ is a third-person possessed singular form of ҠЫҘ, not a plural. No other plural candidates removed.",
+      "words": [
+        "ҠЫҘЫ"
       ]
     }
   }

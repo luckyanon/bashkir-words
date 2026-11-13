@@ -10,6 +10,7 @@ const HISTORY_FILES = {
   'nouns-2026-11-01-review-1': '2.9.4.json',
   '3e289d7b8e8e501e': '2.9.5.json',
   '0f4edc6e8c823fa9': '2.10.0.json',
+  '6987d31ccbc93291': '2.10.2.json',
 };
 const validThrough = value => Number.isSafeInteger(value) && value > 0;
 function savedLayouts(saved) {
@@ -63,6 +64,9 @@ export function restoreRelease(saved, provider, lexicon, history) {
   const old = previous(saved.datasetRevision), result = structuredClone(saved);
   function remap(progress, before, after) {
     if (!progress || JSON.stringify(before.words) === JSON.stringify(after.words)) return;
+    // Old releases did not record chronology. Retain their available order
+    // before clearing solved coordinates; the game filters it after remapping.
+    if (!Array.isArray(progress.foundOrder)) progress.foundOrder = [...(progress.solved || []), ...(progress.bonus || [])];
     const shown = new Set(progress.revealed||[]), positions = new Map();
     for (const word of before.words) positions.set(word.word, getWordCells(word).map(cell => shown.has(cell.key)));
     const revealed = new Set();

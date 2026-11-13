@@ -18,7 +18,7 @@ const unique = value => [...new Set(Array.isArray(value) ? value : [])];
 const validId = value => Number.isSafeInteger(Number(value)) && Number(value) >= 1 && Number(value) <= MAX_LEVEL_ID;
 const safeCount = value => Number.isSafeInteger(value) && value >= 0 ? value : 0;
 const capped = value => Math.min(Number.MAX_SAFE_INTEGER, Math.max(0, value));
-const emptyLevel = () => ({ revealed: [], solved: [], bonus: [], completed: false, rewarded: false });
+const emptyLevel = () => ({ revealed: [], solved: [], bonus: [], foundOrder: [], completed: false, rewarded: false });
 const emptyHardcore = () => ({currentLevel:1,completedCount:0,bonusCount:0,wordCount:0,rewardRevision:2,rewardCoins:0,legacyEarnings:0,legacyCompletedCount:0,legacyBonusCount:0,rewardedWords:[],progress:emptyLevel()});
 const legacyHardcoreEarnings=h=>h?capped(safeCount(h.legacyCompletedCount)*30+(safeCount(h.completedCount)-safeCount(h.legacyCompletedCount))*500+safeCount(h.legacyBonusCount)*BONUS_REWARD+(safeCount(h.bonusCount)-safeCount(h.legacyBonusCount)+safeCount(h.wordCount))):0;
 const hardcoreEarnings=h=>h?capped(safeCount(h.legacyEarnings)+safeCount(h.rewardCoins)):0;
@@ -129,13 +129,22 @@ function prepareSource(levelSource, lexicon) {
     layoutVersion:Number(levelSource.layoutVersion ?? 1), legacyLayoutThroughLevel:safeCount(levelSource.legacyLayoutThroughLevel),datasetRevision:String(levelSource.datasetRevision||""),difficultyRevision:Number(levelSource.difficultyRevision||0),wordRevision:Number(levelSource.wordRevision||0) };
 }
 
+function orderedFoundWords(candidate, solved = candidate?.solved || [], bonus = candidate?.bonus || []) {
+  const available = new Set([...solved, ...bonus]);
+  const words = value => unique(value).filter(word => typeof word === 'string').map(normalizeWord);
+  // Older saves have no shared chronology. Retain their existing display order
+  // and append future discoveries to one history for targets and bonuses.
+  return unique([...words(candidate?.foundOrder), ...words(candidate?.solved), ...solved, ...bonus])
+    .filter(word => available.has(word));
+}
+
 function deriveLevel(meta, candidate, rewarded) {
   const keys = new Set(meta.board.map(cell => cell.key));
   const revealed = candidate ? unique(candidate.revealed).filter(key => typeof key === 'string' && keys.has(key)) : rewarded ? [...keys] : [];
   const shown = new Set(revealed);
   const solved = meta.words.filter(item => item.keys.every(key => shown.has(key))).map(item => item.word);
   const bonus = unique(candidate?.bonus).map(normalizeWord).filter(word => meta.bonuses.includes(word));
-  return { revealed, solved, bonus, completed: solved.length === meta.words.length, rewarded };
+  return { revealed, solved, bonus, foundOrder: orderedFoundWords(candidate, solved, bonus), completed: solved.length === meta.words.length, rewarded };
 }
 
 function attachCompatibility(state, source) {
@@ -255,6 +264,7 @@ function sanitizePrepared(source, saved, hardcoreSource) {
       const meta = source.getMeta(id);
       state.levels[id] = deriveLevel(meta, saved.levels[id], contains(state.completedRanges, Number(id)));
       state.levels[id].bonus = state.levels[id].bonus.filter(word => contains(state.bonusRanges[meta.bonuses.indexOf(word)], Number(id)));
+      state.levels[id].foundOrder = orderedFoundWords(state.levels[id]);
     }
     state.economy.rewardRevision=2;
     state.economy.legacyClassicCompletions=Math.min(count(state.completedRanges)-state.economy.completedBaseline,saved.economy?.rewardRevision===2?safeCount(saved.economy.legacyClassicCompletions):count(state.completedRanges)-state.economy.completedBaseline);
@@ -287,6 +297,7 @@ export function createGame(levelSource, lexicon, savedState = null, options = {}
     if (!state.levels[meta.id]) {
       state.levels[meta.id] = deriveLevel(meta, null, contains(state.completedRanges, meta.id));
       state.levels[meta.id].bonus = meta.bonuses.filter((word, index) => word&&contains(state.bonusRanges[index], meta.id));
+      state.levels[meta.id].foundOrder = orderedFoundWords(state.levels[meta.id]);
     }
     visits.delete(meta.id); visits.set(meta.id, true);
     while (visits.size > RECENT_LEVEL_LIMIT) {
@@ -298,15 +309,20 @@ export function createGame(levelSource, lexicon, savedState = null, options = {}
     return state.levels[meta.id];
   }
   function emit() { options.onChange?.(clone(state)); }
-  function sync(meta = getMeta()) {
+  function sync(meta = getMeta(), submittedWord) {
     const progress = getLevelState();
     const before = new Set(progress.solved);
+    const previousOrder = orderedFoundWords(progress);
     const shown = new Set(progress.revealed);
     progress.solved = meta.words.filter(item => item.keys.every(key => shown.has(key))).map(item => item.word);
+    const newlySolved = progress.solved.filter(word => !before.has(word));
+    // Crossings can finish in the same move; keep the entered word last.
+    progress.foundOrder = [...previousOrder, ...newlySolved.filter(word => word !== submittedWord),
+      ...(newlySolved.includes(submittedWord) ? [submittedWord] : [])];
     progress.completed = progress.solved.length === meta.words.length;
     let completionReward = 0;
     if(isHardcore()){
-      const h=state.hardcore,newlySolved=progress.solved.filter(word=>!before.has(word)),paid=new Set(h.rewardedWords),unpaid=newlySolved.filter(word=>!paid.has(word));
+      const h=state.hardcore,paid=new Set(h.rewardedWords),unpaid=newlySolved.filter(word=>!paid.has(word));
       const reward=unpaid.length*HARDCORE_WORD_REWARD;h.wordCount=capped(h.wordCount+unpaid.length);h.rewardedWords.push(...unpaid);state.coins=capped(state.coins+reward);
       if(progress.completed&&!progress.rewarded){h.completedCount++;completionReward=hardcoreCompletionReward(meta.words.length,progress.bonus.length);h.rewardCoins=capped(h.rewardCoins+completionReward);state.coins=capped(state.coins+completionReward);progress.rewarded=true;}
       return {newlySolved,completed:progress.completed,completionReward,reward};
@@ -318,7 +334,7 @@ export function createGame(levelSource, lexicon, savedState = null, options = {}
     }
     progress.rewarded = contains(state.completedRanges, meta.id);
     state.maxUnlocked = source.reachable(state.completedRanges);
-    return { newlySolved: progress.solved.filter(word => !before.has(word)), completed: progress.completed, completionReward };
+    return { newlySolved, completed: progress.completed, completionReward };
   }
   function startLevel(id) {
     if (!validId(id) || !source.canStart(id, state.maxUnlocked)) return false;
@@ -344,12 +360,13 @@ export function createGame(levelSource, lexicon, savedState = null, options = {}
     const target = meta.words.find(item => item.word === word);
     if (target) {
       progress.revealed = unique([...progress.revealed, ...target.keys]);
-      const result = { type: 'target', word, reward: 0, ...sync(meta) };
+      const result = { type: 'target', word, reward: 0, ...sync(meta, word) };
       emit(); return result;
     }
     const bonusIndex = meta.bonuses.indexOf(word);
     if (bonusIndex < 0) return { type: 'outside', word, reward: 0 };
     progress.bonus.push(word);
+    progress.foundOrder.push(word);
     if(isHardcore())state.hardcore.bonusCount++;
     const reward = isHardcore()?HARDCORE_WORD_REWARD:contains(state.bonusRanges[bonusIndex], meta.id) ? 0 : BONUS_REWARD;
     if (reward) { if(!isHardcore()){while(state.bonusRanges.length<=bonusIndex)state.bonusRanges.push([]);insertRange(state.bonusRanges[bonusIndex], meta.id);} state.coins = capped(state.coins + reward); }
@@ -449,6 +466,7 @@ export function createGame(levelSource, lexicon, savedState = null, options = {}
     getLevelState, startLevel, submit, hint, shuffle, setSettings, reset, replay, getHiddenCells, getDailyGiftStatus, claimDailyGift,
     getBoard: id => getMeta(id)?.board || [],
     getSolvedWords: id => [...(getLevelState(id)?.solved || [])],
+    getFoundWords: id => orderedFoundWords(getLevelState(id)),
     snapshot: () => clone(state),
   };
 }

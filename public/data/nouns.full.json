@@ -6,7 +6,7 @@
   "partOfSpeech": "noun",
   "selectionPolicy": "Only source-marked noun readings; other parts of speech and their definitions are excluded. Homographs are retained only in the noun reading. Existing single-word/common-noun/modern-spelling filters retained. Academic-only OCR candidates are quarantined.",
   "reuseNotice": "Includes Belemle-derived data with unspecified reuse terms; see ATTRIBUTION.md.",
-  "entryCount": 6527,
+  "entryCount": 6526,
   "entries": [
     {
       "id": "ba-cb5c092c99c8",
@@ -215475,85 +215475,6 @@
       "eligibility": {
         "game": false,
         "target": false,
-        "starter": false
-      },
-      "quality": {
-        "type": "source_marked_noun",
-        "linguistReviewed": false,
-        "nounSourceCount": 1,
-        "translationSourceCount": 1
-      }
-    },
-    {
-      "id": "ba-fe5178cf05fd",
-      "word": "ҡыҙы",
-      "display": "ҠЫҘЫ",
-      "length": 4,
-      "signature": "ҘҠЫЫ",
-      "letterCounts": {
-        "Ҡ": 1,
-        "Ы": 2,
-        "Ҙ": 1
-      },
-      "partsOfSpeech": [
-        "noun"
-      ],
-      "definitions": {
-        "ru": [
-          {
-            "text": "его или её дочь; притяжательная форма слова «дочь»",
-            "partOfSpeech": "noun",
-            "sourceId": "kaikki-en",
-            "sourceSenseId": "en-ҡыҙы-ba-noun-ChWlFTDu",
-            "sourceLanguage": "en",
-            "translationMethod": "editorial_from_saved_english_gloss",
-            "senseId": "ba-ru-added-eba5665a808d034b",
-            "translationAddedOn": "2026-10-08",
-            "validation": "Source-based extraction; not a completed linguistic review"
-          },
-          {
-            "text": "компонент женского отчества со значением «дочь»",
-            "partOfSpeech": "noun",
-            "sourceId": "kaikki-en",
-            "sourceSenseId": "en-ҡыҙы-ba-noun-ItryDx9g",
-            "sourceLanguage": "en",
-            "translationMethod": "editorial_from_saved_english_gloss",
-            "senseId": "ba-ru-added-0fea75c6318bf112",
-            "translationAddedOn": "2026-10-08",
-            "validation": "Source-based extraction; not a completed linguistic review"
-          }
-        ],
-        "en": [
-          {
-            "text": "third-person singular possessed nominative of ҡыҙ (qıð, “daughter”)",
-            "partOfSpeech": "noun",
-            "sourceId": "kaikki-en",
-            "senseId": "en-ҡыҙы-ba-noun-ChWlFTDu"
-          },
-          {
-            "text": "Used to form patronymics for women",
-            "partOfSpeech": "noun",
-            "sourceId": "kaikki-en",
-            "senseId": "en-ҡыҙы-ba-noun-ItryDx9g"
-          }
-        ]
-      },
-      "sources": [
-        {
-          "sourceId": "kaikki-en",
-          "url": "https://en.wiktionary.org/wiki/%D2%A1%D1%8B%D2%99%D1%8B#Bashkir",
-          "originalHeadwords": [
-            "ҡыҙы"
-          ],
-          "recordLines": [
-            2832
-          ],
-          "partOfSpeech": "noun"
-        }
-      ],
-      "eligibility": {
-        "game": true,
-        "target": true,
         "starter": false
       },
       "quality": {
@@ -501054,9 +500975,9 @@
     "removedCount": 1,
     "reason": "Explicit user request; supersedes previous exception for бор"
   },
-  "datasetRevision": "6987d31ccbc93291",
+  "datasetRevision": "dd0523ec354e3366",
   "editorialPolicy": {
-    "revision": "nouns-2026-11-12-review-4",
+    "revision": "nouns-2026-11-13-review-1",
     "excludedWords": [
       "АБАЗИН",
       "АБИССИН",
@@ -501239,6 +501160,7 @@
       "ҠУМЫҠ",
       "ҠЫРҒЫҘ",
       "ҠЫТАЙ",
+      "ҠЫҘЫ",
       "ҮЗБӘК",
       "ҺАРТ",
       "ҺИНД",

@@ -7,7 +7,7 @@ import {createGame,classicBonusWords} from '../src/game.mjs';
 import {restoreRelease,needsReleaseHistory,releaseHistoryFiles} from '../src/release-migration.mjs';
 import {createStorage,STORAGE_KEY} from '../src/storage.mjs';
 const load=async name=>JSON.parse(await readFile(new URL('../public/data/'+name,import.meta.url),'utf8'));
-const [raw,full,pools,history,reviewHistory,latestHistory,unslopHistory,classicUiHistory]=await Promise.all(['game-lexicon.nouns.json','nouns.full.json','level-pools.json','migrations/2.9.0.json','migrations/2.9.4.json','migrations/2.9.5.json','migrations/2.10.0.json','migrations/2.10.2.json'].map(load));
+const [raw,full,pools,history,reviewHistory,latestHistory,unslopHistory,classicUiHistory,chronologyHistory]=await Promise.all(['game-lexicon.nouns.json','nouns.full.json','level-pools.json','migrations/2.9.0.json','migrations/2.9.4.json','migrations/2.9.5.json','migrations/2.10.0.json','migrations/2.10.2.json','migrations/2.10.3.json'].map(load));
 history.currentPools=pools;
 const lexicon=createLexicon(raw,full),oldLexicon=createLexicon(history.raw,{entries:[...full.entries,...history.removedEntries]});
 
@@ -161,10 +161,87 @@ test('2.9.5 update preserves purchases, paid hints and bonus identity across dir
 });
 
 test('each release archive retains every formerly translated target after later removals',()=>{
- for(const archive of [history,reviewHistory,latestHistory,unslopHistory,classicUiHistory]){
+ for(const archive of [history,reviewHistory,latestHistory,unslopHistory,classicUiHistory,chronologyHistory]){
   const historical=createLexicon(archive.raw,{entries:[...full.entries,...archive.removedEntries]});
   assert.equal(historical.targetWords.length,archive.raw.targetWords.length,archive.raw.datasetRevision);
   for(const word of archive.raw.words)assert(historical.getEntry(word),'Missing historical entry: '+word);
+ }
+});
+
+test('2.10.3 plural cleanup preserves chronology, economy and six historical bonus layouts',()=>{
+ const archives=[history,reviewHistory,latestHistory,unslopHistory,classicUiHistory,chronologyHistory];
+ const resources={histories:archives,currentPools:pools},seed='release-plural-order',id=902;
+ const historicalLexicon=archive=>createLexicon(archive.raw,{entries:[...full.entries,...archive.removedEntries]});
+ const previousLexicon=historicalLexicon(chronologyHistory);
+ const previous=createLevelProvider(chronologyHistory.pools,previousLexicon,{seed});
+ const previousHard=createLevelProvider(chronologyHistory.pools,previousLexicon,{seed:seed+':hardcore',hardcore:true});
+ const current=createLevelProvider(pools,lexicon,{seed}),hard=createLevelProvider(pools,lexicon,{seed:seed+':hardcore',hardcore:true});
+ const before=previous.getLevel(id),after=current.getLevel(id);
+ const removed=new Set(chronologyHistory.removedEntries.map(entry=>entry.display));
+ const removedTarget=before.words.find(item=>removed.has(item.word))?.word;
+ const common=before.words.filter(item=>after.words.some(next=>next.word===item.word)).map(item=>item.word);
+ const commonBonus=classicBonusWords(before,previousLexicon).find(word=>word&&classicBonusWords(after,lexicon).includes(word));
+ assert.equal(chronologyHistory.raw.datasetRevision,'dd0523ec354e3366');
+ assert.equal(removed.size,38);assert(removedTarget&&common.length>=2&&commonBonus);
+ assert.notDeepEqual(before.words,after.words,'Exercise a real changed field after plural removal');
+ for(const chained of [false,true]){
+  let priorProvider=previous,initial;
+  if(chained){
+   const originalLexicon=historicalLexicon(history),original=createLevelProvider(history.pools,originalLexicon,{seed});
+   initial={...createGame(original,originalLexicon).snapshot(),currentLevel:id,maxUnlocked:id,completedRanges:[[1,id-1]],coins:5000};
+   for(const archive of archives.slice(1)){
+    const nextLexicon=historicalLexicon(archive),next=createLevelProvider(archive.pools,nextLexicon,{seed});
+    const step=restoreRelease(initial,next,nextLexicon,{...resources,currentPools:archive.pools});
+    assert(step.changed);priorProvider=step.provider;
+    initial=createGame(priorProvider,nextLexicon,step.saved).snapshot();
+   }
+  }else initial={...createGame(previous,previousLexicon).snapshot(),currentLevel:id,maxUnlocked:id,completedRanges:[[1,id-1]],coins:5000};
+  const game=createGame(priorProvider,previousLexicon,initial,{hardcoreSource:previousHard});
+  game.purchaseBackground('salavat');game.claimDailyGift();game.setSettings({sound:false,music:false,backgroundMotion:false});
+  game.submit(common[1]);game.submit(commonBonus);game.submit(removedTarget);game.submit(common[0]);game.hint();game.hint();
+  game.setMode('hardcore');
+  for(const word of game.getCurrentLevel().words.slice(0,3).reverse())game.submit(word.word);
+  const hardBonus=game.getCurrentLevel().bonusWords[0];if(hardBonus)game.submit(hardBonus);
+  const saved=game.snapshot(),original=JSON.stringify(saved);
+  assert.equal(saved.datasetRevision,'dd0523ec354e3366');
+  assert(releaseHistoryFiles(saved).includes('2.10.3.json'));
+  let migration=restoreRelease(saved,current,lexicon,resources);
+  assert(migration.changed);assert.equal(JSON.stringify(saved),original,'Original backup source stays immutable');
+  assert.deepEqual(migration.saved.levels[id].foundOrder,saved.levels[id].foundOrder,'Remap preserves chronology before game sanitization');
+  let restored=createGame(migration.provider,lexicon,migration.saved,{hardcoreSource:hard});
+  for(const key of ['coins','hintCount','currentLevel','maxUnlocked'])assert.equal(restored.state[key],saved[key],key);
+  for(const key of ['bonusRanges','completedRanges','settings','backgrounds','dailyGift','economy'])assert.deepEqual(restored.state[key],saved[key],key);
+  assert.equal(restored.state.mode,'hardcore');
+  const verifyOrder=(progress,prior)=>{
+   const available=new Set([...progress.solved,...progress.bonus]);
+   const kept=prior.foundOrder.filter(word=>available.has(word));
+   assert(kept.length>=2,'Surviving discoveries exercise chronology');
+   assert.deepEqual(progress.foundOrder.slice(0,kept.length),kept);
+   assert.equal(progress.foundOrder.length,available.size);
+   assert.equal(new Set(progress.foundOrder).size,progress.foundOrder.length);
+   assert(progress.foundOrder.every(word=>available.has(word)&&!removed.has(word)));
+  };
+  verifyOrder(restored.getLevelState(),saved.hardcore.progress);
+  assert(restored.getLevelState().revealed.length>=Math.min(saved.hardcore.progress.revealed.length,restored.getBoard().length));
+  restored.setMode('classic');verifyOrder(restored.getLevelState(),saved.levels[id]);
+  assert(restored.getLevelState().foundOrder.includes(commonBonus));
+  assert(restored.getLevelState().revealed.length>=Math.min(saved.levels[id].revealed.length,restored.getBoard().length));
+  assert.equal(restored.state.bonusLayouts.length,chained?6:1,'All six layouts fit the eight-layout cap');
+  if(chained)assert.deepEqual(restored.state.bonusLayouts.map(layout=>layout.datasetRevision),archives.map(archive=>archive.raw.datasetRevision));
+  for(const word of removed)assert(!lexicon.hasWord(word),word);
+  for(let reload=0;reload<2;reload++){
+   const snapshot=restored.snapshot();migration=restoreRelease(snapshot,current,lexicon,resources);assert.equal(migration.changed,false);
+   restored=createGame(migration.provider,lexicon,migration.saved,{hardcoreSource:hard});
+   assert.deepEqual(restored.snapshot(),snapshot,'Reload keeps chronology, all layouts and economy exactly');
+  }
+  restored.replay(id);let coins=restored.state.coins,result=restored.submit(commonBonus);
+  assert.equal(result.type,'bonus');assert.equal(result.reward,0);assert.equal(restored.state.coins,coins);
+  assert.deepEqual(restored.getFoundWords(),[commonBonus]);
+  result=restored.submit(commonBonus);assert.equal(result.type,'repeat');assert.equal(restored.state.coins,coins);
+  migration=restoreRelease(restored.snapshot(),current,lexicon,resources);
+  restored=createGame(migration.provider,lexicon,migration.saved,{hardcoreSource:hard});
+  assert.deepEqual(restored.getFoundWords(),[commonBonus]);
+  restored.replay(id);coins=restored.state.coins;assert.equal(restored.submit(commonBonus).reward,0);assert.equal(restored.state.coins,coins);
  }
 });
 
@@ -247,6 +324,10 @@ test('2.10.1 preserves changed boards and reward identities after direct and ful
 });
 
 test('shared 2.10.1/2.10.2 revision migrates removed words without losing legacy or explicit found order',()=>{
+ // Keep this historical regression tied to its actual 2.10.3 destination;
+ // the following release has separate direct and full-chain coverage above.
+ const lexicon=createLexicon(chronologyHistory.raw,{entries:[...full.entries,...chronologyHistory.removedEntries]});
+ const pools=chronologyHistory.pools;
  const archives=[history,reviewHistory,latestHistory,unslopHistory,classicUiHistory];
  const resources={histories:archives,currentPools:pools},seed='release-qyzy-order',id=374;
  const historicalLexicon=archive=>createLexicon(archive.raw,{entries:[...full.entries,...archive.removedEntries]});

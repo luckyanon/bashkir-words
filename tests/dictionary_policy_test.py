@@ -21,6 +21,38 @@ class DictionaryPolicyTest(unittest.TestCase):
         apply_policy(raw, full)
         self.assertEqual((raw, full), before)
 
+    def test_2_10_4_exact_selection_is_excluded_without_a_blanket_plural_rule(self):
+        selected = POLICY['requestedRemovalBatches']['2.10.4']['words']
+        expected = {'АҠТАР', 'БОРОНҒОЛАР', 'ЙӘШЕЛДӘР', 'КАНИКУЛДАР',
+                    'ҠАЛҠАНЛЫЛАР', 'ТАҘҘАР', 'УМЫРТҠАЛЫЛАР', 'ҺӨТИМӘРҘӘР',
+                    'ҺӘНӘКСЕЛӘР', 'ЯҢЫЛАР', 'ЙӘШТӘР', 'ИМЕҘЕҮСЕЛӘР', 'БАҪМАҠТАР',
+                    'БОТИНКА', 'КЕРӘШЕН', 'СИМЕШКӘ', 'СҮБӘК', 'ТӨРКИ', 'ТРУСИК',
+                    'АЭРОСАНА', 'КОЛГОТКА', 'КОНСЕРВА', 'НОСИЛКА', 'ОБОЙ', 'САНА',
+                    'ЫШТАН', 'КАРИАТИДА', 'КАСТАНЬЕТА', 'КАТАКОМБА', 'КӨНГӨРӘ',
+                    'КӘЙЛӘ', 'ҠАЗЫЙ', 'ПРЕНИЕ', 'РЕГАЛИЯ', 'САНДАЛЫЙ', 'ТАПОЧКА',
+                    'ФОРТЕПЬЯНО', 'РЕЦЕПТАР'}
+        self.assertEqual(len(selected), 38)
+        self.assertEqual(set(selected), expected)
+        # БАЛАЛАР is a future-import fixture: an unselected plural must not
+        # be rejected by an inferred general rule. It is not added to data.
+        preserved = {'УЛЫ': 'его сын', 'ҠЫҘ': 'дочь', 'ҠАЙСЫ': 'ножницы',
+                     'АЛДАР': 'обманщик', 'ДӘФТӘР': 'тетрадь', 'БАЛАЛАР': 'дети'}
+        entries = [{'display': word, 'definitions': {'ru': [] if word == 'РЕЦЕПТАР'
+                    else [{'text': 'выбранное слово'}]}}
+                   for word in selected]
+        preserved_entries = [{'display': word, 'definitions': {'ru': [{'text': text}]}}
+                             for word, text in preserved.items()]
+        entries += copy.deepcopy(preserved_entries)
+        raw, full = {'starterWords': ['БАҪМАҠТАР', 'ҠЫҘ', 'ЙӘШТӘР']}, {'entries': entries}
+        apply_policy(raw, full)
+        self.assertEqual(set(raw['words']), set(preserved))
+        self.assertEqual(set(raw['targetWords']), set(preserved))
+        self.assertEqual(raw['starterWords'], ['ҠЫҘ'])
+        self.assertEqual(full['entries'], preserved_entries)
+        before = copy.deepcopy((raw, full))
+        apply_policy(raw, full)
+        self.assertEqual((raw, full), before)
+
     def test_new_source_marked_abbreviations_are_rejected(self):
         for sense in [{'text': 'единица (сокращение)'}, {'text': 'unit', 'tags': ['abbreviation']},
                       {'text': 'short for a longer name'}, {'text': 'сокр. от названия'}]:

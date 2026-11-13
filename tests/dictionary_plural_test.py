@@ -33,7 +33,7 @@ class PluralAuditRulesTest(unittest.TestCase):
         self.assertEqual(list(audit.russian_segments('ботан. листва; листья, ветки')), ['листва', 'листья', 'ветки'])
 
     def test_import_excludes_requested_form_only_and_is_idempotent(self):
-        preserved = ['ҠЫҘ', 'УЛЫ', 'ҠАЙСЫ', 'ЙӘШТӘР', 'БАҪМАҠТАР', 'ҺӨТИМӘРҘӘР']
+        preserved = ['ҠЫҘ', 'УЛЫ', 'ҠАЙСЫ']
         entries = [{'display': word, 'definitions': {'ru': [{'text': 'исходный перевод'}]}}
                    for word in ['ҠЫҘЫ'] + preserved]
         raw, full = {'starterWords': ['ҠЫҘЫ', 'ҠЫҘ']}, {'entries': copy.deepcopy(entries)}

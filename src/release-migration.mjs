@@ -11,6 +11,7 @@ const HISTORY_FILES = {
   '3e289d7b8e8e501e': '2.9.5.json',
   '0f4edc6e8c823fa9': '2.10.0.json',
   '6987d31ccbc93291': '2.10.2.json',
+  'dd0523ec354e3366': '2.10.3.json',
 };
 const validThrough = value => Number.isSafeInteger(value) && value > 0;
 function savedLayouts(saved) {

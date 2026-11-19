@@ -3,7 +3,6 @@ node_modules/
 dist/
 dist-android/
 rust/hardcore/target/
-rust/app/target/
 .sites-runtime/
 .openai/
 

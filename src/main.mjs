@@ -2,8 +2,7 @@ import {createIdleHintClock,hintTileIds} from './idle-hints.mjs';
 import {createMusic} from './music.mjs';
 import {createBackgroundMotion} from './background-motion.mjs';
 import {loadLexicon} from './dictionary-service.mjs';
-import {HINT_COST} from './game.mjs';
-import {createNativeGame} from './native-game.mjs';
+import {createGame,HINT_COST} from './game.mjs';
 import {buildBoard} from './levels.mjs';
 import {createLevelProvider} from './level-generator.mjs';
 import {loadHardcoreLayoutWasm} from './hardcore-layout-wasm.mjs';
@@ -252,7 +251,7 @@ function animateShuffle(){
   shuffleTimer=setTimeout(()=>{wheel.classList.remove('is-shuffling');wheelInput?.refresh();},motionEnabled()?405:0);
 }
 function campaignSeed(){return String(Date.now())+'-'+crypto.getRandomValues(new Uint32Array(1))[0];}
-function installGame(provider,saved=null){levels=provider;game=createNativeGame(provider,lexicon,saved,{hardcoreSource:createLevelProvider(poolData,lexicon,{seed:provider.seed+':hardcore',hardcore:true}),onChange:state=>{storage.save(state).then(ok=>{if(!ok)toast(t.storageWarning);});}},window.BashkirRust);}
+function installGame(provider,saved=null){levels=provider;game=createGame(provider,lexicon,saved,{hardcoreSource:createLevelProvider(poolData,lexicon,{seed:provider.seed+':hardcore',hardcore:true}),onChange:state=>{storage.save(state).then(ok=>{if(!ok)toast(t.storageWarning);});}});}
 async function action(name,element){
   if(name==='gift'){const origin=element.querySelector('.coin')?.getBoundingClientRect();const result=game.claimDailyGift();refreshGiftButton();if(result.type==='gift'){const plugins=window.BashkirNativePlugins||{};plugins.DailyGift?.sync({claimedDay:game.state.dailyGift.lastClaimDay,requestPermission:true}).catch(()=>{});animateGift(origin);platform.sound('bonus');toast(t.giftReceived);}else toast(t.giftClaimed);return;}
   if(name==='license-close'){await closeLicense();return;}

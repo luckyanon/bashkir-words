@@ -1,33 +1,24 @@
-# Сборка Android 3.1.0
+# Android — Слова 3.1.2
 
-Android 7.0+, target/compile SDK 36, пакет `ru.bashkir.words`, versionCode 34. Rust рисует интерфейс по правилам версии 2.10.5 в Android Bitmap. Движок и отрисовка собраны в `libbashkir_words.so` для arm64-v8a, armeabi-v7a и x86_64. Словарь и ресурсы находятся в APK.
+Android 7.0+ (minSdk 24), target/compile SDK 36, appId `ru.bashkir.words`, versionCode 36. Android WebView загружает встроенный интерфейс 2.10.5, а модуль Rust/WebAssembly строит поля хардкора.
 
 ## Подпись и обновление
 
-Сертификат подписи выпуска SHA-256:
+APK 3.1.2 подписан прежним ключом. SHA-256 сертификата приведён ниже.
 
 `3833621841ad9952edd62fc68ab0dc3b6d40f2990da8735cbbe38ad2d97f2c4a`
 
-Используйте прежний сертификат, чтобы APK устанавливался поверх 2.10.5, 3.0.0 и 3.0.1. При первом запуске игра загружает сохранение из предыдущей версии. Если 3.0.1 уже импортировала сохранение из 3.0.0, игра выбирает более свежий прогресс из `CapacitorStorage`. Дальнейший прогресс записывается в `bashkir-words-renderer`.
+Подпись позволяет установить 3.1.2 поверх 3.1.0 и проверочной 3.1.1. При первом запуске приложение переносит сохранение в Capacitor Storage и сохраняет резервную копию прежней записи. Следующие запуски читают прогресс из Capacitor Storage.
 
 Ключи и пароли не входят в Git, APK или исходный архив. Для будущих выпусков используйте тот же доступный ключ; переход с него на другой сертификат потребует отдельного решения о миграции.
 
 ## Сборка
 
-Установите Node.js 24, JDK 21, Android SDK 36, Build Tools 36.0.0, Android NDK 28 или новее и стабильный Rust. Укажите SDK через `ANDROID_HOME` или `android/local.properties`.
-
-```text
-rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-android
-cargo install cargo-ndk --locked
-npm run build:android
-android/gradlew.bat -p android :app:testDebugUnitTest :app:lintDebug
-```
-
-На Linux используйте `./android/gradlew`. Gradle через `cargo-ndk` собирает Rust для всех трёх ABI. APK находится в `android/app/build/outputs/apk/release/`. Перед подписью выровняйте APK через `zipalign -P 16`, затем проверьте сертификат и подпись через `apksigner verify --print-certs`.
+Node.js 24, JDK 21, SDK 36, Build Tools 36.0.0. `npm ci`, `npm run build:android`, `npx cap sync android`, затем `android/gradlew.bat -p android :app:assembleRelease :app:testDebugUnitTest :app:lintDebug`. Укажите SDK через `ANDROID_HOME` либо `android/local.properties` (двоеточие диска должно быть экранировано). Полученный unsigned APK выровняйте `zipalign` и подпишите `apksigner` своим ключом.
 
 ## Системные функции
 
-Нативные отступы учитывают системные панели и вырез экрана. Кнопки доступны через TalkBack и клавиатурную навигацию.
+Нативные отступы объединяют `systemBars`, `displayCutout` и `ime`; встроенная обработка отступов Capacitor выключена, чтобы не получить двойной отступ. Панели системы доступны штатным жестом, кнопки не попадают под камеру и навигацию.
 
 Датчик движения использует гравитационную проекцию из rotation vector, а не нестабильные углы Эйлера при вертикальном хвате. При пределе смещения центр следует за изменением хвата, затем плавно центрируется на неподвижной новой ориентации. После сворачивания и поворота экрана калибровка начинается заново.
 
@@ -37,4 +28,4 @@ android/gradlew.bat -p android :app:testDebugUnitTest :app:lintDebug
 
 ## Проверка
 
-Тесты Rust покрывают загрузку сохранений Capacitor, игровой прогресс, раскладки, экранные действия и работу обоих режимов. [Отчёт о проверках](QA.md)
+В APK проверены подписи v2/v3, выравнивание, версия и побайтное совпадение 40 веб-файлов с APK 2.10.5. На эмуляторе Android 15 проверено обновление поверх 3.1.1, восстановление обоих режимов и сохранение нового слова после перезапуска. [Исторические проверки 2.10.5](QA.md)

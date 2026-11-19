@@ -36,48 +36,6 @@ pub extern "C" fn output_ptr() -> *const i32 {
     OUTPUT.with_borrow(|output| output.as_ptr())
 }
 
-#[derive(Debug, Clone, Copy)]
-pub struct NativePlacement {
-    pub word_index: usize,
-    pub row: i32,
-    pub col: i32,
-    pub down: bool,
-}
-
-#[derive(Debug)]
-pub struct NativeLayout {
-    pub rows: i32,
-    pub cols: i32,
-    pub placements: Vec<NativePlacement>,
-}
-
-pub fn layout_for_words(words: &[&str], seed: u32) -> Option<NativeLayout> {
-    let mut input = Vec::new();
-    for word in words {
-        input.push(word.encode_utf16().count() as u32);
-        input.extend(word.encode_utf16().map(u32::from));
-    }
-    let mut output = Vec::new();
-    let count = create_layout(&input, seed, &mut output);
-    if count == 0 {
-        return None;
-    }
-    let placements = output[2..]
-        .chunks_exact(4)
-        .map(|item| NativePlacement {
-            word_index: item[0] as usize,
-            row: item[1],
-            col: item[2],
-            down: item[3] == 1,
-        })
-        .collect();
-    Some(NativeLayout {
-        rows: output[0],
-        cols: output[1],
-        placements,
-    })
-}
-
 struct Random(u32);
 
 impl Random {

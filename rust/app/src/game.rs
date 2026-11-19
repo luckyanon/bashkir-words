@@ -389,6 +389,14 @@ impl Game {
             .collect()
     }
 
+    pub fn dictionary_entry(&self, word: &str) -> Option<&crate::puzzles::DictionaryEntry> {
+        self.book.entry(word)
+    }
+
+    pub fn dictionary_size(&self) -> usize {
+        self.book.word_count()
+    }
+
     pub fn definitions(&self, word: &str) -> Vec<Meaning> {
         self.book
             .entry(word)
@@ -425,7 +433,7 @@ impl Game {
         self.dirty = true;
     }
 
-    #[cfg(any(target_os = "android", test))]
+    #[cfg(test)]
     pub(crate) fn take_changed(&mut self) -> bool {
         std::mem::take(&mut self.dirty)
     }
@@ -795,7 +803,14 @@ impl Game {
         self.state.hint_count = capped_add(self.state.hint_count, 1);
         let reward = self.sync(None);
         self.mark_dirty();
-        self.signal(if self.progress().completed { "victory" } else { "hint" }, true);
+        self.signal(
+            if self.progress().completed {
+                "victory"
+            } else {
+                "hint"
+            },
+            true,
+        );
         ActionResult {
             kind: "hint",
             reward,

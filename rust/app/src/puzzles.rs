@@ -372,6 +372,10 @@ impl Random {
 }
 
 impl PuzzleBook {
+    pub fn word_count(&self) -> usize {
+        self.words.len()
+    }
+
     pub fn from_json(lexicon: &str, full_dict: &str, pools: &str) -> Result<Self, String> {
         let lexicon: Lexicon =
             serde_json::from_str(lexicon).map_err(|err| format!("Словарь: {err}"))?;

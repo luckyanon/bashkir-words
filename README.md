@@ -70,7 +70,7 @@
 
 ## Запуск и сборка
 
-Для APK нужны Node.js 24, JDK 21, Android SDK и Build Tools 36, Android NDK 28 или новее, стабильный Rust и `cargo-ndk`. Перед сборкой Gradle выполните `npm ci`, `npm run build:android` и `npx cap sync android`. [Настройка и подпись](ANDROID.md)
+Для сборки APK из текущих исходников нужны JDK 21, Android SDK и Build Tools 36, Android NDK 28 или новее, стабильный Rust и `cargo-ndk`. Запустите `npm run build:android` или задачу Gradle `:app:assembleRelease` в каталоге `android`. [Настройка и подпись](ANDROID.md)
 
 Проверки движка и адаптера запускаются через `npm run test:rust` и `npm test`. Оригинальный интерфейс можно открыть в браузере через `npm start`.
 

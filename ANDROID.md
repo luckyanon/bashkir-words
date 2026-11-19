@@ -1,6 +1,6 @@
-# Android — Слова 3.0.1
+# Сборка Android 3.1.0
 
-Android 7.0+, target/compile SDK 36, пакет `ru.bashkir.words`, versionCode 33. Интерфейс 2.10.5 загружается через Capacitor и использует прежние системные отступы и ресурсы. Движок собран в `libbashkir_words.so` для arm64-v8a, armeabi-v7a и x86_64. Словарь и архивы миграции находятся в APK.
+Android 7.0+, target/compile SDK 36, пакет `ru.bashkir.words`, versionCode 34. Rust рисует интерфейс по правилам версии 2.10.5 в Android Bitmap. Движок и отрисовка собраны в `libbashkir_words.so` для arm64-v8a, armeabi-v7a и x86_64. Словарь и ресурсы находятся в APK.
 
 ## Подпись и обновление
 
@@ -8,7 +8,7 @@ Android 7.0+, target/compile SDK 36, пакет `ru.bashkir.words`, versionCode 
 
 `3833621841ad9952edd62fc68ab0dc3b6d40f2990da8735cbbe38ad2d97f2c4a`
 
-APK использует прежнюю подпись для обновления поверх 2.10.5 и 3.0.0. Если есть сохранение из 3.0.0, приложение один раз переносит его в `CapacitorStorage` и сохраняет резервную копию предыдущей записи. Дальнейший прогресс сохраняется через Capacitor Preferences.
+Используйте прежний сертификат, чтобы APK устанавливался поверх 2.10.5, 3.0.0 и 3.0.1. При первом запуске игра загружает сохранение из предыдущей версии. Если 3.0.1 уже импортировала сохранение из 3.0.0, игра выбирает более свежий прогресс из `CapacitorStorage`. Дальнейший прогресс записывается в `bashkir-words-renderer`.
 
 Ключи и пароли не входят в Git, APK или исходный архив. Для будущих выпусков используйте тот же доступный ключ; переход с него на другой сертификат потребует отдельного решения о миграции.
 
@@ -19,13 +19,11 @@ APK использует прежнюю подпись для обновлени
 ```text
 rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-android
 cargo install cargo-ndk --locked
-npm ci
 npm run build:android
-npx cap sync android
-android/gradlew.bat -p android :app:assembleRelease :app:testDebugUnitTest :app:lintDebug
+android/gradlew.bat -p android :app:testDebugUnitTest :app:lintDebug
 ```
 
-На Linux используйте `./android/gradlew`. Перед подписью выровняйте APK через `zipalign -P 16`, затем проверьте сертификат и подпись через `apksigner verify --print-certs`.
+На Linux используйте `./android/gradlew`. Gradle через `cargo-ndk` собирает Rust для всех трёх ABI. APK находится в `android/app/build/outputs/apk/release/`. Перед подписью выровняйте APK через `zipalign -P 16`, затем проверьте сертификат и подпись через `apksigner verify --print-certs`.
 
 ## Системные функции
 

@@ -2,30 +2,24 @@ package ru.bashkir.words;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 final class NativeSaveImport {
     private static final String SAVE_KEY = "bashkir-words:save";
     private static final String IMPORTED = SAVE_KEY + ":native-3.0.0-imported";
-    private static final String BACKUP = SAVE_KEY + ":before-native-3.0.0";
 
     private NativeSaveImport() {}
 
-    static void run(Context context) {
-        SharedPreferences legacy = context.getSharedPreferences("CapacitorStorage", Context.MODE_PRIVATE);
-        if (legacy.getBoolean(IMPORTED, false)) return;
-        SharedPreferences previousNative = context.getSharedPreferences("bashkir-words-rust", Context.MODE_PRIVATE);
-        String current = previousNative.getString("save", null);
-        if (!isNativeSave(current)) return;
-        String previous = legacy.getString(SAVE_KEY, null);
-        SharedPreferences.Editor update = legacy.edit().putString(SAVE_KEY, current).putBoolean(IMPORTED, true);
-        if (previous != null && !previous.equals(current) && !legacy.contains(BACKUP)) {
-            update.putString(BACKUP, previous);
-        }
-        // Commit before WebView starts so Preferences exposes a single, complete snapshot.
-        if (!update.commit()) Log.w("NativeSaveImport", "Could not persist the imported save");
+    static String read(Context context) {
+        SharedPreferences capacitor = context.getSharedPreferences("CapacitorStorage", Context.MODE_PRIVATE);
+        String latest = capacitor.getString(SAVE_KEY, null);
+        // 3.0.1 continued writing to Capacitor after importing the 3.0.0 snapshot.
+        if (latest != null && capacitor.getBoolean(IMPORTED, false)) return latest;
+
+        String nativeSnapshot = context.getSharedPreferences("bashkir-words-rust", Context.MODE_PRIVATE)
+            .getString("save", null);
+        return isNativeSave(nativeSnapshot) ? nativeSnapshot : latest;
     }
 
     private static boolean isNativeSave(String value) {

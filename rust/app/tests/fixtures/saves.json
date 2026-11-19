@@ -1,0 +1,1441 @@
+[
+  {
+    "from": "2.10.5",
+    "saved": {
+      "version": 2,
+      "campaignSeed": "native-upgrade:Башҡорт🎵",
+      "generatorVersion": 6,
+      "currentLevel": 1,
+      "maxUnlocked": 1,
+      "coins": 70,
+      "settings": {
+        "sound": false,
+        "music": false,
+        "animations": true,
+        "backgroundMotion": false,
+        "background": "salavat"
+      },
+      "levels": {
+        "1": {
+          "revealed": [
+            "2,5",
+            "2,0",
+            "2,1",
+            "2,2",
+            "2,3",
+            "2,4"
+          ],
+          "solved": [
+            "ТӨШЛӨК"
+          ],
+          "bonus": [],
+          "foundOrder": [
+            "ТӨШЛӨК"
+          ],
+          "completed": false,
+          "rewarded": false
+        }
+      },
+      "completedRanges": [],
+      "bonusRanges": [
+        [],
+        [],
+        []
+      ],
+      "hintCount": 1,
+      "economy": {
+        "baseCoins": 90,
+        "completedBaseline": 0,
+        "rewardRevision": 2,
+        "legacyClassicCompletions": 0
+      },
+      "dailyGift": {
+        "count": 10,
+        "lastClaimDay": 20767
+      },
+      "backgrounds": {
+        "version": 1,
+        "owned": [
+          "ufa",
+          "salavat"
+        ],
+        "paid": [
+          "salavat"
+        ]
+      },
+      "legacyThroughLevel": 0,
+      "legacyV3ThroughLevel": 0,
+      "layoutVersion": 2,
+      "legacyLayoutThroughLevel": 0,
+      "datasetRevision": "d27580521c9b9ef8",
+      "wordRevision": 1,
+      "difficultyRevision": 2,
+      "mode": "hardcore",
+      "hardcore": {
+        "currentLevel": 2,
+        "completedCount": 0,
+        "bonusCount": 1,
+        "wordCount": 3,
+        "rewardRevision": 2,
+        "rewardCoins": 0,
+        "legacyEarnings": 0,
+        "legacyCompletedCount": 0,
+        "legacyBonusCount": 0,
+        "rewardedWords": [
+          "ҺАЙЫҪҠАН",
+          "ҺАҠЫНА",
+          "ҠАЙНЫ"
+        ],
+        "progress": {
+          "revealed": [
+            "6,4",
+            "7,4",
+            "8,4",
+            "9,4",
+            "10,4",
+            "11,4",
+            "12,4",
+            "13,4",
+            "7,3",
+            "7,5",
+            "7,6",
+            "7,7",
+            "7,8",
+            "12,3",
+            "12,5",
+            "12,6",
+            "12,7"
+          ],
+          "solved": [
+            "ҺАЙЫҪҠАН",
+            "ҺАҠЫНА",
+            "ҠАЙНЫ"
+          ],
+          "bonus": [
+            "АЙЫҠ"
+          ],
+          "foundOrder": [
+            "ҺАЙЫҪҠАН",
+            "ҺАҠЫНА",
+            "ҠАЙНЫ",
+            "АЙЫҠ"
+          ],
+          "completed": false,
+          "rewarded": false
+        },
+        "datasetRevision": "d27580521c9b9ef8",
+        "rulesRevision": 2
+      }
+    },
+    "expected": {
+      "version": 2,
+      "campaignSeed": "native-upgrade:Башҡорт🎵",
+      "generatorVersion": 6,
+      "currentLevel": 1,
+      "maxUnlocked": 1,
+      "coins": 70,
+      "settings": {
+        "sound": false,
+        "music": false,
+        "animations": true,
+        "backgroundMotion": false,
+        "background": "salavat"
+      },
+      "levels": {
+        "1": {
+          "revealed": [
+            "2,5",
+            "2,0",
+            "2,1",
+            "2,2",
+            "2,3",
+            "2,4"
+          ],
+          "solved": [
+            "ТӨШЛӨК"
+          ],
+          "bonus": [],
+          "foundOrder": [
+            "ТӨШЛӨК"
+          ],
+          "completed": false,
+          "rewarded": false
+        }
+      },
+      "completedRanges": [],
+      "bonusRanges": [
+        [],
+        [],
+        []
+      ],
+      "hintCount": 1,
+      "economy": {
+        "baseCoins": 90,
+        "completedBaseline": 0,
+        "rewardRevision": 2,
+        "legacyClassicCompletions": 0
+      },
+      "dailyGift": {
+        "count": 10,
+        "lastClaimDay": 20767
+      },
+      "backgrounds": {
+        "version": 1,
+        "owned": [
+          "ufa",
+          "salavat"
+        ],
+        "paid": [
+          "salavat"
+        ]
+      },
+      "legacyThroughLevel": 0,
+      "legacyV3ThroughLevel": 0,
+      "layoutVersion": 2,
+      "legacyLayoutThroughLevel": 0,
+      "datasetRevision": "d27580521c9b9ef8",
+      "wordRevision": 1,
+      "difficultyRevision": 2,
+      "mode": "hardcore",
+      "hardcore": {
+        "currentLevel": 2,
+        "completedCount": 0,
+        "bonusCount": 1,
+        "wordCount": 3,
+        "rewardRevision": 2,
+        "rewardCoins": 0,
+        "legacyEarnings": 0,
+        "legacyCompletedCount": 0,
+        "legacyBonusCount": 0,
+        "rewardedWords": [
+          "ҺАЙЫҪҠАН",
+          "ҺАҠЫНА",
+          "ҠАЙНЫ"
+        ],
+        "progress": {
+          "revealed": [
+            "6,4",
+            "7,4",
+            "8,4",
+            "9,4",
+            "10,4",
+            "11,4",
+            "12,4",
+            "13,4",
+            "7,3",
+            "7,5",
+            "7,6",
+            "7,7",
+            "7,8",
+            "12,3",
+            "12,5",
+            "12,6",
+            "12,7"
+          ],
+          "solved": [
+            "ҺАЙЫҪҠАН",
+            "ҺАҠЫНА",
+            "ҠАЙНЫ"
+          ],
+          "bonus": [
+            "АЙЫҠ"
+          ],
+          "foundOrder": [
+            "ҺАЙЫҪҠАН",
+            "ҺАҠЫНА",
+            "ҠАЙНЫ",
+            "АЙЫҠ"
+          ],
+          "completed": false,
+          "rewarded": false
+        },
+        "datasetRevision": "d27580521c9b9ef8",
+        "rulesRevision": 2
+      }
+    },
+    "classic": {
+      "id": 1,
+      "title": "Башкирские слова",
+      "letters": [
+        "Ш",
+        "Ө",
+        "Т",
+        "К",
+        "Ө",
+        "Л"
+      ],
+      "words": [
+        {
+          "word": "ТӨШЛӨК",
+          "entryId": "ba-221c6eb6b07d",
+          "row": 2,
+          "col": 0,
+          "direction": "across"
+        },
+        {
+          "word": "ТӨК",
+          "entryId": "ba-8e26547041a9",
+          "row": 0,
+          "col": 5,
+          "direction": "down"
+        },
+        {
+          "word": "ӨКӨ",
+          "entryId": "ba-3a5b79fa7b9d",
+          "row": 0,
+          "col": 1,
+          "direction": "down"
+        },
+        {
+          "word": "ТӨКӨ",
+          "entryId": "ba-e4e74d580a85",
+          "row": 0,
+          "col": 0,
+          "direction": "across"
+        },
+        {
+          "word": "ТӨШ",
+          "entryId": "ba-7b4137510330",
+          "row": 2,
+          "col": 0,
+          "direction": "down"
+        },
+        {
+          "word": "ӨТӨК",
+          "entryId": "ba-69086c525181",
+          "row": 2,
+          "col": 4,
+          "direction": "down"
+        },
+        {
+          "word": "ТӨЛКӨ",
+          "entryId": "ba-df79e5b8d65a",
+          "row": 5,
+          "col": 1,
+          "direction": "across"
+        },
+        {
+          "word": "КӨЛ",
+          "entryId": "ba-ad76f4c63329",
+          "row": 4,
+          "col": 2,
+          "direction": "down"
+        },
+        {
+          "word": "ӨЛӨШ",
+          "entryId": "ba-a5661250db0c",
+          "row": 5,
+          "col": 5,
+          "direction": "down"
+        },
+        {
+          "word": "КӨШӨЛ",
+          "entryId": "ba-7fbc6cf26559",
+          "row": 8,
+          "col": 3,
+          "direction": "across"
+        },
+        {
+          "word": "ӨЛТӨК",
+          "entryId": "ba-d34d80b0b5b3",
+          "row": 1,
+          "col": 5,
+          "direction": "across"
+        },
+        {
+          "word": "ТӨЛӨК",
+          "entryId": "ba-35afc0d046f7",
+          "row": 1,
+          "col": 7,
+          "direction": "down"
+        }
+      ],
+      "bonusWords": [],
+      "rows": 9,
+      "cols": 10,
+      "layout": "free",
+      "difficultyRevision": 2,
+      "generatorVersion": 6,
+      "layoutVersion": 2,
+      "minWordLength": 3,
+      "excludedWordLengths": [
+        2
+      ]
+    },
+    "hardcore": {
+      "id": 2,
+      "title": "Хардкор",
+      "mode": "hardcore",
+      "letters": [
+        "Ы",
+        "А",
+        "Й",
+        "Н",
+        "Ҡ",
+        "А",
+        "Ҫ",
+        "Һ"
+      ],
+      "words": [
+        {
+          "word": "ҺАЙЫҪҠАН",
+          "entryId": "ba-8a2e10800a38",
+          "row": 6,
+          "col": 4,
+          "direction": "down"
+        },
+        {
+          "word": "ҺАҠЫНА",
+          "entryId": "ba-0ddb2e9c6490",
+          "row": 7,
+          "col": 3,
+          "direction": "across"
+        },
+        {
+          "word": "ҠАЙНЫ",
+          "entryId": "ba-1829f22873ac",
+          "row": 12,
+          "col": 3,
+          "direction": "across"
+        },
+        {
+          "word": "ҠАЙЫН",
+          "entryId": "ba-9d29500b976c",
+          "row": 9,
+          "col": 7,
+          "direction": "down"
+        },
+        {
+          "word": "АЙҺЫН",
+          "entryId": "ba-7e6cb7cb8543",
+          "row": 9,
+          "col": 1,
+          "direction": "across"
+        },
+        {
+          "word": "ҠЫҪАН",
+          "entryId": "ba-741094729a82",
+          "row": 6,
+          "col": 1,
+          "direction": "down"
+        },
+        {
+          "word": "ЙЫҺАН",
+          "entryId": "ba-786577d5d2d7",
+          "row": 4,
+          "col": 8,
+          "direction": "down"
+        },
+        {
+          "word": "АЙҠАН",
+          "entryId": "ba-eddf7646aa91",
+          "row": 10,
+          "col": 7,
+          "direction": "across"
+        },
+        {
+          "word": "АҠЫН",
+          "entryId": "ba-6df294cbd663",
+          "row": 7,
+          "col": 11,
+          "direction": "down"
+        },
+        {
+          "word": "ҠЫНА",
+          "entryId": "ba-5d972ca97808",
+          "row": 5,
+          "col": 7,
+          "direction": "across"
+        },
+        {
+          "word": "ҠАҪА",
+          "entryId": "ba-67914bdd46e8",
+          "row": 10,
+          "col": 9,
+          "direction": "down"
+        },
+        {
+          "word": "ҺАҠА",
+          "entryId": "ba-108e043a11ae",
+          "row": 2,
+          "col": 10,
+          "direction": "down"
+        },
+        {
+          "word": "ҠЫҪА",
+          "entryId": "ba-7b3d26db569c",
+          "row": 4,
+          "col": 10,
+          "direction": "across"
+        },
+        {
+          "word": "АНЫҠ",
+          "entryId": "ba-35f0850ecd7e",
+          "row": 13,
+          "col": 9,
+          "direction": "across"
+        },
+        {
+          "word": "ҠЫЙ",
+          "entryId": "ba-92725bb031c2",
+          "row": 8,
+          "col": 11,
+          "direction": "across"
+        },
+        {
+          "word": "ҺАҠ",
+          "entryId": "ba-babd5d5e65af",
+          "row": 11,
+          "col": 12,
+          "direction": "down"
+        },
+        {
+          "word": "НАЙ",
+          "entryId": "ba-2a39904d28ef",
+          "row": 3,
+          "col": 13,
+          "direction": "down"
+        },
+        {
+          "word": "ҺАН",
+          "entryId": "ba-da6bf96dc62f",
+          "row": 2,
+          "col": 10,
+          "direction": "across"
+        },
+        {
+          "word": "АҪА",
+          "entryId": "ba-8d19bd5764eb",
+          "row": 12,
+          "col": 12,
+          "direction": "across"
+        },
+        {
+          "word": "ҺЫН",
+          "entryId": "ba-4802b9b2775c",
+          "row": 6,
+          "col": 6,
+          "direction": "down"
+        },
+        {
+          "word": "ҠАН",
+          "entryId": "ba-6068e3e6d8a1",
+          "row": 11,
+          "col": 14,
+          "direction": "down"
+        },
+        {
+          "word": "ҠЫН",
+          "entryId": "ba-18b89e094266",
+          "row": 0,
+          "col": 12,
+          "direction": "down"
+        },
+        {
+          "word": "ЫҪ",
+          "entryId": "ba-11d9df9b9666",
+          "row": 1,
+          "col": 12,
+          "direction": "across"
+        },
+        {
+          "word": "АЙ",
+          "entryId": "ba-0e0b26e0e7f8",
+          "row": 7,
+          "col": 13,
+          "direction": "down"
+        },
+        {
+          "word": "АҠ",
+          "entryId": "ba-2d7ca7f0cf2b",
+          "row": 7,
+          "col": 13,
+          "direction": "across"
+        },
+        {
+          "word": "АҪ",
+          "entryId": "ba-824940f9cee6",
+          "row": 8,
+          "col": 0,
+          "direction": "across"
+        },
+        {
+          "word": "ЫҠ",
+          "entryId": "ba-c85688068b78",
+          "row": 0,
+          "col": 11,
+          "direction": "across"
+        },
+        {
+          "word": "ҺАЙ",
+          "entryId": "ba-504890419a6d",
+          "row": 15,
+          "col": 0,
+          "direction": "across"
+        },
+        {
+          "word": "ҺЫЙ",
+          "entryId": "ba-e8b4b11a6b4e",
+          "row": 13,
+          "col": 2,
+          "direction": "down"
+        },
+        {
+          "word": "АҺ",
+          "entryId": "ba-75aef663a5a8",
+          "row": 13,
+          "col": 1,
+          "direction": "across"
+        }
+      ],
+      "bonusWords": [
+        "АЙЫҠ"
+      ],
+      "rows": 16,
+      "cols": 15,
+      "layout": "free",
+      "difficultyRevision": 2,
+      "generatorVersion": 6,
+      "layoutVersion": 2,
+      "minWordLength": 2,
+      "excludedWordLengths": []
+    }
+  },
+  {
+    "from": "2.10.3",
+    "saved": {
+      "version": 2,
+      "campaignSeed": "native-archive:Салауат",
+      "generatorVersion": 6,
+      "currentLevel": 1,
+      "maxUnlocked": 1,
+      "coins": 70,
+      "settings": {
+        "sound": false,
+        "music": false,
+        "animations": true,
+        "backgroundMotion": false,
+        "background": "salavat"
+      },
+      "levels": {
+        "1": {
+          "revealed": [
+            "2,2",
+            "0,0",
+            "0,1",
+            "0,2",
+            "0,3",
+            "0,4",
+            "0,5"
+          ],
+          "solved": [
+            "КӘМӘСЕ"
+          ],
+          "bonus": [],
+          "foundOrder": [
+            "КӘМӘСЕ"
+          ],
+          "completed": false,
+          "rewarded": false
+        }
+      },
+      "completedRanges": [],
+      "bonusRanges": [
+        [],
+        [],
+        []
+      ],
+      "hintCount": 1,
+      "economy": {
+        "baseCoins": 90,
+        "completedBaseline": 0,
+        "rewardRevision": 2,
+        "legacyClassicCompletions": 0
+      },
+      "dailyGift": {
+        "count": 10,
+        "lastClaimDay": 20767
+      },
+      "backgrounds": {
+        "version": 1,
+        "owned": [
+          "ufa",
+          "salavat"
+        ],
+        "paid": [
+          "salavat"
+        ]
+      },
+      "legacyThroughLevel": 0,
+      "legacyV3ThroughLevel": 0,
+      "layoutVersion": 2,
+      "legacyLayoutThroughLevel": 0,
+      "datasetRevision": "dd0523ec354e3366",
+      "wordRevision": 1,
+      "difficultyRevision": 2,
+      "mode": "hardcore",
+      "hardcore": {
+        "currentLevel": 2,
+        "completedCount": 0,
+        "bonusCount": 3,
+        "wordCount": 3,
+        "rewardRevision": 2,
+        "rewardCoins": 0,
+        "legacyEarnings": 0,
+        "legacyCompletedCount": 0,
+        "legacyBonusCount": 0,
+        "rewardedWords": [
+          "УЛТЫРҘАШ",
+          "ШАҘЫРТ",
+          "ТАУЛЫ"
+        ],
+        "progress": {
+          "revealed": [
+            "5,21",
+            "6,21",
+            "7,21",
+            "8,21",
+            "9,21",
+            "10,21",
+            "11,21",
+            "12,21",
+            "9,17",
+            "9,18",
+            "9,19",
+            "9,20",
+            "9,22",
+            "6,18",
+            "6,19",
+            "6,20",
+            "6,22"
+          ],
+          "solved": [
+            "УЛТЫРҘАШ",
+            "ШАҘЫРТ",
+            "ТАУЛЫ"
+          ],
+          "bonus": [
+            "АҘЫУ",
+            "УЛАР",
+            "ТЫУАР"
+          ],
+          "foundOrder": [
+            "УЛТЫРҘАШ",
+            "ШАҘЫРТ",
+            "ТАУЛЫ",
+            "АҘЫУ",
+            "УЛАР",
+            "ТЫУАР"
+          ],
+          "completed": false,
+          "rewarded": false
+        },
+        "datasetRevision": "dd0523ec354e3366",
+        "rulesRevision": 2
+      }
+    },
+    "expected": {
+      "version": 2,
+      "campaignSeed": "native-archive:Салауат",
+      "generatorVersion": 6,
+      "currentLevel": 1,
+      "maxUnlocked": 1,
+      "coins": 70,
+      "settings": {
+        "sound": false,
+        "music": false,
+        "animations": true,
+        "backgroundMotion": false,
+        "background": "salavat"
+      },
+      "levels": {
+        "1": {
+          "revealed": [
+            "1,3",
+            "2,3",
+            "3,3",
+            "4,3",
+            "5,3",
+            "6,3",
+            "5,4"
+          ],
+          "solved": [
+            "БИЛӘМӘ"
+          ],
+          "bonus": [],
+          "foundOrder": [
+            "БИЛӘМӘ"
+          ],
+          "completed": false,
+          "rewarded": false
+        }
+      },
+      "completedRanges": [],
+      "bonusRanges": [
+        [],
+        [],
+        []
+      ],
+      "hintCount": 1,
+      "economy": {
+        "baseCoins": 90,
+        "completedBaseline": 0,
+        "rewardRevision": 2,
+        "legacyClassicCompletions": 0
+      },
+      "dailyGift": {
+        "count": 10,
+        "lastClaimDay": 20767
+      },
+      "backgrounds": {
+        "version": 1,
+        "owned": [
+          "ufa",
+          "salavat"
+        ],
+        "paid": [
+          "salavat"
+        ]
+      },
+      "legacyThroughLevel": 0,
+      "legacyV3ThroughLevel": 0,
+      "layoutVersion": 2,
+      "legacyLayoutThroughLevel": 0,
+      "datasetRevision": "d27580521c9b9ef8",
+      "wordRevision": 1,
+      "difficultyRevision": 2,
+      "bonusLayouts": [
+        {
+          "datasetRevision": "dd0523ec354e3366",
+          "throughLevel": 1
+        }
+      ],
+      "mode": "hardcore",
+      "hardcore": {
+        "currentLevel": 2,
+        "completedCount": 0,
+        "bonusCount": 3,
+        "wordCount": 3,
+        "rewardRevision": 2,
+        "rewardCoins": 0,
+        "legacyEarnings": 0,
+        "legacyCompletedCount": 0,
+        "legacyBonusCount": 0,
+        "rewardedWords": [
+          "УЛТЫРҘАШ",
+          "ШАҘЫРТ",
+          "ТАУЛЫ"
+        ],
+        "progress": {
+          "revealed": [
+            "5,21",
+            "6,21",
+            "7,21",
+            "8,21",
+            "9,21",
+            "10,21",
+            "11,21",
+            "12,21",
+            "9,17",
+            "9,18",
+            "9,19",
+            "9,20",
+            "9,22",
+            "6,18",
+            "6,19",
+            "6,20",
+            "6,22"
+          ],
+          "solved": [
+            "УЛТЫРҘАШ",
+            "ШАҘЫРТ",
+            "ТАУЛЫ"
+          ],
+          "bonus": [
+            "АҘЫУ",
+            "УЛАР",
+            "ТЫУАР"
+          ],
+          "foundOrder": [
+            "УЛТЫРҘАШ",
+            "ШАҘЫРТ",
+            "ТАУЛЫ",
+            "АҘЫУ",
+            "УЛАР",
+            "ТЫУАР"
+          ],
+          "completed": false,
+          "rewarded": false
+        },
+        "datasetRevision": "d27580521c9b9ef8",
+        "rulesRevision": 2
+      }
+    },
+    "classic": {
+      "id": 1,
+      "title": "Башкирские слова",
+      "letters": [
+        "Л",
+        "М",
+        "И",
+        "Ә",
+        "Ә",
+        "Б"
+      ],
+      "words": [
+        {
+          "word": "БИЛӘМӘ",
+          "entryId": "ba-6f130497de86",
+          "row": 1,
+          "col": 3,
+          "direction": "down"
+        },
+        {
+          "word": "МӘЛ",
+          "entryId": "ba-54c80a5c13c8",
+          "row": 5,
+          "col": 3,
+          "direction": "across"
+        },
+        {
+          "word": "БИЛ",
+          "entryId": "ba-c8db70289b7c",
+          "row": 1,
+          "col": 3,
+          "direction": "across"
+        },
+        {
+          "word": "ИМЛӘ",
+          "entryId": "ba-269f5ade7727",
+          "row": 3,
+          "col": 5,
+          "direction": "down"
+        },
+        {
+          "word": "ӘЛӘМ",
+          "entryId": "ba-0b1101825873",
+          "row": 6,
+          "col": 5,
+          "direction": "across"
+        },
+        {
+          "word": "ИЛӘМ",
+          "entryId": "ba-7f588aebc237",
+          "row": 3,
+          "col": 5,
+          "direction": "across"
+        },
+        {
+          "word": "ӘЛБӘ",
+          "entryId": "ba-af46a6a445f6",
+          "row": 3,
+          "col": 7,
+          "direction": "down"
+        },
+        {
+          "word": "ЛӘМ",
+          "entryId": "ba-5d4a955a4f47",
+          "row": 1,
+          "col": 8,
+          "direction": "down"
+        },
+        {
+          "word": "ӘМӘЛ",
+          "entryId": "ba-e2665a250dcb",
+          "row": 3,
+          "col": 0,
+          "direction": "across"
+        },
+        {
+          "word": "БӘЛӘ",
+          "entryId": "ba-4efb2863608c",
+          "row": 6,
+          "col": 0,
+          "direction": "across"
+        },
+        {
+          "word": "БИЛӘМ",
+          "entryId": "ba-561bdee61211",
+          "row": 0,
+          "col": 0,
+          "direction": "down"
+        }
+      ],
+      "bonusWords": [],
+      "rows": 7,
+      "cols": 9,
+      "layout": "free",
+      "difficultyRevision": 2,
+      "generatorVersion": 6,
+      "layoutVersion": 2,
+      "minWordLength": 3,
+      "excludedWordLengths": [
+        2
+      ]
+    },
+    "hardcore": {
+      "id": 2,
+      "title": "Хардкор",
+      "mode": "hardcore",
+      "letters": [
+        "Т",
+        "Ҙ",
+        "Л",
+        "У",
+        "Ш",
+        "Ы",
+        "Р",
+        "А"
+      ],
+      "words": [
+        {
+          "word": "УЛТЫРҘАШ",
+          "entryId": "ba-fa1a863d8d1d",
+          "row": 5,
+          "col": 21,
+          "direction": "down"
+        },
+        {
+          "word": "ШАҘЫРТ",
+          "entryId": "ba-2f2c50e99b26",
+          "row": 9,
+          "col": 17,
+          "direction": "across"
+        },
+        {
+          "word": "ТАУЛЫ",
+          "entryId": "ba-b9f61b7cf972",
+          "row": 6,
+          "col": 18,
+          "direction": "across"
+        },
+        {
+          "word": "ШЫРАУ",
+          "entryId": "ba-0cf33be21b62",
+          "row": 11,
+          "col": 18,
+          "direction": "across"
+        },
+        {
+          "word": "ҘУРАТ",
+          "entryId": "ba-0673e19d105b",
+          "row": 3,
+          "col": 19,
+          "direction": "down"
+        },
+        {
+          "word": "ТЫШАУ",
+          "entryId": "ba-5c9a35cfe38c",
+          "row": 4,
+          "col": 15,
+          "direction": "across"
+        },
+        {
+          "word": "ТУРЫ",
+          "entryId": "ba-40db3a4701d5",
+          "row": 4,
+          "col": 15,
+          "direction": "down"
+        },
+        {
+          "word": "ЫЛАУ",
+          "entryId": "ba-97e836bdfe05",
+          "row": 11,
+          "col": 19,
+          "direction": "down"
+        },
+        {
+          "word": "ШУРА",
+          "entryId": "ba-1d057eaf1e45",
+          "row": 13,
+          "col": 16,
+          "direction": "across"
+        },
+        {
+          "word": "ТУРА",
+          "entryId": "ba-1171411e4738",
+          "row": 12,
+          "col": 17,
+          "direction": "down"
+        },
+        {
+          "word": "УҘЫШ",
+          "entryId": "ba-0c7fc1f2ff71",
+          "row": 14,
+          "col": 19,
+          "direction": "across"
+        },
+        {
+          "word": "УРТА",
+          "entryId": "ba-bd4e5e54ef3d",
+          "row": 15,
+          "col": 14,
+          "direction": "across"
+        },
+        {
+          "word": "АТЫШ",
+          "entryId": "ba-d3080d8f2cce",
+          "row": 7,
+          "col": 13,
+          "direction": "across"
+        },
+        {
+          "word": "АУЫҘ",
+          "entryId": "ba-f89efbbfbe9e",
+          "row": 7,
+          "col": 13,
+          "direction": "down"
+        },
+        {
+          "word": "УРҘА",
+          "entryId": "ba-a3cfa917c93a",
+          "row": 10,
+          "col": 11,
+          "direction": "across"
+        },
+        {
+          "word": "АЛЫШ",
+          "entryId": "ba-d4436c8ffe57",
+          "row": 10,
+          "col": 14,
+          "direction": "down"
+        },
+        {
+          "word": "АРЫУ",
+          "entryId": "ba-61802544bbb1",
+          "row": 7,
+          "col": 11,
+          "direction": "down"
+        },
+        {
+          "word": "АЛЫУ",
+          "entryId": "ba-f7b1f2c9df08",
+          "row": 5,
+          "col": 12,
+          "direction": "across"
+        },
+        {
+          "word": "АРЫШ",
+          "entryId": "ba-76f198d457a5",
+          "row": 13,
+          "col": 11,
+          "direction": "across"
+        },
+        {
+          "word": "ЫЛАШ",
+          "entryId": "ba-f1d3be804ed9",
+          "row": 3,
+          "col": 12,
+          "direction": "down"
+        },
+        {
+          "word": "ШЫРТ",
+          "entryId": "ba-f919d1d2b6c4",
+          "row": 3,
+          "col": 11,
+          "direction": "across"
+        },
+        {
+          "word": "ШАРТ",
+          "entryId": "ba-4d6a7284529e",
+          "row": 12,
+          "col": 11,
+          "direction": "down"
+        },
+        {
+          "word": "ТЫУА",
+          "entryId": "ba-926308bf57d9",
+          "row": 7,
+          "col": 8,
+          "direction": "across"
+        },
+        {
+          "word": "АУЫР",
+          "entryId": "ba-d6d5e4349c75",
+          "row": 5,
+          "col": 9,
+          "direction": "down"
+        },
+        {
+          "word": "ТУЛА",
+          "entryId": "ba-3c9e9e2c20b8",
+          "row": 5,
+          "col": 6,
+          "direction": "across"
+        },
+        {
+          "word": "УТАР",
+          "entryId": "ba-4d5d8b3a64ea",
+          "row": 14,
+          "col": 8,
+          "direction": "across"
+        },
+        {
+          "word": "УҘЫР",
+          "entryId": "ba-205d1e91077a",
+          "row": 14,
+          "col": 8,
+          "direction": "down"
+        },
+        {
+          "word": "ТАРЫ",
+          "entryId": "ba-def140bb88b5",
+          "row": 5,
+          "col": 6,
+          "direction": "down"
+        },
+        {
+          "word": "АУЫЛ",
+          "entryId": "ba-016b66d8613c",
+          "row": 16,
+          "col": 6,
+          "direction": "across"
+        },
+        {
+          "word": "АРЫ",
+          "entryId": "ba-663c52a5ab6a",
+          "row": 14,
+          "col": 15,
+          "direction": "down"
+        },
+        {
+          "word": "ЛЫУ",
+          "entryId": "ba-0caa32837622",
+          "row": 11,
+          "col": 14,
+          "direction": "across"
+        },
+        {
+          "word": "УРТ",
+          "entryId": "ba-0aa5569348d3",
+          "row": 12,
+          "col": 9,
+          "direction": "down"
+        },
+        {
+          "word": "ТЫУ",
+          "entryId": "ba-60c06b633e01",
+          "row": 3,
+          "col": 7,
+          "direction": "down"
+        },
+        {
+          "word": "ШЫР",
+          "entryId": "ba-eb308646ac3c",
+          "row": 14,
+          "col": 22,
+          "direction": "down"
+        },
+        {
+          "word": "УША",
+          "entryId": "ba-25f325f2647d",
+          "row": 14,
+          "col": 6,
+          "direction": "down"
+        },
+        {
+          "word": "ТЫШ",
+          "entryId": "ba-a4e2b8ad237a",
+          "row": 3,
+          "col": 7,
+          "direction": "across"
+        },
+        {
+          "word": "ТУР",
+          "entryId": "ba-03c2cbcc795b",
+          "row": 16,
+          "col": 20,
+          "direction": "across"
+        },
+        {
+          "word": "ТАШ",
+          "entryId": "ba-96fe2a7e04c3",
+          "row": 16,
+          "col": 20,
+          "direction": "down"
+        },
+        {
+          "word": "ТАУ",
+          "entryId": "ba-395908d48a9b",
+          "row": 12,
+          "col": 7,
+          "direction": "across"
+        },
+        {
+          "word": "УЛЫ",
+          "entryId": "ba-d5d0a6cb65ef",
+          "row": 2,
+          "col": 16,
+          "direction": "down"
+        },
+        {
+          "word": "ТУҘ",
+          "entryId": "ba-257858397485",
+          "row": 2,
+          "col": 15,
+          "direction": "across"
+        },
+        {
+          "word": "ЛУШ",
+          "entryId": "ba-1a5f73e1549b",
+          "row": 18,
+          "col": 18,
+          "direction": "across"
+        },
+        {
+          "word": "АРТ",
+          "entryId": "ba-baf75ef06687",
+          "row": 10,
+          "col": 7,
+          "direction": "down"
+        },
+        {
+          "word": "ЫҘА",
+          "entryId": "ba-0c0db5bbe896",
+          "row": 10,
+          "col": 5,
+          "direction": "across"
+        },
+        {
+          "word": "ШАУ",
+          "entryId": "ba-c759de8a3568",
+          "row": 14,
+          "col": 4,
+          "direction": "across"
+        },
+        {
+          "word": "ШУР",
+          "entryId": "ba-93ac34a93db3",
+          "row": 14,
+          "col": 4,
+          "direction": "down"
+        },
+        {
+          "word": "ШАЛ",
+          "entryId": "ba-f01be3fcd7ba",
+          "row": 16,
+          "col": 18,
+          "direction": "down"
+        },
+        {
+          "word": "ТУШ",
+          "entryId": "ba-225e3f17cbc0",
+          "row": 1,
+          "col": 9,
+          "direction": "down"
+        },
+        {
+          "word": "ТАЛ",
+          "entryId": "ba-4dc8d1e6fc03",
+          "row": 1,
+          "col": 9,
+          "direction": "across"
+        },
+        {
+          "word": "ЫУА",
+          "entryId": "ba-512324025e89",
+          "row": 12,
+          "col": 5,
+          "direction": "down"
+        },
+        {
+          "word": "АУ",
+          "entryId": "ba-c75e363f63b9",
+          "row": 10,
+          "col": 16,
+          "direction": "down"
+        },
+        {
+          "word": "УР",
+          "entryId": "ba-52b9110b9381",
+          "row": 7,
+          "col": 5,
+          "direction": "across"
+        },
+        {
+          "word": "ЫУ",
+          "entryId": "ba-f4a24870ec5b",
+          "row": 8,
+          "col": 6,
+          "direction": "across"
+        },
+        {
+          "word": "АТ",
+          "entryId": "ba-29fcce63ff6b",
+          "row": 1,
+          "col": 15,
+          "direction": "down"
+        },
+        {
+          "word": "УЛ",
+          "entryId": "ba-02d72a21de51",
+          "row": 18,
+          "col": 19,
+          "direction": "down"
+        },
+        {
+          "word": "АШ",
+          "entryId": "ba-81f6d6850165",
+          "row": 8,
+          "col": 17,
+          "direction": "down"
+        },
+        {
+          "word": "АЛ",
+          "entryId": "ba-ce6002451abd",
+          "row": 0,
+          "col": 11,
+          "direction": "down"
+        },
+        {
+          "word": "АРТЫУ",
+          "entryId": "ba-59ce492713e7",
+          "row": 15,
+          "col": 0,
+          "direction": "across"
+        },
+        {
+          "word": "АРТЫШ",
+          "entryId": "ba-61f171f1f6d9",
+          "row": 15,
+          "col": 0,
+          "direction": "down"
+        },
+        {
+          "word": "ЛАУЫР",
+          "entryId": "ba-fbe3665b7701",
+          "row": 11,
+          "col": 1,
+          "direction": "down"
+        },
+        {
+          "word": "ТАУЫШ",
+          "entryId": "ba-c8663211f368",
+          "row": 15,
+          "col": 2,
+          "direction": "down"
+        },
+        {
+          "word": "УТ",
+          "entryId": "ba-0d18ee06581b",
+          "row": 17,
+          "col": 2,
+          "direction": "across"
+        }
+      ],
+      "bonusWords": [
+        "АҘЫУ",
+        "УЛАР",
+        "ТЫУАР"
+      ],
+      "rows": 20,
+      "cols": 23,
+      "layout": "free",
+      "difficultyRevision": 2,
+      "generatorVersion": 6,
+      "layoutVersion": 2,
+      "minWordLength": 2,
+      "excludedWordLengths": []
+    }
+  }
+]

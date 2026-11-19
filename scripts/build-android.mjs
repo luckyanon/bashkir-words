@@ -1,11 +1,12 @@
-import {fileURLToPath} from 'node:url';
-import {writeRuntimeDictionary} from './runtime-data.mjs';
-import { build } from 'vite';
-await build({
-  root: fileURLToPath(new URL('../',import.meta.url)),
-  base: './',
-  plugins: [{ name: 'native-entry', transformIndexHtml: { order: 'pre', handler: html => html.replace('./src/main.mjs', './src/native-entry.mjs') } }],
-  build: { outDir: 'dist-android', target: 'es2022', emptyOutDir: true },
-});
+import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 
-await writeRuntimeDictionary(fileURLToPath(new URL('../dist-android/',import.meta.url)));
+const windows = process.platform === 'win32';
+const command = windows ? process.env.ComSpec || 'cmd.exe' : './gradlew';
+const args = windows ? ['/d', '/c', 'gradlew.bat', ':app:assembleRelease'] : [':app:assembleRelease'];
+const result = spawnSync(command, args, {
+  cwd: fileURLToPath(new URL('../android/', import.meta.url)),
+  stdio: 'inherit',
+});
+if (result.error) throw result.error;
+process.exitCode = result.status ?? 1;

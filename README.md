@@ -1,8 +1,12 @@
 # Слова — башкирская игра
 
-Текущая версия **2.10.5**, Android versionCode **31**. Игра для Android работает без сервера и подключения к интернету.
+Текущая версия **3.0.0**, Android versionCode **32**. Игра для Android работает без сервера и подключения к интернету.
 
-[APK 2.10.5](https://github.com/luckyanon/bashkir-words/releases/download/v2.10.5/bashkir-words-2.10.5.apk) · [Подпись и сведения о сборке](releases/2.10.5.md)
+[APK 3.0.0](https://github.com/luckyanon/bashkir-words/releases/download/v3.0.0/bashkir-words-3.0.0.apk) · [Подпись и сведения о сборке](releases/3.0.0.md)
+
+## Обновление 3.0.0
+
+Игровой интерфейс, словарь, генераторы, правила, экономика и сохранения перенесены на Rust. Android рисует команды интерфейса на Canvas и предоставляет системные функции: ввод, звук, датчики, напоминания, доступность и хранилище. APK работает без WebView. При первом запуске приложение читает прежнее сохранение из Capacitor Preferences. Новые записи хранятся отдельно, исходное сохранение доступно как резервная копия.
 
 ## Обновление 2.10.5
 
@@ -62,10 +66,10 @@
 
 ## Запуск и сборка
 
-Node.js 24: `npm ci`. Локальная проверка интерфейса: `npm start`. Для этого выпуска собирается только Android.
-Android: JDK 21, Android SDK 36; `npm run build:android`, `npx cap sync android`, затем `android/gradlew.bat -p android :app:assembleRelease`. Локальный SDK задаётся в `android/local.properties` или `ANDROID_HOME`. Подробности подписи: [ANDROID.md](ANDROID.md).
+Android: JDK 21, Android SDK и Build Tools 36, Android NDK 28 или новее, стабильный Rust и `cargo-ndk`. Сборка из корня репозитория в Windows — `android/gradlew.bat -p android :app:assembleRelease`. На Linux используйте `./android/gradlew -p android :app:assembleRelease`. [Настройка и подпись](ANDROID.md)
+Тесты нативной игры: `cargo test --locked --manifest-path rust/app/Cargo.toml`. Для проверки совместимости сохранений в репозитории сохранены веб-исходники 2.10.5. Их можно запустить через `npm ci` и `npm start` с Node.js 24.
 
-Поля хардкора строит модуль Rust/WebAssembly из `public/wasm/`. Если WebAssembly недоступен, поле строит JavaScript. Для пересборки модуля установите Rust и выполните `rustup target add wasm32-unknown-unknown`, затем `npm run build:wasm`. Для обычной сборки Android используется готовый модуль из репозитория. Сравнение двух реализаций по фактическому словарю запускается командой `node scripts/benchmark-hardcore.mjs`.
+Веб-версия 2.10.5 использует модуль из `public/wasm/`. Его можно пересобрать через `rustup target add wasm32-unknown-unknown` и `npm run build:wasm`.
 
 ## Классика
 

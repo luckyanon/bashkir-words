@@ -425,6 +425,11 @@ impl Game {
         self.dirty = true;
     }
 
+    #[cfg(any(target_os = "android", test))]
+    pub(crate) fn take_changed(&mut self) -> bool {
+        std::mem::take(&mut self.dirty)
+    }
+
     pub fn take_save(&mut self) -> Option<String> {
         if !self.dirty {
             return None;
@@ -453,6 +458,13 @@ impl Game {
         self.random ^= self.random >> 7;
         self.random ^= self.random << 17;
         (self.random % count as u64) as usize
+    }
+
+    fn sampled_index(&mut self, count: usize, sample: Option<f64>) -> usize {
+        sample.map_or_else(
+            || self.random_index(count),
+            |value| ((value * count as f64).floor().max(0.0) as usize).min(count - 1),
+        )
     }
 
     fn reconcile_progress(&mut self) {
@@ -557,6 +569,8 @@ impl Game {
             self.state.current_level
         };
         if self.state.mode == mode {
+            self.rack.clone_from(&self.active.level.letters);
+            self.mark_dirty();
             true
         } else {
             self.change_level(mode, id, false)
@@ -603,9 +617,13 @@ impl Game {
     }
 
     pub fn shuffle(&mut self) {
+        self.shuffle_with_samples(&[]);
+    }
+
+    pub fn shuffle_with_samples(&mut self, samples: &[f64]) {
         let original = self.rack.clone();
-        for i in (1..self.rack.len()).rev() {
-            let j = self.random_index(i + 1);
+        for (index, i) in (1..self.rack.len()).rev().enumerate() {
+            let j = self.sampled_index(i + 1, samples.get(index).copied());
             self.rack.swap(i, j);
         }
         if self.rack == original {
@@ -750,6 +768,10 @@ impl Game {
     }
 
     pub fn hint(&mut self) -> ActionResult {
+        self.hint_with_sample(None)
+    }
+
+    pub fn hint_with_sample(&mut self, sample: Option<f64>) -> ActionResult {
         if self.is_hardcore() {
             return ActionResult::new("unavailable");
         }
@@ -767,7 +789,7 @@ impl Game {
         if self.state.coins < HINT_COST {
             return ActionResult::new("insufficient");
         }
-        let index = self.random_index(hidden.len());
+        let index = self.sampled_index(hidden.len(), sample);
         self.progress_mut().revealed.push(hidden[index].clone());
         self.state.coins -= HINT_COST;
         self.state.hint_count = capped_add(self.state.hint_count, 1);
@@ -836,10 +858,10 @@ impl Game {
             &self.book.dataset_revision,
         );
         state.settings = settings;
-        let history = crate::history::History::default();
-        if let Ok(active) = load_level(&self.book, &history, &state, Mode::Classic, 1) {
+        state.legacy_layout_through_level = self.state.legacy_layout_through_level;
+        state.bonus_layouts.clone_from(&self.state.bonus_layouts);
+        if let Ok(active) = load_level(&self.book, &self.history, &state, Mode::Classic, 1) {
             self.state = state;
-            self.history = history;
             self.rack.clone_from(&active.level.letters);
             self.active = active;
             self.recent.clear();

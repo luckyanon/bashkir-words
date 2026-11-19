@@ -1,6 +1,6 @@
-# Android — Слова 3.0.0
+# Android — Слова 3.0.1
 
-Android 7.0+, target/compile SDK 36, пакет `ru.bashkir.words`, versionCode 32. Игра и интерфейс скомпилированы в `libbashkir_words.so` для arm64-v8a, armeabi-v7a и x86_64. Android-слой предоставляет Canvas, ввод, хранилище, звук, датчики, доступность и напоминания. Словарь, архивы миграции, изображения и музыка находятся в APK.
+Android 7.0+, target/compile SDK 36, пакет `ru.bashkir.words`, versionCode 33. Интерфейс 2.10.5 загружается через Capacitor и использует прежние системные отступы и ресурсы. Движок собран в `libbashkir_words.so` для arm64-v8a, armeabi-v7a и x86_64. Словарь и архивы миграции находятся в APK.
 
 ## Подпись и обновление
 
@@ -8,17 +8,20 @@ Android 7.0+, target/compile SDK 36, пакет `ru.bashkir.words`, versionCode 
 
 `3833621841ad9952edd62fc68ab0dc3b6d40f2990da8735cbbe38ad2d97f2c4a`
 
-Android проверяет ту же подпись при установке обновления поверх 2.10.5. При первом запуске версия 3.0.0 читает `CapacitorStorage` и сохраняет дальнейший прогресс в отдельном хранилище. [Сведения о подписи 2.10.5](releases/2.10.5.md)
+APK использует прежнюю подпись для обновления поверх 2.10.5 и 3.0.0. Если есть сохранение из 3.0.0, приложение один раз переносит его в `CapacitorStorage` и сохраняет резервную копию предыдущей записи. Дальнейший прогресс сохраняется через Capacitor Preferences.
 
 Ключи и пароли не входят в Git, APK или исходный архив. Для будущих выпусков используйте тот же доступный ключ; переход с него на другой сертификат потребует отдельного решения о миграции.
 
 ## Сборка
 
-Установите JDK 21, Android SDK 36, Build Tools 36.0.0, Android NDK 28 или новее и стабильный Rust. Укажите SDK через `ANDROID_HOME` или `android/local.properties`. Установите Rust-цели и сборщик NDK.
+Установите Node.js 24, JDK 21, Android SDK 36, Build Tools 36.0.0, Android NDK 28 или новее и стабильный Rust. Укажите SDK через `ANDROID_HOME` или `android/local.properties`.
 
 ```text
 rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-android
 cargo install cargo-ndk --locked
+npm ci
+npm run build:android
+npx cap sync android
 android/gradlew.bat -p android :app:assembleRelease :app:testDebugUnitTest :app:lintDebug
 ```
 

@@ -1,8 +1,12 @@
 # Слова — башкирская игра
 
-Текущая версия **3.0.0**, Android versionCode **32**. Игра для Android работает без сервера и подключения к интернету.
+Текущая версия **3.0.1**, Android versionCode **33**. Игра для Android работает без сервера и подключения к интернету.
 
-[APK 3.0.0](https://github.com/luckyanon/bashkir-words/releases/download/v3.0.0/bashkir-words-3.0.0.apk) · [Подпись и сведения о сборке](releases/3.0.0.md)
+[APK 3.0.1](https://github.com/luckyanon/bashkir-words/releases/download/v3.0.1/bashkir-words-3.0.1.apk) · [Подпись и сведения о сборке](releases/3.0.1.md)
+
+## Обновление 3.0.1
+
+В APK восстановлен оригинальный интерфейс 2.10.5, включая разметку экранов, размеры и расположение элементов, шрифты, анимации, жесты, музыку и звуки. Игровые правила, генераторы и обработка сохранений работают на Rust. Обновление читает прогресс из 3.0.0 или из 2.10.5.
 
 ## Обновление 3.0.0
 
@@ -66,8 +70,9 @@
 
 ## Запуск и сборка
 
-Android: JDK 21, Android SDK и Build Tools 36, Android NDK 28 или новее, стабильный Rust и `cargo-ndk`. Сборка из корня репозитория в Windows — `android/gradlew.bat -p android :app:assembleRelease`. На Linux используйте `./android/gradlew -p android :app:assembleRelease`. [Настройка и подпись](ANDROID.md)
-Тесты нативной игры: `cargo test --locked --manifest-path rust/app/Cargo.toml`. Для проверки совместимости сохранений в репозитории сохранены веб-исходники 2.10.5. Их можно запустить через `npm ci` и `npm start` с Node.js 24.
+Для APK нужны Node.js 24, JDK 21, Android SDK и Build Tools 36, Android NDK 28 или новее, стабильный Rust и `cargo-ndk`. Перед сборкой Gradle выполните `npm ci`, `npm run build:android` и `npx cap sync android`. [Настройка и подпись](ANDROID.md)
+
+Проверки движка и адаптера запускаются через `npm run test:rust` и `npm test`. Оригинальный интерфейс можно открыть в браузере через `npm start`.
 
 Веб-версия 2.10.5 использует модуль из `public/wasm/`. Его можно пересобрать через `rustup target add wasm32-unknown-unknown` и `npm run build:wasm`.
 

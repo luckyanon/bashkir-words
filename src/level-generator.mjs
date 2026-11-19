@@ -1,13 +1,13 @@
 import { createDictionary, normalizeWord, signature } from './lib/dictionary.mjs';
 import { getWordCells } from './levels.mjs';
 import {createHardcoreLayout} from './hardcore-layout.mjs';
+import {createHardcoreLayoutWithWasm,hashSeed} from './hardcore-layout-wasm.mjs';
 
 export const GENERATOR_VERSION = 6;
 const MAX_SPAN = 24;
 
 function randomSource(value) {
-  let state = 2166136261;
-  for (const character of String(value)) state = Math.imul(state ^ character.codePointAt(0), 16777619) >>> 0;
+  let state = hashSeed(value);
   return () => {
     state += 0x6D2B79F5;
     let next = state;
@@ -318,7 +318,9 @@ export function createLevelProvider(poolData, lexicon, {
       const pool=pools[hardcoreOrders.get(key)[(id-1)%indexes.length]];
       const words=lexicon.findWords(pool.letters,{minLength:2,targetsOnly:true});
       if(words.length<30||words.length!==pool.hardcoreWordCount)throw new TypeError('Outdated hardcore rack index');
-      const layout=createHardcoreLayout(words.map(word=>({word,entryId:lexicon.getEntry(word).id})),randomSource(`${campaignSeed}:hardcore:2:${id}`));
+      const entries=words.map(word=>({word,entryId:lexicon.getEntry(word).id}));
+      const layoutSeed=`${campaignSeed}:hardcore:2:${id}`;
+      const layout=createHardcoreLayoutWithWasm(entries,layoutSeed) ?? createHardcoreLayout(entries,randomSource(layoutSeed));
       const bonusWords=lexicon.findWords(pool.letters,{minLength:2}).filter(word=>!lexicon.isTargetCandidate(word)).slice(0,3);
       const level=Object.freeze({id,title:'Хардкор',mode:'hardcore',letters:Object.freeze(shuffle(pool.letters,randomSource(`${campaignSeed}:hardcore:rack:${id}`))),words:Object.freeze(layout.words.map(Object.freeze)),bonusWords:Object.freeze(bonusWords),rows:layout.rows,cols:layout.cols,layout:'free',difficultyRevision:applyLevelDifficulty?2:0,generatorVersion:GENERATOR_VERSION,layoutVersion:2,minWordLength:2,excludedWordLengths:Object.freeze([])});
       cache.set(id,level);if(cache.size>8)cache.delete(cache.keys().next().value);return level;

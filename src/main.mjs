@@ -5,6 +5,7 @@ import {loadLexicon} from './dictionary-service.mjs';
 import {createGame,HINT_COST} from './game.mjs';
 import {buildBoard} from './levels.mjs';
 import {createLevelProvider} from './level-generator.mjs';
+import {loadHardcoreLayoutWasm} from './hardcore-layout-wasm.mjs';
 import {createStorage} from './storage.mjs';
 import {createPlatform} from './platform.mjs';
 import {bindWheel} from './gestures.mjs';
@@ -323,7 +324,7 @@ async function boot(){
     platform=createPlatform({onCancel:cancelInput,onBack:()=>{if(modal.open||licenseModal.open)closeModal();else if(view!=='menu')navigateView('menu');else plugins.App?.exitApp?.();},settings:()=>game?.state.settings||{sound:true},plugins});
     music=createMusic();plugins.App?.addListener('appStateChange',({isActive})=>{music.setActive(isActive);if(!isActive)wordAttempt();}).catch(()=>{});
     storage=createStorage(platform.storageAdapter);backgroundMotion=createBackgroundMotion(backgroundLayer,{native:plugins.BackgroundMotion,app:plugins.App});
-    const [loadedLexicon,pools,saved]=await Promise.all([loadLexicon('./',globalThis.fetch),fetch('./data/level-pools.json').then(r=>{if(!r.ok)throw new Error('level pools');return r.json();}),storage.load()]);
+    const [loadedLexicon,pools,saved]=await Promise.all([loadLexicon('./',globalThis.fetch),fetch('./data/level-pools.json').then(r=>{if(!r.ok)throw new Error('level pools');return r.json();}),storage.load(),loadHardcoreLayoutWasm()]);
     lexicon=loadedLexicon;poolData=pools;
     const seed=saved?.campaignSeed||campaignSeed();
     let provider=createLevelProvider(pools,lexicon,{seed,...layoutOptionsForSave(saved,pools.generatorVersion)});

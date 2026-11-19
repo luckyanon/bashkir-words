@@ -3,12 +3,14 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {createLexicon} from '../src/dictionary-service.mjs';
 import {createLevelProvider} from '../src/level-generator.mjs';
+import {installHardcoreLayoutWasm} from '../src/hardcore-layout-wasm.mjs';
 import {createGame,HINT_COST,LEVEL_REWARD,BONUS_REWARD,HARDCORE_WORD_REWARD,HARDCORE_LEVEL_REWARD} from '../src/game.mjs';
 import {validateLevel,getWordCells} from '../src/levels.mjs';
 import {signature} from '../src/lib/dictionary.mjs';
 import {createStorage,createWebStorageAdapter} from '../src/storage.mjs';
 
 const load=async name=>JSON.parse(await readFile(new URL('../public/data/'+name,import.meta.url),'utf8'));
+await installHardcoreLayoutWasm(await readFile(new URL('../public/wasm/hardcore-layout.wasm',import.meta.url)));
 const [raw,full,data]=await Promise.all(['game-lexicon.nouns.json','nouns.full.json','level-pools.json'].map(load));
 const lexicon=createLexicon(raw,full),reps=[5,6,7,8].map(n=>data.pools.find(p=>Math.min(8,p.letters.length)===n));
 function forPool(pool,seed='hardcore-test'){

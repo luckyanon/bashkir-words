@@ -1,6 +1,6 @@
 {
   "name": "bashkir-words",
-  "version": "2.10.4",
+  "version": "2.10.5",
   "private": true,
   "type": "module",
   "description": "Локальная башкирская словесная головоломка",
@@ -9,6 +9,7 @@
     "start": "node scripts/serve.mjs",
     "build": "node scripts/build.mjs",
     "build:android": "node scripts/build-android.mjs",
+    "build:wasm": "node scripts/build-hardcore-wasm.mjs",
     "preview": "node scripts/serve.mjs --dist",
     "test": "node --test tests/*.test.mjs",
     "levels": "node scripts/generate-levels.mjs"
